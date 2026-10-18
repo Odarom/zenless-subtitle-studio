@@ -20,8 +20,9 @@ export function publicSource(root) {
     }
   };
   for (const dir of ['video', 'src', 'scripts', 'services', 'test']) walk(dir);
+  if (existsSync(join(root, 'docs/discord'))) walk('docs/discord');
   for (const name of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md']) add(`glossary/${name}`);
-  for (const name of ['package.json', 'package-lock.json', 'video-run.cmd', 'video-setup.cmd', 'reports.cmd', 'REPORTS.md', 'VIDEO-SUBTITLES.md', '.env.example']) if (existsSync(join(root, name))) add(name);
+  for (const name of ['package.json', 'package-lock.json', 'video-run.cmd', 'video-setup.cmd', 'run.cmd', 'local-ai.cmd', 'choose-ai.cmd', 'glossary-sync.cmd', 'reports.cmd', 'REPORTS.md', 'SERVER-API.md', 'VIDEO-SUBTITLES.md', '.env.example']) if (existsSync(join(root, name))) add(name);
   for (const locale of ['ko', 'en', 'ja', 'zh-CN']) add(`README-${locale}.md`, `video/docs/README-${locale}.md`);
   result.set('README.md', `# Zenless Subtitle Studio ${VIDEO_VERSION}\n\n[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)\n\n[Download for Windows x64 / Windows 다운로드](https://github.com/${DEFAULT_PROGRAM_REPOSITORY}/releases/latest)\n\nTranslate a complete YouTube video or local file before playback. Optional local speech/OCR, a shared Zenless glossary, one whole-video translation request by default, and private in-app feedback. Each user supplies their own translation API key.\n\nExtract the entire release ZIP and run **Start.cmd**. Node is included; speech/video tools download on first launch. Load the included **video-extension** folder in Chrome/Edge for YouTube overlays.\n\nRecommended: a [Google AI Studio free API key](https://aistudio.google.com/apikey) with **Gemini 3.1 Flash-Lite** (\`gemini-3.1-flash-lite\`), subject to service quotas. See the language guides for setup, privacy and updates.\n\n[Shared glossary](https://github.com/Odarom/zenless-translation-database) · [Development](DEVELOPMENT.md)\n\nFan-made software; not an official game product.\n`);
   result.set('DEVELOPMENT.md', '# Development\n\nRequires Node.js 24.17+; Windows x64 is the supported portable target.\n\n- Install source dependencies: `npm ci` (Discord bot only).\n- Start the subtitle app: `node video/server.mjs --open`.\n- Prepare local tools: `node scripts/video-setup.mjs`.\n- Run tests: `npm test` and `npm run video:test`.\n- Build extension and Windows package: `npm run video:package`.\n- Package integration: `node scripts/video-package-smoke.mjs`. It needs the public sample media and downloaded tools described in the smoke scripts.\n- Update integration: `node scripts/video-update-smoke.mjs`.\n- Publish source only: `node scripts/video-publish.mjs --source-only`.\n- Publish tested release and update feed: `node scripts/video-publish.mjs`. GitHub CLI must be authenticated as the repository owner. Existing releases are never overwritten with a different ZIP.\n\nThe `src` tree also contains the related Discord bot. The `services` tree contains the optional maintainer-only private report receiver; app users do not deploy it. The receiver is separate from the Discord runtime. Operator SSH and deployment configuration are deliberately excluded.\n\nNever commit `.env`, `.secrets`, `data`, `reports`, `.tools`, models, downloaded media or a used portable installation. Runtime reports are untrusted data. Confirm corrections against authoritative sources before publishing glossary changes.\n');
@@ -67,12 +68,15 @@ export async function publishProgram(root = resolve(import.meta.dirname, '..'), 
     if (!health.ok || !(await health.json()).ready) throw new Error('외부 HTTPS 신고 서버를 확인하지 못했습니다.');
     files.set('services.json', JSON.stringify({ schema: 1, reports: url.href }, null, 2) + '\n');
   }
+  files.set('README.md', files.get('README.md') + '\n[Discord bot source and setup / 디스코드 봇 사용법](https://github.com/Odarom/zenless-discord-translator)\n');
   let commit = commitFiles(files, `Update subtitle studio ${VIDEO_VERSION}`);
   if (sourceOnly) return { repository: repo, url: remote.html_url, commit, sourceFiles: files.size };
   const release = JSON.parse(readFileSync(join(root, 'dist/video-release.json'), 'utf8'));
   if (release.version !== VIDEO_VERSION || await sha256File(release.output) !== release.sha256) throw new Error('배포 ZIP 버전 또는 체크섬을 확인하세요.');
   const qa = JSON.parse(readFileSync(join(root, 'dist/video-package-qa.json'), 'utf8'));
   if (qa.version !== VIDEO_VERSION || qa.archiveSha256 !== release.sha256 || !qa.cpuTranscription || !qa.optionalCpuOcr) throw new Error('최종 배포본 검사를 먼저 완료하세요.');
+  const updateQa = JSON.parse(readFileSync(join(root, 'dist/video-update-qa.json'), 'utf8'));
+  if (updateQa.version !== VIDEO_VERSION || updateQa.archiveSha256 !== release.sha256 || !updateQa.bundledSupervisorRestart || !updateQa.settingsKeysModelsToolsHistoryPreserved) throw new Error('최종 배포본의 업데이트·재시작 검사를 먼저 완료하세요.');
   const tag = `v${VIDEO_VERSION}`; let published;
   try { published = api(`repos/${repo}/releases/tags/${tag}`); } catch (error) { if (!/HTTP 404/.test(error.message)) throw error; }
   if (published) {

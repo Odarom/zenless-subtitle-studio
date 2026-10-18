@@ -13,7 +13,7 @@ import { reportError, reportText, reportLanguage } from '../src/report-i18n.js';
 import { Store } from '../src/store.js';
 import { Relay } from '../src/relay.js';
 import { UserError } from '../src/config.js';
-import { reviewMarkdown } from '../scripts/report-review.mjs';
+import { reviewMarkdown } from '../src/report-markdown.js';
 
 const G = '111111111111111111', OTHER = '222222222222222222', U = '333333333333333333', V = '444444444444444444';
 const SOURCE = '555555555555555555', TARGET = '666666666666666666', ORIGINAL = '777777777777777777', COPY = '888888888888888888';
