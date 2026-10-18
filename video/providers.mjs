@@ -5,7 +5,8 @@ const escapeXml = value => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
 export function protectDeepLTerms(text, glossary, sourceLanguage, targetLanguage) {
   const choices = new Map();
   for (const term of glossary) {
-    const target = term.outputPreferred?.[targetLanguage], source = term.preferred?.[sourceLanguage];
+    if (term.autoUse === false) continue;
+    const target = term.outputPreferred?.[targetLanguage] ?? term.preferred?.[targetLanguage], source = term.preferred?.[sourceLanguage];
     if (!target || !source || source === target || source.length < 2) continue;
     const key = source.toLowerCase();
     if (!choices.has(key)) choices.set(key, { source, target });

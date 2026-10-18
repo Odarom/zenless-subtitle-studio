@@ -1,6 +1,7 @@
 .env
 .env.*
 !.env.example
+!.env.runner.example
 .secrets/
 .tools/
 .models/

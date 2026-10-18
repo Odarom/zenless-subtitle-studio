@@ -96,7 +96,7 @@ async function main() {
         if (chunk.reports.length < 100) break;
         if (page === 49) throw new UserError('영상 신고 수집 범위를 초과했습니다.');
       }
-      data.sources.push('private-video');
+      data.sources.push('private-video', 'private-discord');
     }
     if (!options['discord-only'] && !options['private-only']) {
       const github = await collectGithubReports(options.repository || DEFAULT_GLOSSARY_REPOSITORY, githubRequest);

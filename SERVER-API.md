@@ -1,5 +1,7 @@
 # Discord에서 서버별 API 설정
 
+> **개인 설치용 기존 방식(API_MODE=server)에만 해당합니다.** 운영자가 등록 키를 복호화할 수 있으므로 본인이 운영하는 설치에서 자기 키만 사용하세요. 공개 중계 봇(API_MODE=runner)은 키 입력 창을 제공하지 않습니다. 공개 봇에서는 `/zzz connect`로 개인 PC·서버의 연결 프로그램을 연결하고 그 프로그램의 서버 프로필에서 키를 관리합니다. [새 사용 안내](https://github.com/Odarom/zenless-discord-translator)와 [여러 서버·SSH 관리 UI](https://github.com/Odarom/zenless-discord-translator/blob/main/HOSTING.md)를 참고하세요.
+
 서버 관리자가 `/zzz api-set`을 실행하고 Gemini 또는 OpenAI를 선택합니다. 입력 창에서 모델, API 키, 하루 요청 한도를 정하면 **그 서버에만** 적용됩니다. 키가 없어도 봇은 실행되며 기존 채널 연결은 유지됩니다.
 
 1. **모델 선택:** 목록에서 모델을 고릅니다. Gemini는 3.1 Flash-Lite, 3.5 Flash-Lite, 3 Flash (Preview), OpenAI는 GPT-4.1 mini와 GPT-4.1을 제공합니다.
@@ -34,7 +36,7 @@ Gemini의 일시적인 서버 오류(HTTP 500·502·503·504)는 약 1초 뒤 �
 
 ## 운영자의 기존 설정과 여러 서버
 
-`.env`의 `DISCORD_TOKEN`, `DISCORD_APPLICATION_ID`는 봇을 실행하는 운영자만 입력합니다. 다른 서버 사용자는 자신의 API 키만 Discord에서 등록하면 됩니다.
+`.env`의 `DISCORD_TOKEN`, `DISCORD_APPLICATION_ID`는 봇을 실행하는 운영자만 입력합니다. 이 기존 직접 호출 방식에서 다른 이용자의 API 키를 수집하지 마세요. 공개 사용자는 개인 연결 프로그램에 자기 키를 저장합니다.
 
 `DISCORD_GUILD_ID`는 선택 사항이며 `.env`의 기존 API/로컬 설정을 허용할 운영자 서버를 지정합니다. 이 기본값은 다른 서버에 공유되지 않습니다. Discord에서 등록한 서버 설정이 우선하며 `/zzz api-delete` 후 `.env` 키나 로컬 AI로 자동 복귀하지 않습니다. 운영자가 로컬 기본값을 다시 쓰려면 서버별 설정을 명시적으로 초기화해야 합니다.
 

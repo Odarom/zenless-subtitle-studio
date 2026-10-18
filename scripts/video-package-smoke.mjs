@@ -101,9 +101,10 @@ try {
   if (ocrJob.status !== 'completed' || !ocrJob.cues.some(cue => cue.kind === 'screen' && cue.positions?.length >= 2)) throw new Error('배포본 화면 OCR을 완료하지 못했습니다.');
   const project = await api(`/api/jobs/${ocrJob.id}/export?format=json`);
   if (project.app !== 'zenless-subtitle-studio' || !project.cues[0].region) throw new Error('화면 프로젝트 저장을 확인하지 못했습니다.');
-  await api('/api/glossary/check', 'POST', {});
+  const glossaryCheck = await api('/api/glossary/check', 'POST', {});
   const updatedGlossary = await api('/api/glossary/update', 'POST', {});
-  if (updatedGlossary.current.count !== 2312) throw new Error('공개 GitHub 용어집 연결을 확인하지 못했습니다.');
+  const expectedGlossary = glossaryCheck.available || glossaryCheck.current;
+  if (updatedGlossary.current.count !== expectedGlossary.count || updatedGlossary.current.sha256 !== expectedGlossary.sha256) throw new Error('공개 GitHub 용어집 연결을 확인하지 못했습니다.');
   report = { version: release.version, archiveSha256: release.sha256, bundledNode: release.nodeVersion, archiveVerified: true, cleanKeys: !initialSettings.hasKey, initialJobs: initialJobs.length, globalPathDisabled: true, nonAsciiAndSpacePath: true, bracketPath: true, firstTimeSetup: 'completed (verified cached downloads)', archiveExtractor: 'Windows PowerShell 5.1 + .NET', cpuTranscription: 'completed', optionalCpuOcr: 'completed', projectExport: true, githubGlossaryUpdate: true, fourLanguageReadmes: true, elapsedMs: Date.now() - started, cueCount: cues.length, translationApiCalls: 0 };
   writeFileSync(join(root, 'dist', 'video-package-qa.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report));
 } finally { child.kill(); await new Promise(resolveExit => { if (child.exitCode !== null) resolveExit(); else child.once('close', resolveExit); }); }

@@ -34,6 +34,8 @@ export class Jobs {
     if (!input || typeof input !== 'object' || !input.input || !input.options) throw new Error('영상과 번역 설정을 확인하세요.');
     const { sourceLanguage = 'en', targetLanguage = 'ko', style = 'official', forceAsr = false, transcribeOnly = false, speech = true, screenText = false, screenLanguage = sourceLanguage === 'auto' ? 'en' : sourceLanguage, screenIntervalMs = 1000, screenStartMs = 0, screenEndMs = null } = input.options;
     const translationMode = input.options.translationMode || 'single';
+    const glossaryMode = input.options.glossaryMode || 'full';
+    if (!['full', 'relevant'].includes(glossaryMode)) throw new Error('용어집 전송 범위를 확인하세요.');
     if (!['single', 'large-batches'].includes(translationMode)) throw new Error('번역 요청 방식을 확인하세요.');
     if (typeof speech !== 'boolean' || typeof screenText !== 'boolean' || !speech && !screenText || !LANGS.slice(1).includes(screenLanguage) || ![500, 1000, 2000].includes(screenIntervalMs) || !Number.isSafeInteger(screenStartMs) || screenStartMs < 0 || screenStartMs > 7 * 86400000 || screenEndMs !== null && (!Number.isSafeInteger(screenEndMs) || screenEndMs <= screenStartMs || screenEndMs > 7 * 86400000)) throw new Error('음성·화면 글자 선택과 분석 구간을 확인하세요.');
     if (!LANGS.includes(sourceLanguage) || !LANGS.slice(1).includes(targetLanguage) || !['official', 'community'].includes(style) || typeof forceAsr !== 'boolean' || typeof transcribeOnly !== 'boolean') throw new Error('번역 언어 또는 스타일을 확인하세요.');
@@ -43,7 +45,7 @@ export class Jobs {
     if (!input.input.fileId && !videoId) throw new Error('유튜브 영상이나 파일을 선택하세요.');
     const api = transcribeOnly ? null : this.settings.private();
     const speechDevice = this.settings.options.speechDevice, speechThreads = this.settings.options.speechThreads;
-    const job = { id: randomUUID(), title: String(input.title || '').slice(0, 250), videoId, input: { fileId: input.input.fileId || null, youtubeUrl: videoId ? `https://www.youtube.com/watch?v=${videoId}` : null }, options: { sourceLanguage, targetLanguage, style, forceAsr, transcribeOnly, speechDevice, speechThreads, speech, screenText, screenLanguage, screenIntervalMs, screenStartMs, screenEndMs, translationMode }, translationConfig: api ? { provider: api.provider, model: api.model } : null, status: 'queued', stage: 'queued', message: '처리를 기다리고 있습니다.', completedCues: 0, createdAt: new Date().toISOString(), cues: [] };
+    const job = { id: randomUUID(), title: String(input.title || '').slice(0, 250), videoId, input: { fileId: input.input.fileId || null, youtubeUrl: videoId ? `https://www.youtube.com/watch?v=${videoId}` : null }, options: { sourceLanguage, targetLanguage, style, forceAsr, transcribeOnly, speechDevice, speechThreads, speech, screenText, screenLanguage, screenIntervalMs, screenStartMs, screenEndMs, translationMode, glossaryMode }, translationConfig: api ? { provider: api.provider, model: api.model } : null, status: 'queued', stage: 'queued', message: '처리를 기다리고 있습니다.', completedCues: 0, createdAt: new Date().toISOString(), cues: [] };
     mkdirSync(this.directory(job.id), { recursive: true }); this.jobs.set(job.id, job); this.save(job); this.pump(); return this.summary(job);
   }
   cancel(id) {

@@ -5,8 +5,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { sentenceCues, translationPlan } from '../video/translation-plan.mjs';
 import { RequestGate } from '../video/request-gate.mjs';
-import { translateBatch } from '../video/translation.mjs';
-import { deepLTranslation } from '../video/providers.mjs';
+import { translateBatch, videoGlossary } from '../video/translation.mjs';
+import { deepLTranslation, protectDeepLTerms } from '../video/providers.mjs';
 
 test('local sentence grouping joins incomplete speech across screen cues and retains screen positions', () => {
   const cues = [{ id: '1', startMs: 0, endMs: 2000, sourceText: 'Use Quick Assist after' }, { id: '2', startMs: 500, endMs: 3000, sourceText: 'EX Special Attack', kind: 'screen', region: { x: .1, y: .2, w: .3, h: .1 } }, { id: '3', startMs: 2100, endMs: 4000, sourceText: 'the EX Special Attack.' }, { id: '4', startMs: 4500, endMs: 6000, sourceText: 'Save the next attack.' }];
@@ -22,10 +22,22 @@ test('normal video sends all speech, screen text and glossary in one API request
   const result = await translateBatch({ allCues: cues, batch: plan.batches[0], options: { sourceLanguage: 'en', targetLanguage: 'ko' }, config, glossaryPath: 'glossary/zzz.json', usage: { reserve: () => 'day', record: () => {} }, fetcher: async (url, init) => {
     calls++; const body = JSON.parse(init.body), data = JSON.parse(body.contents[0].parts[0].text);
     assert.equal(data.cues.length, 100); assert(data.glossary.some(term => term.preferred.en === 'Quick Assist')); assert(data.cues.some(c => c.kind === 'screen'));
+    assert.equal(data.glossary.length, JSON.parse(readFileSync('glossary/zzz.json')).entries.length);
+    assert(data.glossary.every(term => Array.isArray(term.aliases))); assert(!Object.hasOwn(data.glossary[0], 'sources'));
     assert(body.systemInstruction.parts[0].text.includes('generates SRT/VTT/project files in code'));
     return { ok: true, status: 200, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ cues: data.cues.map(c => ({ id: c.id, text: '빠른 지원' })) }) }] } }] }) };
   } });
   assert.equal(calls, 1); assert.equal(result.length, 100); assert.equal(result[99].endMs, cues[99].endMs);
+});
+
+test('videos default to all glossary entries; smaller model selection is explicit and included in preflight', () => {
+  const cues = [{ id: '1', sourceText: 'Quick Assist.', startMs: 0, endMs: 2000 }];
+  const all = videoGlossary(cues, { targetLanguage: 'ko' }, 'glossary/zzz.json');
+  const related = videoGlossary(cues, { glossaryMode: 'relevant', targetLanguage: 'ko' }, 'glossary/zzz.json');
+  assert(all.length > related.length); assert(all.some(term => term.rule && term.meaning));
+  assert.match(protectDeepLTerms('Quick Assist', all, 'en', 'ko'), /<keep>빠른 지원<\/keep>/);
+  assert.throws(() => translationPlan(cues, { provider: 'ollama' }, {}, all), /API를 호출하지 않았습니다/);
+  assert.equal(translationPlan(cues, { provider: 'gemini', model: 'gemini-3.1-flash-lite' }, {}, all).requests, 1);
 });
 test('oversized single requests stop before any API call, splitting is explicit', () => {
   const cues = Array.from({ length: 100 }, (_, i) => ({ id: String(i + 1), sourceText: '긴 영상 번역 '.repeat(100), startMs: i * 1000, endMs: i * 1000 + 900 }));

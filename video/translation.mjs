@@ -5,7 +5,7 @@ import { geminiTranslation } from '../src/gemini.js';
 import { readFileSync } from 'node:fs';
 import { deepLTranslation, ollamaTranslation } from './providers.mjs';
 
-export const PROMPT_VERSION = 2;
+export const PROMPT_VERSION = 3;
 export function translationKey(cues, options, glossaryPath) {
   return createHash('sha256').update(JSON.stringify({ cues: cues.map(({ id, startMs, endMs, sourceText }) => ({ id, startMs, endMs, sourceText })), options, glossary: createHash('sha256').update(readFileSync(glossaryPath)).digest('hex'), version: PROMPT_VERSION })).digest('hex');
 }
@@ -30,7 +30,11 @@ export function cueWarnings(cue, target) {
 }
 
 export function videoGlossary(cues, options, glossaryPath) {
-  return relevantTerms(loadGlossary(glossaryPath), cues.map(c => c.sourceText).join('\n'), Infinity).map(({ id, preferred, communityPreferred, category, meaning, rule, communityRule, characterName, relatedSkills }) => ({ id, preferred, outputPreferred: options.style === 'community' ? { ...preferred, ...communityPreferred } : preferred, category, meaning, rule, communityRule, characterName, relatedSkills }));
+  const entries = loadGlossary(glossaryPath);
+  const selected = options.glossaryMode === 'relevant' ? relevantTerms(entries, cues.map(c => c.sourceText).join('\n'), Infinity) : entries;
+  return selected.map(({ id, preferred, communityPreferred, aliases, category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }) => ({ id, preferred, aliases,
+    ...(options.style === 'community' && communityPreferred?.[options.targetLanguage] ? { outputPreferred: { [options.targetLanguage]: communityPreferred[options.targetLanguage] } } : {}),
+    category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }));
 }
 export async function translateBatch({ allCues, batch, options, config, glossaryPath, glossary: plannedGlossary, usage, gate, update, signal, fetcher = fetch }) {
   signal?.throwIfAborted();
@@ -44,7 +48,7 @@ Return exactly one translation per supplied cue, with exactly the original strin
 The local program uses your IDs to recombine translated text with original timestamps and screen positions, validates every ID, and generates SRT/VTT/project files in code. Return only the requested JSON; do not generate executable code, subtitle numbering, SRT/VTT syntax or new timing values.
 Read the whole supplied transcript and screen text together before translating. Speech cues are complete sentences where timing allows. Screen text provides concurrent context. Preserve each sentence as one coherent translation, without duplication or omission. Do not move claims across distant cues.
 Preserve names, numbers, units, percentages, negation, conditions, uncertainty, questions, combat action types, action order and repeated inputs. Never summarize or add game facts.
-Use glossary outputPreferred for a concept only when the context fits. Keep ambiguous aliases unresolved when evidence is insufficient. A longer name takes precedence over a name contained within it. Preserve literal names when the speaker discusses their spelling or translation.
+The glossary may contain the entire database, including unrelated entries: select a concept only when the text and context fit its aliases and rules. Use outputPreferred[targetLanguage] when present, otherwise preferred[targetLanguage]. Entries with autoUse=false must not be automatically substituted. Prerelease names are tentative, not confirmed released mechanics. Keep ambiguous aliases unresolved when evidence is insufficient. A longer name takes precedence over a name contained within it. Preserve literal names when the speaker discusses their spelling or translation.
 Style: ${options.style === 'community' ? 'Use only registered gamer shorthand, preserving all meaning.' : 'Use full official names and natural, clear subtitles.'}
 Use original proper names if no localized name is supplied. Source text already in the target language should be preserved. Keep speech tone; do not add explanations or speaker labels. Line breaks may improve readability but must not omit meaning.`;
   const payload = { title: options.title, sourceLanguage: options.sourceLanguage, targetLanguage: options.targetLanguage, wholeDocument: config.provider === 'deepl', before, cues: batch.map(cue => ({ id: cue.id, text: cue.sourceText, kind: cue.kind || 'speech', startMs: cue.startMs, endMs: cue.endMs })), after, glossary };

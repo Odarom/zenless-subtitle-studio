@@ -63,6 +63,7 @@ export class ReportStore {
           );
           CREATE INDEX IF NOT EXISTS reports_recent ON reports(guild_id, reporter_id, created_at);
           CREATE INDEX IF NOT EXISTS reports_status ON reports(status, created_at);
+          CREATE TABLE IF NOT EXISTS project_shares (report_id TEXT PRIMARY KEY, receipt_id TEXT NOT NULL);
           PRAGMA user_version = 1;`);
         chmodSync(path, 0o600);
       }
@@ -74,7 +75,15 @@ export class ReportStore {
   }
   close() { this.db.close(); }
   prune() {
-    if (!this.readOnly) this.db.prepare('DELETE FROM reports WHERE created_at < ?').run(this.now() - REPORT_RETENTION_MS);
+    if (!this.readOnly) {
+      this.db.prepare('DELETE FROM reports WHERE created_at < ?').run(this.now() - REPORT_RETENTION_MS);
+      this.db.prepare('DELETE FROM project_shares WHERE report_id NOT IN (SELECT id FROM reports)').run();
+    }
+  }
+  shareReceipt(id) { return this.db.prepare('SELECT receipt_id FROM project_shares WHERE report_id=?').get(id)?.receipt_id; }
+  recordShare(id, receipt) {
+    if (!this.get(id) || !/^A-\d{8}-[a-f0-9]{12}$/.test(receipt)) throw new UserError('공유 접수번호를 확인하세요.');
+    this.db.prepare('INSERT OR REPLACE INTO project_shares(report_id,receipt_id) VALUES(?,?)').run(id, receipt);
   }
   decode(row) {
     if (!row) return null;
@@ -151,5 +160,5 @@ export class ReportStore {
       return changed;
     } catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
-  forgetGuild(guildId) { this.db.prepare('DELETE FROM reports WHERE guild_id = ?').run(guildId); }
+  forgetGuild(guildId) { this.db.prepare('DELETE FROM reports WHERE guild_id = ?').run(guildId); this.prune(); }
 }

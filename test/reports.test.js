@@ -76,6 +76,34 @@ function submission(button, overrides = {}) {
     ]) };
 }
 
+test('sharing is opt-in with an exact preview, reporter isolation, persisted receipt and manual failure retry', async () => {
+  const h = harness(); let calls = 0, fail = true;
+  h.flow.sharing = { async send(report) { calls++; assert.equal(report.source.text, originalText); if (fail) throw new Error('offline'); return 'A-20261019-abcdef123456'; } };
+  const button = await openModal(h), submit = submission(button); await h.flow.submit(submit);
+  assert.equal(calls, 0);
+  const customId = submit.responses.at(-1).components[0].toJSON().components[0].custom_id;
+  const stranger = { ...interaction(V), customId }; await assert.rejects(h.flow.share(stranger));
+  const preview = { ...interaction(), customId }; await h.flow.share(preview);
+  assert.equal(calls, 0); assert.equal(preview.responses.at(-1).files.length, 1);
+  assert.equal(preview.responses.at(-1).files[0].name, 'report-preview.json');
+  const confirmId = preview.responses.at(-1).components[0].toJSON().components[0].custom_id;
+  const send = { ...interaction(), customId: confirmId }; await h.flow.share(send);
+  assert.equal(calls, 1); assert.match(send.responses.at(-1).content, /실패/);
+  fail = false; await h.flow.share({ ...interaction(), customId: confirmId });
+  const report = h.reports.list()[0]; assert.equal(h.reports.shareReceipt(report.id), 'A-20261019-abcdef123456');
+  assert.deepEqual(h.flow.shareOffer(report, interaction()), []);
+  h.reports.close();
+});
+test('cancelled project sharing keeps the local report and never sends', async () => {
+  const h = harness(); h.flow.sharing = { send() { assert.fail('cancel must not send'); } };
+  const button = await openModal(h), submit = submission(button); await h.flow.submit(submit);
+  const customId = submit.responses.at(-1).components[0].toJSON().components[0].custom_id;
+  const preview = { ...interaction(), customId }; await h.flow.share(preview);
+  const cancel = preview.responses.at(-1).components[0].toJSON().components[1].custom_id;
+  await h.flow.share({ ...interaction(), customId: cancel });
+  assert.equal(h.reports.list().length, 1); h.reports.close();
+});
+
 test('reports persist only whitelisted snapshot data and are isolated by guild and reporter', () => {
   const h = dbSetup();
   const input = reportInput(); input.metadata.apiKey = 'SECRET-KEY'; input.secret = 'SECRET-TOKEN';

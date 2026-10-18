@@ -51,6 +51,23 @@ test('program update paths exclude private data, traversal and arbitrary root ex
   for (const path of ['app/data/x', 'app/.secrets/key', '../app.js', 'app/video/../../x', 'run.exe', 'app/video/.hidden', 'C:/x']) assert.equal(updatePathAllowed(path), false, path);
 });
 const videoReport = () => ({ id: 'V-20261019-abcdef123456', createdAt: Date.now(), updatedAt: Date.now(), source: { text: 'Quick Assist', language: 'en' }, target: { text: '오역 예시', language: 'ko' }, issue: { type: 'term', explanation: '테스트 신고', suggestion: '', fragment: '' }, metadata: {} });
+
+test('shared Discord reports use a separate endpoint and join private review without leaking identity', async t => {
+  const directory = mkdtempSync(join(tmpdir(), 'zzz-shared-receiver-')), store = new PrivateReportStore(join(directory, 'shared.sqlite'));
+  const server = privateReportServer(store);
+  t.after(async () => { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); store.close(); rmSync(directory, { recursive: true, force: true }); });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening'); const base = `http://127.0.0.1:${server.address().port}`;
+  const input = { installationId: randomUUID(), report: { ...videoReport(), id: 'R-20261019-abcdef123456', platform: 'discord', guildId: 'PRIVATE', metadata: { apiKey: 'PRIVATE' } } };
+  const post = (path, data) => fetch(base + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+  const firstResponse = await post('/api/discord-reports', input); assert.equal(firstResponse.status, 201);
+  const first = await firstResponse.json(); assert.equal((await (await post('/api/discord-reports', input)).json()).receiptId, first.receiptId);
+  assert.equal((await post('/api/reports', input)).status, 400);
+  const copy = store.list()[0]; assert.equal(copy.origin, 'private-discord'); assert(!JSON.stringify(copy).includes('PRIVATE')); assert.equal(copy.source.provenance, 'user-provided');
+  const changed = { ...input, report: { ...input.report, issue: { ...input.report.issue, explanation: 'changed' } } };
+  assert.equal((await post('/api/discord-reports', changed)).status, 400);
+  assert.equal((await fetch(base + '/api/discord-reports')).status, 404);
+  store.apply([{ id: first.receiptId, expectedUpdatedAt: copy.updatedAt, status: 'resolved', note: 'synthetic QA' }]); assert.equal(store.list()[0].status, 'resolved');
+});
 test('private report service deduplicates retries, limits abuse and exposes no report listing', async t => {
   const directory = mkdtempSync(join(tmpdir(), 'zzz-update-'));
   const store = new PrivateReportStore(join(directory, 'reports.sqlite'));

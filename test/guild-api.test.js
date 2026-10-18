@@ -113,7 +113,7 @@ test('modal key entry is private, never prefilled, one-time and immediately pers
   const h = setup(); h.vault.set(B, second);
   const apiSetup = new ApiSetup(h.vault, base), relay = { forgetGroup() {} };
   const deps = { apiSetup, relay, store: h.store };
-  const opening = openInteraction();
+  const opening = { ...openInteraction(), responses: [], async reply(value) { this.responses.push(value); } };
   assert.equal(await respondToApi(opening, deps, new SerialQueue()), true);
   assert.equal(modalField(opening.modal, 'key').value, undefined);
   assert(opening.modal.components.some(label => label.description?.includes('운영자가 복호화할 수 있습니다')));
@@ -256,9 +256,21 @@ test('multi-server relay keeps channels and recent conversation isolated', async
 
 test('API commands have no slash option for a raw key and registration is valid', () => {
   const json = command.toJSON();
-  assert.equal(json.options.length, 9);
+  assert(json.options.some(o => o.name === 'connect'));
+  assert(json.options.some(o => o.name === 'disconnect'));
   assert.deepEqual(json.options.find(o => o.name === 'api-set').options.map(o => o.name), ['provider']);
   assert(json.default_member_permissions);
+});
+
+test('public runner mode rejects both new key dialogs and stale modal submissions without touching the vault', async () => {
+  const h = setup(), apiSetup = new ApiSetup({ get() { assert.fail('public mode must not read stored API keys'); } }, base);
+  const opening = { ...openInteraction(), responses: [], async reply(value) { this.responses.push(value); } };
+  await respondToApi(opening, { apiSetup, config: { apiMode: 'runner' } }, new SerialQueue());
+  assert.equal(opening.modal, undefined);
+  assert.match(opening.responses.at(-1).content, /API 키를 받지/);
+  const stale = { ...opening, isChatInputCommand: () => false, isModalSubmit: () => true, customId: 'zzz:api:old-session' };
+  await respondToApi(stale, { apiSetup, config: { apiMode: 'runner' } }, new SerialQueue());
+  assert.match(stale.responses.at(-1).content, /API 키를 받지/);
 });
 
 test('queued stale modal cannot restore a key deleted while awaiting its turn', async () => {

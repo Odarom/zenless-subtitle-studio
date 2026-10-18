@@ -58,7 +58,7 @@ UNIT
 sudo tee /etc/caddy/Caddyfile >/dev/null <<'CADDY'
 ${domain} {
   header Strict-Transport-Security "max-age=31536000"
-  @reports path /api/reports /health
+  @reports path /api/reports /api/discord-reports /health
   handle @reports {
     reverse_proxy 127.0.0.1:4321
   }

@@ -1,11 +1,12 @@
 import { randomBytes } from 'node:crypto';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, LabelBuilder, MessageFlags, ModalBuilder,
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, LabelBuilder, MessageFlags, ModalBuilder,
   PermissionFlagsBits, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { UserError } from './config.js';
 import { messageText } from './relay.js';
 import { REPORT_MENU_NAME } from './report-commands.js';
 import { REPORT_TYPES, textHash } from './report-store.js';
 import { reportText as t, reportStatus, reportType, reportError } from './report-i18n.js';
+import { normalizeSharedDiscordReport } from './shared-report.js';
 
 const PREFIX = 'zzz:report:';
 const SESSION_MS = 10 * 60 * 1000;
@@ -22,16 +23,18 @@ async function timeout(promise, ms = 5000) {
 }
 
 export class ReportFlow {
-  constructor({ store, reports, client, now = Date.now }) { Object.assign(this, { store, reports, client, now }); this.pending = new Map(); this.opened = new Map(); this.publicOpened = new Map(); }
+  constructor({ store, reports, client, sharing, now = Date.now }) { Object.assign(this, { store, reports, client, sharing, now }); this.pending = new Map(); this.opened = new Map(); this.publicOpened = new Map(); this.shares = new Map(); }
   prune() {
     for (const [id, item] of this.pending) if (item.expires <= this.now()) this.pending.delete(id);
     for (const [key, time] of this.opened) if (time + 3000 <= this.now()) this.opened.delete(key);
     for (const [key, time] of this.publicOpened) if (time + 10000 <= this.now()) this.publicOpened.delete(key);
+    for (const [key, item] of this.shares) if (item.expires <= this.now() && !item.sending) this.shares.delete(key);
   }
   cancelGuild(guildId) {
     for (const [id, item] of this.pending) if (item.guildId === guildId) this.pending.delete(id);
     for (const key of this.opened.keys()) if (key.startsWith(`${guildId}:`)) this.opened.delete(key);
     for (const key of this.publicOpened.keys()) if (key.startsWith(`${guildId}:`)) this.publicOpened.delete(key);
+    for (const [key, item] of this.shares) if (item.guildId === guildId) this.shares.delete(key);
   }
   session(interaction, stage) {
     requireGuild(interaction); this.prune();
@@ -177,7 +180,45 @@ export class ReportFlow {
     };
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     const { report, duplicate } = this.reports.create(session.guildId, session.userId, input);
-    await interaction.editReply({ content: `${t(interaction, duplicate ? 'duplicate' : 'received')}\n${t(interaction, 'id')}: **${report.id}**\n${t(interaction, 'state')}: ${reportStatus(interaction, report.status)}\n${t(interaction, 'statusHelp', { id: report.id })}\n${t(interaction, 'noAuto')}`, allowedMentions: { parse: [] } });
+    const components = this.shareOffer(report, interaction);
+    await interaction.editReply({ content: `${t(interaction, duplicate ? 'duplicate' : 'received')}\n${t(interaction, 'id')}: **${report.id}**\n${t(interaction, 'state')}: ${reportStatus(interaction, report.status)}\n${t(interaction, 'statusHelp', { id: report.id })}\n${t(interaction, 'noAuto')}\n${components.length ? t(interaction, 'shareOptional') : ''}`, components, allowedMentions: { parse: [] } });
+  }
+  shareOffer(report, interaction) {
+    this.prune();
+    if (!this.sharing || this.reports.shareReceipt(report.id) || this.shares.size >= 500) return [];
+    const nonce = randomBytes(16).toString('hex');
+    this.shares.set(nonce, { reportId: report.id, guildId: interaction.guildId, userId: interaction.user.id, expires: this.now() + SESSION_MS });
+    return [new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`${PREFIX}share:${nonce}`).setLabel(t(interaction, 'share')).setStyle(ButtonStyle.Secondary))];
+  }
+  async share(interaction) {
+    requireGuild(interaction); this.prune();
+    const [, stage, nonce] = /^zzz:report:(share|send|cancel):([a-f0-9]{32})$/.exec(interaction.customId) || [];
+    const item = this.shares.get(nonce);
+    if (!item || item.guildId !== interaction.guildId || item.userId !== interaction.user.id || item.sending) throw new UserError(t(interaction, 'shareExpired'));
+    const report = this.reports.forViewer(item.reportId, interaction.guildId, interaction.user.id);
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    if (stage === 'cancel') { this.shares.delete(nonce); return interaction.editReply({ content: t(interaction, 'shareCancelled'), components: [] }); }
+    const receipt = this.reports.shareReceipt(report.id);
+    if (receipt) return interaction.editReply({ content: t(interaction, 'shareDone', { id: receipt }), components: [] });
+    const buttons = [new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setCustomId(`${PREFIX}send:${nonce}`).setLabel(t(interaction, 'shareConfirm')).setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId(`${PREFIX}cancel:${nonce}`).setLabel(t(interaction, 'shareCancel')).setStyle(ButtonStyle.Secondary),
+    )];
+    if (stage === 'share') {
+      const payload = normalizeSharedDiscordReport({ ...report, platform: 'discord' });
+      item.confirmedPreview = true;
+      return interaction.editReply({ content: t(interaction, 'shareNotice'), components: buttons,
+        files: [new AttachmentBuilder(Buffer.from(JSON.stringify(payload, null, 2)), { name: 'report-preview.json' })], allowedMentions: { parse: [] } });
+    }
+    if (!item.confirmedPreview) throw new UserError(t(interaction, 'shareExpired'));
+    item.sending = true;
+    try {
+      const id = await this.sharing.send(report); this.reports.recordShare(report.id, id); this.shares.delete(nonce);
+      await interaction.editReply({ content: t(interaction, 'shareDone', { id }), components: [], allowedMentions: { parse: [] } });
+    } catch {
+      item.sending = false;
+      await interaction.editReply({ content: t(interaction, 'shareFailed'), components: buttons, allowedMentions: { parse: [] } });
+    }
   }
   async status(interaction) {
     requireGuild(interaction);
@@ -191,6 +232,8 @@ export class ReportFlow {
       const report = this.reports.forViewer(interaction.options.getString('id', true), interaction.guildId, interaction.user.id,
         interaction.memberPermissions.has(PermissionFlagsBits.ManageGuild));
       content = `**${report.id}**\n${t(interaction, 'state')}: ${reportStatus(interaction, report.status)}\n${t(interaction, 'type')}: ${reportType(interaction, report.issue.type)}\n${report.review.note ? `${t(interaction, 'review')}: ${report.review.note}` : t(interaction, 'noReview')}`;
+      const receipt = this.reports.shareReceipt(report.id);
+      if (receipt) content += `\n${t(interaction, 'shareDone', { id: receipt })}`;
     } else throw new UserError('신고 조회 명령을 확인하세요.');
     await interaction.editReply({ content, allowedMentions: { parse: [] } });
   }
@@ -233,9 +276,11 @@ export async function respondToReports(interaction, { reportFlow }) {
   const start = interaction.isButton?.() && interaction.customId.startsWith(`${PREFIX}start:`);
   const submit = interaction.isModalSubmit?.() && interaction.customId.startsWith(`${PREFIX}submit:`);
   const status = interaction.isChatInputCommand?.() && interaction.commandName === 'zzz-report';
-  if (!menu && !button && !start && !submit && !status) return false;
+  const share = interaction.isButton?.() && /^zzz:report:(share|send|cancel):/.test(interaction.customId);
+  if (!menu && !button && !start && !submit && !status && !share) return false;
   try {
-    if (menu) await reportFlow.begin(interaction);
+    if (share) await reportFlow.share(interaction);
+    else if (menu) await reportFlow.begin(interaction);
     else if (start) await reportFlow.beginFromButton(interaction);
     else if (button) await reportFlow.openModal(interaction);
     else if (submit) await reportFlow.submit(interaction);

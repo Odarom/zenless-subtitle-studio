@@ -1,54 +1,51 @@
-# ゼンレスDiscord翻訳ボット
+# ゼンレス Discord翻訳
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
-## [➕ Discordサーバーに翻訳ボットを追加](https://discord.com/oauth2/authorize?client_id=1557261995215028254&scope=bot%20applications.commands&permissions=536939520&integration_type=0)
+[ボットを導入](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [PCプログラム](https://github.com/Odarom/zenless-discord-translator/releases/latest) · [利用規約](TERMS.md) · [プライバシー](PRIVACY.md)
 
-Odaromが運営する **zzz translator** を招待して使います。インストールやサーバー運営は不要です。韓国語・英語・日本語・簡体字中国語のテキストチャンネルをつなぎ、ゼンレスゾーンゼロの用語集を参照して新しい投稿を翻訳します。
+共通のゼンレス用語DBを使って言語別チャンネルを翻訳します。ボットは原文・文脈・翻訳結果を中継し、**自分のPCまたは個人サーバーが翻訳APIを直接呼び出します**。APIキーは自分の端末に保存し、共有ボットには渡しません。Discordサーバーごとに接続プログラム1台を実行してください。
 
-[利用規約](TERMS.md) · [プライバシーポリシー](PRIVACY.md)
+## Windows PC
 
-## 始め方
+1. サーバー管理権限で上記リンクからボットを導入します。
+2. Windows x64 ZIPをすべて展開し、**Start.cmd**を実行します。Node.jsは同梱されています。ブラウザーに自分のPCの設定画面が開きます。
+3. サービス・モデル・自分のAPIキー・1日のリクエスト上限を設定し、**この端末に保存**を押します。UIは韓国語・英語・日本語・簡体字中国語に対応します。
+4. Discordで**/zzz connect**を実行し、1回限り・10分間有効のコードをPCに入力します。**ボットと接続 → 翻訳接続を開始**を押します。APIキーをDiscordに送らないでください。
+5. **/zzz link**で異なる言語のチャンネルを同じグループに接続します。2チャンネルから使えます。過去ログは翻訳せず、新規投稿を処理します。記録のある投稿の編集・削除は翻訳にも反映します。画像・GIF・絵文字のみの投稿はAIなしで共有します。このボットにはOCR・音声翻訳はありません。
 
-1. 上の追加リンクから管理するサーバーを選び、チャンネルを見る・メッセージを送信・メッセージ履歴を読む・ウェブフックの管理を許可します。
-2. サーバー管理者が `/zzz api-set` で **自分のサーバー用のGeminiまたはOpenAIのAPIキー**、モデル、1日のリクエスト上限を登録します。
-3. 2つ以上の言語別チャンネルを同じグループにつなぎます。
+複数のDiscordサーバーでは、**サーバープロファイル → サーバーを追加**で名前を付け、各サーバーの/zzz connectコードを接続してください。キー・モデル・上限・使用量を個別管理し、同じキーも別のキーも使えます。変更するプロファイルのみ停止・保存・開始し、他のサーバーは動き続けます。Geminiでは別キーでも同じプロジェクトならAPI上限を共有します。個人サーバーの管理は[SSHによるUI接続](HOSTING.md#several-servers-and-private-management-ui)を参照してください。[通信図](ARCHITECTURE.md)で原文・結果・DB・報告の流れを確認できます。
 
-```text
-/zzz link group:friends channel:#한국어 language:한국어
-/zzz link group:friends channel:#日本語 language:日本語
-```
+## 現時点の無料APIの推奨
 
-2つ目のチャンネルをつないだ後の新規投稿から翻訳します。同じグループでは各言語1チャンネルまでです。API・チャンネル設定にはサーバー管理権限が必要です。
+**2026-10-19韓国時間時点**では、[Google AI Studioでキーを発行](https://aistudio.google.com/apikey)し、**Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite)**を推奨します。[公式料金表](https://ai.google.dev/gemini-api/docs/pricing)に無料枠があります。アカウント・プロジェクトの条件とRPM・TPM・日次上限内なら無料利用できます。[データ処理条件](https://ai.google.dev/gemini-api/terms)・課金設定・モデルの利用権限を確認してください。無制限・永続的な無料提供ではありません。OpenAI APIや自分の端末のOllamaも選べます。
 
-## 無料APIのおすすめ — 2026年10月19日（韓国標準時）時点
+## 個人サーバー
 
-**現時点で無料利用できるAPIとしてGemini 3.1 Flash-Liteをおすすめします。** [Google AI Studioで無料APIキーを取得](https://aistudio.google.com/apikey)し、モデルを `gemini-3.1-flash-lite` に設定します。**無料枠の上限内で使えば、翻訳ボットを無料で利用できます。** 無料枠にもリクエスト数・トークンの上限があり、提供条件は今後変わる場合があります。[Google公式の最新の無料枠・料金](https://ai.google.dev/gemini-api/docs/pricing)をご確認ください。有料サービスを選ぶ場合は、登録したキーのアカウントに料金が発生します。
+自分で管理するOracle・VPS・自宅サーバーで、同じ接続プログラムを画面なしで実行できます。サーバーが動いていればPCを終了しても翻訳できます。サーバー管理者はキーにアクセスできるため、自分のサーバーで自分のキーを使う個人用途とし、他人のキーを収集しないでください。
 
-**キーは運営サーバーで暗号化保存し、API呼び出しのために復号する場合があります。サーバーへのアクセス権を持つ運営者はキーにアクセスできます。**設定フォームは実行者にのみ表示されますが、入力文字は隠れません。プライバシーポリシーを確認してください。
+ソースを取得しNode.js 24.17以上を用意します。接続プログラムだけならDiscordライブラリの導入は不要です。
 
-## コマンドと動作
+~~~sh
+cp .env.runner.example .env.runner
+chmod 600 .env.runner
+# .env.runnerに自分のサービス・モデル・キー・上限を設定してから:
+node --env-file=.env.runner scripts/discord-runner.mjs pair
+node --env-file=.env.runner scripts/discord-runner.mjs start
+~~~
 
-| コマンド | 機能 |
-|---|---|
-| `/zzz status` | 接続状況 |
-| `/zzz pause group:friends` · `/zzz resume group:friends` | 停止・再開 |
-| `/zzz unlink` | チャンネルの接続解除 |
-| `/zzz usage` · `/zzz api-status` | 使用量・API設定 |
-| `/zzz api-delete` | 保存したAPI設定の削除・利用停止 |
+pairでは/zzz connectのコードを入力します。再起動後の自動実行は[HOSTING.md](HOSTING.md)のsystemd例を参照してください。外向きHTTPS接続のみで、自分の端末の受信Webポートを開く必要はありません。同じ接続を2台で同時実行しないでください。
 
-1件のメッセージの翻訳先言語を1回のAIリクエストで処理します。記録が残る原文の編集・削除は訳文にも反映し、編集には追加リクエストが必要です。画像・GIF・絵文字だけの投稿はAIなしで共有します。画像内の文字、DM・スレッド・フォーラム・音声は翻訳しません。上限エラーは自動再送せず、Geminiの一時的なサーバーエラーのみ1回再試行する場合があります。失敗・再試行も使用量に含み、回数上限は金額上限ではありません。
+## 用語DBと誤訳報告
 
-## 誤訳の報告
+- PC・サーバーとも、起動時と**6時間ごと**に[共通DB](https://github.com/Odarom/zenless-translation-database)を更新します。サイズ・ハッシュ・形式を確認してから置換し、失敗時は最後の正常なDBを維持します。プログラム本体の更新とは別です。
+- チャットでは本文・返信・直近の文脈から名称・別名を検索し、最大30候補を同じ翻訳リクエストに含めます。検索用の追加LLMリクエストはありません。
+- 訳文に**!report**と返信し**報告を開始**、または**アプリ → 誤訳を報告**を選択します。案内を確認して送信すると、原文・訳文・説明をプロジェクト管理者が非公開で確認します。GitHubログインは不要です。
+- 自分の報告は**/zzz-report mine**と**/zzz-report status**で確認します。独立した自己ホスト版では、ローカル受付後に**プロジェクト管理者にも共有**を選択し、プレビューに同意した場合のみ転送します。
+- キー・個人情報・無関係な会話を含めないでください。報告は最大90日保存し、管理者確認後にDBへ反映します。報告だけで自動修正・AI呼び出しはしません。
 
-訳文へ **`!report` と返信**して報告ボタンを押します。メッセージの **アプリ → 誤訳を報告**、`/zzz-report submit message:メッセージリンク`も利用できます。`/zzz-report mine`・`/zzz-report status id:受付番号`で自分の報告を確認できます。
+接続確認は/zzz api-status、解除は/zzz disconnect、グループ停止・再開は/zzz pause・resumeです。使用量はPC画面かnode --env-file=.env.runner scripts/discord-runner.mjs usageで確認します。失敗したAPI呼び出しも含みます。中継接続が切れても開始済みの翻訳を自動で繰り返しません。
 
-GitHubへの投稿は不要です。運営者へ非公開で届き、動画アプリの報告と一緒に確認します。**確認した修正だけを[共通用語集](https://github.com/Odarom/zenless-translation-database)へ反映します。**会話全体をデータベースへ自動収集する機能ではありません。報告の保存期間は最大90日です。
+PC UIはキーを端末内で暗号化しますが、その端末の管理者は復号できます。画面なしの導入は非公開の.env.runnerを使います。.envファイル・data/・.secrets/を公開しないでください。設定変更・ファイル更新前には停止し、個人設定を保存してください。自分のDiscordボットを運営する場合は[HOSTING.md](HOSTING.md)を参照してください。従来のAPI_MODE=serverは運営者がキーを復号できるため、自分のキーだけを使う個人用途に限ってください。公開中継ボットはAPI_MODE=runnerを使います。
 
-## 更新・問い合わせ
-
-運営者がボットと用語集を更新するため、利用者によるファイル更新やサーバー運営は不要です。接続前に参加者へ他チャンネルへの転送と外部AI処理を説明してください。無料Geminiのデータ利用や成人向け条件など、提供者の規約も確認してください。
-
-コマンドが出ない場合はアプリコマンドの使用権限とサーバーへのインストール、翻訳されない場合はチャンネル権限・`/zzz api-status`・`/zzz status`を確認します。終了は接続解除またはボット退出で行えます。提供者側のキー失効は別途必要です。
-
-[問い合わせ](https://github.com/Odarom/zenless-discord-translator/issues/new)にキー・非公開会話・個人情報を投稿しないでください。[字幕スタジオ](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)は別のPCアプリです。ゲーム制作会社の公式サービスではありません。
+[動画字幕スタジオ](https://github.com/Odarom/zenless-subtitle-studio)は別のプログラムです。ゲーム公式サービスではないファンツールです。

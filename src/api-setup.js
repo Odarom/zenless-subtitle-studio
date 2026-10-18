@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { runnerText } from './runner-i18n.js';
 import { LabelBuilder, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle, MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { API_MODELS, validateApiSettings } from './vault.js';
 import { modelPresetOptions, resolveModelChoice } from './model-presets.js';
@@ -76,11 +77,15 @@ export class ApiSetup {
   }
 }
 
-export async function respondToApi(interaction, { apiSetup, relay, store }, queue) {
+export async function respondToApi(interaction, { apiSetup, relay, store, config }, queue) {
   const opening = interaction.isChatInputCommand?.() && interaction.commandName === 'zzz' && interaction.options.getSubcommand() === 'api-set';
   const submitting = interaction.isModalSubmit?.() && interaction.customId.startsWith('zzz:api:');
   if (!opening && !submitting) return false;
   try {
+    if (config?.apiMode === 'runner') {
+      requireManager(interaction);
+      await interaction.reply({ content: runnerText(interaction.locale, 'api'), flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } }); return true;
+    }
     if (opening) await apiSetup.open(interaction);
     else {
       const { guildId, revision, value } = apiSetup.take(interaction);

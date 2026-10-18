@@ -33,6 +33,7 @@ export function estimatedOutputTokens(cues, targetLanguage) {
 export function translationPlan(cues, config, { targetLanguage = 'ko', translationMode = 'single' } = {}, glossary = []) {
   const limits = providerLimits(config), maxOutputTokens = Math.min(config.maxOutputTokens || limits.output, limits.output);
   const glossaryTokens = Math.ceil(Buffer.byteLength(JSON.stringify(glossary), 'utf8') / 2);
+  if (config.provider !== 'deepl' && glossaryTokens + maxOutputTokens + 6000 > limits.context) throw new Error('용어집이 선택한 모델의 입력 범위를 넘을 수 있어 API를 호출하지 않았습니다. 입력 범위가 큰 모델을 선택하거나 용어집 전송 범위를 관련 용어만으로 바꾸세요.');
   const fits = batch => {
     const output = estimatedOutputTokens(batch, targetLanguage);
     const input = Math.ceil(Buffer.byteLength(JSON.stringify(batch.map(c => ({ id: c.id, text: c.sourceText }))), 'utf8') / 2) + glossaryTokens + 6000;

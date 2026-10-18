@@ -5,6 +5,8 @@ export const LANGUAGES = Object.freeze({
 });
 
 export function settings(env = process.env, { requireSecrets = true, requireTranslation = true } = {}) {
+  const apiMode = env.API_MODE || 'server';
+  if (!['server', 'runner'].includes(apiMode)) throw new UserError('API_MODE는 server 또는 runner여야 합니다.');
   const provider = env.TRANSLATION_PROVIDER || 'ollama';
   if (!['ollama', 'gemini', 'openai'].includes(provider)) throw new UserError('TRANSLATION_PROVIDER는 ollama, gemini, openai 중 하나여야 합니다.');
   const required = ['DISCORD_TOKEN', 'DISCORD_APPLICATION_ID'];
@@ -30,7 +32,7 @@ export function settings(env = process.env, { requireSecrets = true, requireTran
   const localModel = env.OLLAMA_MODEL || 'qwen3:8b';
   if (!/^[a-zA-Z0-9._:/-]+$/.test(localModel) || /cloud/i.test(localModel)) throw new UserError('OLLAMA_MODEL에는 다운로드한 로컬 모델 이름을 입력하세요. 클라우드 모델은 사용할 수 없습니다.');
   return {
-    token: env.DISCORD_TOKEN, applicationId: env.DISCORD_APPLICATION_ID,
+    token: env.DISCORD_TOKEN, applicationId: env.DISCORD_APPLICATION_ID, apiMode,
     guildId: env.DISCORD_GUILD_ID, apiKey: provider === 'gemini' ? env.GEMINI_API_KEY : provider === 'openai' ? env.OPENAI_API_KEY : undefined,
     provider, ollamaUrl: localUrl.origin,
     model: provider === 'ollama' ? localModel : provider === 'gemini' ? env.GEMINI_MODEL || 'gemini-3-flash-preview' : env.OPENAI_MODEL || 'gpt-4.1-mini', style,

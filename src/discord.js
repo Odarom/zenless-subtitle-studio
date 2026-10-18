@@ -3,6 +3,7 @@ import { LANGUAGES, UserError } from './config.js';
 import { seoulDay } from './store.js';
 import { requireManager } from './api-setup.js';
 import { downloadImages } from './media.js';
+import { runnerText, runnerLocale } from './runner-i18n.js';
 
 export class DiscordTransport {
   constructor(client) { this.client = client; this.hooks = new Map(); }
@@ -22,9 +23,21 @@ export class DiscordTransport {
   }
 }
 
-export async function handleCommand(interaction, { store, config, relay, client, translator, vault, apiSetup }) {
+export async function handleCommand(interaction, { store, config, relay, client, translator, vault, apiSetup, broker }) {
   requireManager(interaction);
   const sub = interaction.options.getSubcommand();
+  if (sub === 'connect') {
+    if (!broker) throw new UserError('이 설치본은 직접 API 모드입니다. 운영자에게 개인 번역 연결 모드를 확인하세요.');
+    const code = broker.code(interaction.guildId);
+    const language = ['ko', 'en', 'ja', 'zh-CN'][runnerLocale(interaction.locale)];
+    return runnerText(interaction.locale, 'connect', { code: `\`${code}\``, url: config.runnerUrl, guide: `https://github.com/Odarom/zenless-discord-translator/blob/main/README-${language}.md` });
+  }
+  if (sub === 'disconnect' || (sub === 'api-delete' && broker)) {
+    if (!broker) throw new UserError('개인 번역 연결 모드에서 사용하세요.');
+    broker.disconnect(interaction.guildId);
+    for (const group of store.groups(interaction.guildId)) relay.forgetGroup(group.key);
+    return runnerText(interaction.locale, 'disconnected');
+  }
   if (sub === 'api-delete') {
     vault.delete(interaction.guildId);
     apiSetup.cancelGuild(interaction.guildId);
@@ -33,6 +46,7 @@ export async function handleCommand(interaction, { store, config, relay, client,
   }
   if (sub === 'api-status') {
     const status = translator.status(interaction.guildId);
+    if (broker) return status.configured ? runnerText(interaction.locale, 'status', { online: runnerText(interaction.locale, status.online ? 'online' : 'offlineState'), provider: status.provider, model: status.model, limit: status.dailyLimit }) : runnerText(interaction.locale, 'missing');
     return status.configured ? `이 서버의 번역 설정: ${status.provider}\n모델: ${status.model}\n하루 최대 ${status.dailyLimit}회 / 설정 위치: ${status.source}\n키는 표시하지 않습니다. 등록 상태이며 실제 연결·무료 한도는 별도 확인이 필요합니다.` : '이 서버의 API가 미설정 또는 삭제된 상태입니다. /zzz api-set으로 등록하세요.';
   }
   if (sub === 'link') {
@@ -50,7 +64,7 @@ export async function handleCommand(interaction, { store, config, relay, client,
     const group = store.link(interaction.guildId, name, channel.id, language, hook.id);
     relay.forgetGroup(group.key);
     const status = translator.status(interaction.guildId);
-    return `연결 완료: **${name}** / <#${channel.id}> / ${LANGUAGES[language]}\n${group.channels.length < 2 ? '다른 언어 채널을 하나 더 연결하세요.' : '언어 채널 연결이 준비되었습니다.'}\n${!status.configured ? '번역하려면 /zzz api-set으로 이 서버의 API를 먼저 등록하세요.' : `새 텍스트와 최근 문맥을 ${status.provider === 'ollama' ? '봇 PC의 로컬 AI에서 처리' : `${status.provider} API로 전송`}합니다.`} 채널 공개 범위는 Discord에서 직접 설정하세요.`;
+    return `연결 완료: **${name}** / <#${channel.id}> / ${LANGUAGES[language]}\n${group.channels.length < 2 ? '다른 언어 채널을 하나 더 연결하세요.' : '언어 채널 연결이 준비되었습니다.'}\n${broker ? '개인 번역 프로그램 연결: /zzz connect. 연결된 기기로 원문·문맥을 전달합니다.' : !status.configured ? '번역하려면 /zzz api-set으로 이 서버의 API를 먼저 등록하세요.' : `새 텍스트와 최근 문맥을 ${status.provider === 'ollama' ? '봇 PC의 로컬 AI에서 처리' : `${status.provider} API로 전송`}합니다.`} 채널 공개 범위는 Discord에서 직접 설정하세요.`;
   }
   if (sub === 'unlink') {
     const channel = interaction.options.getChannel('channel', true);
@@ -66,6 +80,7 @@ export async function handleCommand(interaction, { store, config, relay, client,
     return `${name}: ${sub === 'pause' ? '번역을 중지했습니다.' : '번역을 다시 시작했습니다.'}`;
   }
   if (sub === 'usage') {
+    if (broker) return runnerText(interaction.locale, 'usage');
     const usage = store.scoped(interaction.guildId).usage();
     const status = translator.status(interaction.guildId);
     return `**${seoulDay()} (서울 시간) · 이 서버 사용량**\nAI 요청: ${usage.requests} / ${status.configured ? status.dailyLimit : '미설정'}회\n입력 토큰: ${usage.inputTokens.toLocaleString()} / 출력 토큰: ${usage.outputTokens.toLocaleString()}\n현재 방식: ${status.configured ? `${status.provider} / ${status.model}` : '미설정'}\n실패한 요청도 횟수에 포함합니다. ${status.provider === 'ollama' ? '현재 로컬 번역에는 API 요금이 없습니다.' : '요청 횟수 한도는 금액 한도가 아닙니다. 무료 사용 여부·요금은 해당 API 프로젝트에서 확인하세요.'}`;

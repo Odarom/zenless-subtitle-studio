@@ -74,7 +74,7 @@ test('failed translation resumes from saved chunks, preserves timing and stores 
   app.settings.save(config);
   const created = app.jobs.create(jobInput); const failed = await waitJob(app.jobs, created.id);
   assert.equal(failed.status, 'failed'); assert.equal(failed.completedCues, 18); assert.equal(requests, 2);
-  assert(payloads[0].glossary.some(term => term.outputPreferred.ko === '빠른 지원'));
+  assert(payloads[0].glossary.some(term => (term.outputPreferred?.ko ?? term.preferred?.ko) === '빠른 지원'));
   assert(payloads[0].after.length); assert(payloads[1].before.length);
   app.jobs.resume(created.id); const completed = await waitJob(app.jobs, created.id);
   assert.equal(completed.status, 'completed'); assert.equal(requests, 3);

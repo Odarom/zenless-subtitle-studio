@@ -1,6 +1,18 @@
 // Only interface text is localized. Report snapshots and user-written notes
 // remain verbatim; localization never invokes a translation API.
 const messages = {
+  share: ['프로젝트 관리자에게도 공유', 'Share with project maintainer', 'プロジェクト管理者にも共有', '也分享给项目维护者'],
+  shareOptional: ['현재 신고는 이 봇 운영자에게만 접수됐습니다. 공용 DB 개선에 공유하려면 아래 버튼을 선택하세요.', 'This report is local to this bot. Use the button to help improve the shared database.', 'この報告はボット運営者のみが受け取りました。共通DB改善に共有する場合は下のボタンを選択してください。', '此举报仅保存在本机器人中。若要帮助改进共享数据库，请选择下方按钮。'],
+  shareNotice: ['첨부 파일이 프로젝트 관리자 Odarom에게 보낼 전체 내용입니다. 원문·번역·설명·제안·모델·용어집 해시와 임의 설치 식별자를 HTTPS 신고 서버에 전달하며 최대 90일 보관하고 필요 시 AI로 검토합니다. Discord 사용자·서버·채널 ID와 API 키 설정은 포함하지 않습니다. 본문에 개인정보·비밀이 있으면 취소하고 수정하세요. 동의할 때만 보내기를 누르세요. 정책: https://github.com/Odarom/zenless-discord-translator/blob/main/PRIVACY.md',
+    'The attachment previews the report shared with Odarom: original, translation, explanation, suggestion, model and glossary hashes. An anonymous installation ID is also sent over HTTPS. Reports are kept up to 90 days and may be reviewed with AI. Discord user/server/channel IDs and API key settings are excluded. Cancel if the text contains personal information or secrets. Send only if you consent. Policy: https://github.com/Odarom/zenless-discord-translator/blob/main/PRIVACY.md',
+    '添付ファイルはOdaromに共有する報告内容です。原文・訳文・説明・修正案・モデル・用語集ハッシュと匿名のインストールIDをHTTPSで送信し、最大90日保存して必要に応じAIで確認します。Discordのユーザー・サーバー・チャンネルIDやAPIキー設定は含みません。本文に個人情報・秘密があればキャンセルして修正してください。同意する場合のみ送信してください。方針: https://github.com/Odarom/zenless-discord-translator/blob/main/PRIVACY.md',
+    '附件预览将分享给Odarom的举报：原文、译文、说明、建议、模型及术语表哈希。另通过HTTPS发送匿名安装标识，最多保留90天，必要时使用AI审核。不含Discord用户、服务器、频道ID或API密钥设置。如正文含个人信息或秘密，请取消并修改。仅在同意时发送。政策：https://github.com/Odarom/zenless-discord-translator/blob/main/PRIVACY.md'],
+  shareConfirm: ['동의하고 보내기', 'Agree and send', '同意して送信', '同意并发送'],
+  shareCancel: ['취소', 'Cancel', 'キャンセル', '取消'],
+  shareCancelled: ['공용 프로젝트에는 보내지 않았습니다. 이 봇의 신고는 유지됩니다.', 'Not shared with the project. The local report is kept.', 'プロジェクトには送信していません。このボット内の報告は残ります。', '未分享给项目，本地举报仍保留。'],
+  shareDone: ['프로젝트 공유 접수번호: {id}. 위 상태 조회는 이 봇의 로컬 검토 상태입니다. 공용 DB는 관리자 검토 후 갱신됩니다.', 'Project receipt: {id}. Status commands show this bot’s local review status. Shared DB updates follow maintainer review.', 'プロジェクト受付番号: {id}。状態コマンドはこのボット内の確認状態です。共通DBは管理者の確認後に更新します。', '项目接收编号：{id}。状态命令显示本机器人的本地审核状态，共享数据库经维护者审核后更新。'],
+  shareFailed: ['이 봇에는 저장됐지만 프로젝트 전송에 실패했습니다. 자동 재전송하지 않습니다. 아래 보내기로 다시 시도하거나 나중에 같은 번역을 신고하세요.', 'Saved locally, but project delivery failed. No automatic retry. Try Send again, or report the same translation later.', 'このボットには保存済みですが共有に失敗しました。自動再送はしません。下の送信で再試行するか、後で同じ訳文を報告してください。', '已本地保存，但项目分享失败。不会自动重试。请再次发送，或稍后举报同一译文。'],
+  shareExpired: ['공유 창이 만료되었거나 본인의 요청이 아닙니다. 같은 번역에서 신고를 다시 여세요.', 'Sharing expired or belongs to someone else. Reopen reporting on the same translation.', '共有画面が期限切れか他のユーザーのものです。同じ訳文から再度報告してください。', '分享界面已过期或属于其他用户，请从同一译文重新举报。'],
   launch: ['신고 시작', 'Start report', '報告を開始', '开始举报'],
   launchNotice: ['요청한 사용자만 아래 버튼으로 신고를 시작할 수 있습니다. 이후 신고 내용은 본인에게만 표시됩니다.', 'Only the requesting user can start with this button. The report form is then shown privately.', 'このボタンは依頼したユーザーのみ使用できます。その後の報告内容は本人だけに表示されます。', '仅发起请求的用户可以使用此按钮。后续举报内容仅本人可见。'],
   replyHelp: ['번역 메시지에 답장으로 `!신고` 또는 `!report`를 보내세요. `!신고 메시지링크`도 가능합니다.', 'Reply to the translation with `!report`, or send `!report MESSAGE_LINK`.', '訳文に返信して `!report` と送信してください。`!report メッセージリンク` も使えます。', '请回复译文并发送 `!report`，也可以发送 `!report 消息链接`。'],

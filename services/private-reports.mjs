@@ -5,6 +5,7 @@ import { mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { normalizeVideoReport } from '../video/report-import.mjs';
+import { normalizeSharedDiscordReport } from '../src/shared-report.js';
 
 const retention = 90 * 86400000;
 export const PRIVATE_REPORT_ID = /^A-\d{8}-[a-f0-9]{12}$/;
@@ -19,10 +20,10 @@ export class PrivateReportStore {
   }
   prune() { this.db.prepare('DELETE FROM video_reports WHERE created_at < ?').run(this.now() - retention); }
   hash(value) { return createHmac('sha256', this.secret).update(value).digest('hex'); }
-  decode(row) { return row ? { ...JSON.parse(row.payload), id: row.id, origin: 'private-video', submissionId: row.submission_id, createdAt: row.created_at, updatedAt: row.updated_at, status: row.status, review: { note: row.note, actor: 'maintainer' } } : null; }
-  create(input, peer) {
+  decode(row) { return row ? { ...JSON.parse(row.payload), id: row.id, origin: JSON.parse(row.payload).platform === 'discord' ? 'private-discord' : 'private-video', submissionId: row.submission_id, createdAt: row.created_at, updatedAt: row.updated_at, status: row.status, review: { note: row.note, actor: 'maintainer' } } : null; }
+  create(input, peer, platform = 'video') {
     if (!/^[a-f0-9-]{36}$/.test(input?.installationId || '')) throw new Error('Invalid installation ID');
-    const report = normalizeVideoReport(input.report), installation = this.hash(input.installationId), peerHash = this.hash(peer), now = this.now();
+    const report = platform === 'discord' ? normalizeSharedDiscordReport(input.report) : normalizeVideoReport(input.report), installation = this.hash(input.installationId), peerHash = this.hash(peer), now = this.now();
     const payload = JSON.stringify(report), bodyHash = createHash('sha256').update(payload).digest('hex');
     this.db.exec('BEGIN IMMEDIATE');
     try {
@@ -62,14 +63,14 @@ export function privateReportServer(store) {
   const server = http.createServer(async (req, res) => {
     const send = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(data)); };
     if (req.method === 'GET' && req.url === '/health') return send(200, { service: 'zenless-private-reports', ready: true });
-    if (req.method !== 'POST' || req.url !== '/api/reports') return send(404, { error: 'Not found' });
+    if (req.method !== 'POST' || !['/api/reports', '/api/discord-reports'].includes(req.url)) return send(404, { error: 'Not found' });
     try {
       if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '') || Number(req.headers['content-length']) > 65536) return send(413, { error: 'Invalid request size or type' });
       const chunks = []; let size = 0;
       for await (const chunk of req) { size += chunk.length; if (size > 65536) return send(413, { error: 'Report too large' }); chunks.push(chunk); }
       const input = JSON.parse(Buffer.concat(chunks));
       const peer = req.socket.remoteAddress === '127.0.0.1' || req.socket.remoteAddress === '::1' || req.socket.remoteAddress === '::ffff:127.0.0.1' ? String(req.headers['x-forwarded-for'] || req.socket.remoteAddress).split(',').at(-1).trim() : req.socket.remoteAddress;
-      const result = store.create(input, peer); send(201, { receiptId: result.id, duplicate: result.duplicate });
+      const result = store.create(input, peer, req.url === '/api/discord-reports' ? 'discord' : 'video'); send(201, { receiptId: result.id, duplicate: result.duplicate });
     } catch (error) { send(error.statusCode || 400, { error: error.statusCode === 429 ? 'Please try again later' : 'Report was not accepted' }); }
   });
   server.requestTimeout = 15000; server.headersTimeout = 10000; return server;

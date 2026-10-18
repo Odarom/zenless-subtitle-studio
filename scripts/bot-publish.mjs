@@ -1,4 +1,4 @@
-// Publish the hosted bot's usage page instead of a self-hosting source snapshot.
+// Publish the hosted broker guide and the personal PC/server runner source.
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { stageBot, publishBot } from './hosted-bot-publish.mjs';

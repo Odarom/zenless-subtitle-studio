@@ -1,4 +1,4 @@
-# Zenless Subtitle Studio 0.4.0
+# Zenless Subtitle Studio 0.5.0
 
 [한국어](README-ko.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
@@ -14,7 +14,7 @@ A Windows x64 desktop app that recognizes and translates a selected video before
 
 Recommended starting point: get a [free Google AI Studio API key](https://aistudio.google.com/apikey) and choose **Gemini 3.1 Flash-Lite** (`gemini-3.1-flash-lite`). A [free tier](https://ai.google.dev/gemini-api/docs/pricing) is available subject to account/region availability, RPM and daily quotas; it is not unlimited.
 
-The default whole-video mode joins speech fragments into sentences and sends all speech, screen text and relevant glossary entries in one request. The AI returns cue IDs and translated text; local code restores timing and positions and creates SRT/VTT. Local token estimates stop oversized requests before sending. Long-video batches require explicit selection. Errors are not retried automatically. The default one-request-per-minute spacing applies across videos and resumed jobs. Other apps using the same key and daily service quotas still count separately.
+The default whole-video mode joins speech fragments into sentences and sends all speech, screen text and the entire glossary in one request. All names, aliases, meanings and translation rules are included; administrative provenance/history is omitted. Select related terms only explicitly for smaller models. DeepL uses the full DB locally for term protection. The AI returns cue IDs and translated text; local code restores timing and positions and creates SRT/VTT. Local token estimates stop oversized requests before sending. Long-video batches require explicit selection. Errors are not retried automatically. The default one-request-per-minute spacing applies across videos and resumed jobs. Other apps using the same key and daily service quotas still count separately.
 
 Enable developer mode in Chrome/Edge extension management and load the included `video-extension` folder as an unpacked extension. Copy the PC connection code from app settings, register it in the extension on YouTube, and apply a completed job. Keep the PC app running. `Start.cmd` starts the local processing service; you do not need to set up or host a video-processing server.
 
@@ -40,8 +40,8 @@ Enter an explanation and press **Send report** to submit privately to the mainta
 
 Install initially from [GitHub Releases](https://github.com/Odarom/zenless-subtitle-studio/releases/latest). From 0.4.0, use **Check program version → Install and restart** in settings. The app verifies size and SHA-256, blocks installation during active jobs, preserves API keys/models/history and restores previous files on installation failure. Backups stay on your PC. Releases requiring a newer runtime prompt for a full installation.
 
-Users of 0.3.0 or earlier must install 0.4.0 once manually and register the new `video-extension` folder. Future in-place updates also replace the extension files. Reload the extension in Chrome/Edge management and refresh open YouTube pages afterwards.
+Users of 0.3.0 or earlier must install the latest version once manually and register the new `video-extension` folder. Future in-place updates also replace the extension files. Reload the extension in Chrome/Edge management and refresh open YouTube pages afterwards.
 
-Keys are encrypted locally. Do not share `app/data`, `app/.secrets`, your connection code or personal app settings. Share the original release ZIP. Cloud translation receives selected text, relevant glossary terms and context. This is a fan project, not an official game product.
+Keys are encrypted locally. Do not share `app/data`, `app/.secrets`, your connection code or personal app settings. Share the original release ZIP. Cloud translation receives selected text, context and the entire glossary by default. Input size may exceed a free account’s TPM quota. This is a fan project, not an official game product.
 
 The bracket-path installation problem in 0.2.0 was fixed in 0.2.1. Brackets, Korean characters and spaces are supported. Extract a fresh complete release if needed. Run `Setup.cmd` to prepare tools again.

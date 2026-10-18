@@ -1,10 +1,10 @@
-import {mkdirSync,mkdtempSync,readFileSync,writeFileSync} from 'node:fs';
-import {join,resolve} from 'node:path';
+import {mkdirSync,mkdtempSync,readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
+import {join,resolve,dirname} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 
 export const BOT_REPOSITORY='Odarom/zenless-discord-translator';
-export const BOT_INVITE='https://discord.com/oauth2/authorize?client_id=1557261995215028254&scope=bot%20applications.commands&permissions=536939520&integration_type=0';
+export const BOT_INVITE='https://discord.com/oauth2/authorize?client_id=1557261995215028254';
 export function botSource(root) {
   const files=new Map();
   for(const name of ['README-ko.md','README-en.md','README-ja.md','README-zh-CN.md','TERMS.md','PRIVACY.md']) files.set(name,readFileSync(join(root,'docs/discord',name),'utf8'));
@@ -14,12 +14,24 @@ export function botSource(root) {
     if(name.startsWith('README') && !content.includes(BOT_INVITE)) throw new Error('운영 중인 봇의 초대 링크가 없습니다.');
     if(/[A-Z]:\\|\/Users\//i.test(content)) throw new Error('공개 문서에 로컬 경로가 있습니다.');
   }
+  const add=(target,source=target)=>{if(lstatSync(join(root,source)).isSymbolicLink())throw new Error('Symbolic link in public source');files.set(target,readFileSync(join(root,source),'utf8'));};
+  for(const directory of ['src','test'])for(const entry of readdirSync(join(root,directory),{withFileTypes:true}))if(entry.isFile()&&entry.name.endsWith('.js'))add(`${directory}/${entry.name}`);
+  for(const file of ['check.js','reports-cli.mjs','local-ai.js','download-ollama.js','set-provider.js','build-glossary.js','fetch-source.js','source-fetch.mjs','sync-glossary.mjs','glossary-abbreviations.mjs','discord-runner.mjs','runner-ui.mjs','runner-build.mjs'])add(`scripts/${file}`);
+  for(const file of ['index.html','app.js','style.css'])add(`runner/public/${file}`);
+  for(const file of ['zzz.json','sources.json','community.json','curated.json','reviewed-mechanics.json','README.md','ABBREVIATIONS.md','LIFECYCLE.md'])add(`glossary/${file}`);
+  for(const file of ['package.json','package-lock.json','.env.example','.env.runner.example','run.cmd','runner.cmd','local-ai.cmd','choose-ai.cmd','glossary-sync.cmd','SERVER-API.md'])add(file);
+  add('HOSTING.md','docs/discord/HOSTING.md');
+  add('ARCHITECTURE.md','docs/discord/ARCHITECTURE.md');
+  const pkg=JSON.parse(files.get('package.json'));pkg.version='0.2.0';for(const name of Object.keys(pkg.scripts))if(name.startsWith('video')||name==='glossary:publish'||name==='reports')delete pkg.scripts[name];pkg.scripts.reports='node scripts/reports-cli.mjs';pkg.scripts['runner:ui']='node scripts/runner-ui.mjs';pkg.scripts['runner:build']='node scripts/runner-build.mjs';files.set('package.json',JSON.stringify(pkg,null,2)+'\n');
+  const lock=JSON.parse(files.get('package-lock.json'));lock.version=pkg.version;if(lock.packages?.[''])lock.packages[''].version=pkg.version;files.set('package-lock.json',JSON.stringify(lock,null,2)+'\n');
+  files.set('.gitignore','.env\n.env.*\n!.env.example\n!.env.runner.example\n.secrets/\ndata/\nreports/\n.tools/\n.models/\nnode_modules/\ndist/\nglossary/cache/\nglossary/history/\nglossary/candidates/\nglossary/updates/\n');
+  for(const name of files.keys())if(!['.env.example','.env.runner.example'].includes(name)&&/(?:^|\/)(?:\.env[^/]*|\.secrets|data|reports|\.tools|\.models|node_modules)(?:\/|$)/i.test(name))throw new Error('Private data in public source');
   return files;
 }
 export function stageBot(root=resolve(import.meta.dirname,'..')) {
   const parent=join(root,'.tools/hosted-bot'); mkdirSync(parent,{recursive:true});
   const path=mkdtempSync(join(parent,'guide-')),files=botSource(root);
-  for(const [name,content] of files) writeFileSync(join(path,name),content);
+  for(const [name,content] of files) {mkdirSync(dirname(join(path,name)),{recursive:true});writeFileSync(join(path,name),content);}
   return {path,files:files.size,invite:BOT_INVITE};
 }
 export function publishBot(root=resolve(import.meta.dirname,'..'),{recreate=false}={}) {
@@ -53,7 +65,7 @@ export function publishBot(root=resolve(import.meta.dirname,'..'),{recreate=fals
     api(`repos/${repo}`,'DELETE');remote=null;
     writeFileSync(join(temp,'recreation.json'),JSON.stringify({...receipt,deletedAt:new Date().toISOString()},null,2));
   }
-  const description='Invite the hosted Zenless Discord translator to your server. Four-language usage guides, private translation reports and a shared glossary.';
+  const description='Zenless Discord translation with personal PC/server runners. Provider keys stay on each user device. Four-language UI, shared glossary and private reports.';
   if(!remote)remote=api('user/repos','POST',{name:repo.split('/')[1],private:false,auto_init:true,has_issues:true,has_wiki:false,description,homepage:BOT_INVITE});
   if(remote.default_branch!=='main')throw new Error('main 기본 브랜치를 확인하세요.');
   const head=api(`repos/${repo}/git/ref/heads/main`).object.sha,base=api(`repos/${repo}/git/commits/${head}`);
@@ -61,7 +73,7 @@ export function publishBot(root=resolve(import.meta.dirname,'..'),{recreate=fals
   if(existing.tree.some(e=>e.type==='blob' && !files.has(e.path)))throw new Error('문서 외 파일이 있습니다. 사용자가 요청한 --recreate 작업으로 다시 만드세요.');
   const tree=api(`repos/${repo}/git/trees`,'POST',{tree:[...files].map(([path,content])=>({path,mode:'100644',type:'blob',content}))});
   let commit=head;
-  if(tree.sha!==base.tree.sha){commit=api(`repos/${repo}/git/commits`,'POST',{message:'Add hosted bot invite and four-language usage guides',tree:tree.sha,parents:[head]}).sha;api(`repos/${repo}/git/refs/heads/main`,'PATCH',{sha:commit,force:false});}
+  if(tree.sha!==base.tree.sha){commit=api(`repos/${repo}/git/commits`,'POST',{message:'Publish public broker and personal multi-server runners',tree:tree.sha,parents:[head]}).sha;api(`repos/${repo}/git/refs/heads/main`,'PATCH',{sha:commit,force:false});}
   api(`repos/${repo}`,'PATCH',{description,homepage:BOT_INVITE,has_wiki:false});
   const actual=api(`repos/${repo}/git/trees/${commit}?recursive=1`).tree.filter(e=>e.type==='blob').map(e=>e.path);
   if(actual.length!==files.size || actual.some(path=>!files.has(path)))throw new Error('게시된 문서 목록이 다릅니다.');
