@@ -68,7 +68,7 @@ export async function publishProgram(root = resolve(import.meta.dirname, '..'), 
     if (!health.ok || !(await health.json()).ready) throw new Error('외부 HTTPS 신고 서버를 확인하지 못했습니다.');
     files.set('services.json', JSON.stringify({ schema: 1, reports: url.href }, null, 2) + '\n');
   }
-  files.set('README.md', files.get('README.md') + '\n[Discord bot source and setup / 디스코드 봇 사용법](https://github.com/Odarom/zenless-discord-translator)\n');
+  files.set('README.md', files.get('README.md') + '\n[Add the Discord bot and usage guide / 디스코드 봇 초대·사용법](https://github.com/Odarom/zenless-discord-translator)\n');
   let commit = commitFiles(files, `Update subtitle studio ${VIDEO_VERSION}`);
   if (sourceOnly) return { repository: repo, url: remote.html_url, commit, sourceFiles: files.size };
   const release = JSON.parse(readFileSync(join(root, 'dist/video-release.json'), 'utf8'));

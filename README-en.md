@@ -12,7 +12,7 @@ A Windows x64 desktop app that recognizes and translates a selected video before
 
 ## Playback and export
 
-Recommended starting point: get a [free Google AI Studio API key](https://aistudio.google.com/apikey) and choose **Gemini 3.1 Flash-Lite** (`gemini-3.1-flash-lite`). Flash-Lite is the exact model name. A [free tier](https://ai.google.dev/gemini-api/docs/pricing) is available subject to account/region availability, RPM and daily quotas; it is not unlimited.
+Recommended starting point: get a [free Google AI Studio API key](https://aistudio.google.com/apikey) and choose **Gemini 3.1 Flash-Lite** (`gemini-3.1-flash-lite`). A [free tier](https://ai.google.dev/gemini-api/docs/pricing) is available subject to account/region availability, RPM and daily quotas; it is not unlimited.
 
 The default whole-video mode joins speech fragments into sentences and sends all speech, screen text and relevant glossary entries in one request. The AI returns cue IDs and translated text; local code restores timing and positions and creates SRT/VTT. Local token estimates stop oversized requests before sending. Long-video batches require explicit selection. Errors are not retried automatically. The default one-request-per-minute spacing applies across videos and resumed jobs. Other apps using the same key and daily service quotas still count separately.
 

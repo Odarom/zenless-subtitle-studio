@@ -12,7 +12,7 @@
 
 ## 영상에서 보기
 
-처음에는 [Google AI Studio에서 무료 API 키 받기](https://aistudio.google.com/apikey)와 **Gemini 3.1 Flash-Lite**(`gemini-3.1-flash-lite`) 사용을 추천합니다. Google의 정확한 모델 이름은 Flash-Lite입니다. [무료 사용 구간](https://ai.google.dev/gemini-api/docs/pricing)이 있으며 계정·지역별 제공 여부와 RPM·일일 한도가 적용됩니다. 무료 키가 무제한 사용을 뜻하지는 않습니다.
+처음에는 [Google AI Studio에서 무료 API 키 받기](https://aistudio.google.com/apikey)와 **Gemini 3.1 Flash-Lite**(`gemini-3.1-flash-lite`) 사용을 추천합니다. [무료 사용 구간](https://ai.google.dev/gemini-api/docs/pricing)이 있으며 계정·지역별 제공 여부와 RPM·일일 한도가 적용됩니다. 무료 키가 무제한 사용을 뜻하지는 않습니다.
 
 기본 **영상 전체 한 번에 번역**은 인식된 음성 조각을 문장으로 묶고, 전체 음성·화면 텍스트와 관련 용어집을 한 요청에 보냅니다. AI는 구간 번호와 번역문만 반환하고, 프로그램이 원래 시간·위치에 다시 연결하여 SRT/VTT를 만듭니다. 토큰 수는 로컬에서 추정하며 한 응답에 담기 어렵다면 전송 전에 멈춥니다. 긴 영상 분할은 직접 선택할 때만 사용합니다. 오류 뒤 자동 재시도는 하지 않으며 기본 **분당 1회** 간격은 다음 영상·이어하기에도 적용됩니다. 같은 키를 쓰는 다른 프로그램의 요청이나 서비스의 일일 한도는 별도입니다.
 

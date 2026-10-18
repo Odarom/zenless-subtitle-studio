@@ -12,7 +12,7 @@
 
 ## 再生と保存
 
-最初は[Google AI Studioの無料APIキー](https://aistudio.google.com/apikey)と**Gemini 3.1 Flash-Lite**（`gemini-3.1-flash-lite`）をおすすめします。正式なモデル名はFlash-Liteです。[無料枠](https://ai.google.dev/gemini-api/docs/pricing)にはアカウント・地域による利用条件、RPM、日次上限があります。無制限ではありません。
+最初は[Google AI Studioの無料APIキー](https://aistudio.google.com/apikey)と**Gemini 3.1 Flash-Lite**（`gemini-3.1-flash-lite`）をおすすめします。[無料枠](https://ai.google.dev/gemini-api/docs/pricing)にはアカウント・地域による利用条件、RPM、日次上限があります。無制限ではありません。
 
 標準の動画全体翻訳では、音声の断片を文にまとめ、音声・画面文字・関連用語を1回のリクエストで送ります。AIは字幕番号と訳文だけを返し、プログラムが元の時刻・位置に対応付けてSRT/VTTを作ります。トークン数はローカルで推定し、出力上限を超えそうな場合は送信前に停止します。長い動画の分割は利用者が選んだ場合のみ行います。エラー後の自動再送はせず、初期設定の1分1回の間隔は次の動画や再開時にも適用します。同じキーを使う他のアプリや日次上限は別途考慮してください。
 

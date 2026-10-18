@@ -1,12 +1,12 @@
 {
   "version": "3.2",
-  "betaVersion": "3.3.12+19536047",
-  "retrievedAt": "2026-10-13",
+  "betaVersion": "3.3.12+19629936",
+  "retrievedAt": "2026-10-19",
   "manifest": {
     "url": "https://static.nanoka.cc/manifest.json",
     "observedLive": "3.2",
-    "observedLatest": "3.3.12+19536047",
-    "checkedAt": "2026-10-13T14:13:40.909Z"
+    "observedLatest": "3.3.12+19629936",
+    "checkedAt": "2026-10-18T17:28:02.248Z"
   },
   "sources": [
     {
@@ -1275,1309 +1275,1309 @@
       "bytes": 89634
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/character.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/character.json",
       "sha256": "80b4fd1f2fa3f1b7ca53428468e12cb74a112e056804def1fed6a0874e701925",
       "bytes": 115034
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/weapon.json",
-      "sha256": "8226779287405722656320df0007bd28755de34a1fff2187ce0b1c3d4f291f77",
-      "bytes": 37570
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/weapon.json",
+      "sha256": "8767140dcd76005d6a7ccc751f887722245e90b1d235878757d2f59a172ee12c",
+      "bytes": 37579
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/equipment.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/equipment.json",
       "sha256": "44257c768809225de33ac50cb08ada9cdea3e0cd6dfdf8b59ed5c8ee20f525f7",
       "bytes": 51874
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/bangboo.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/bangboo.json",
       "sha256": "788878bfff6efbb1e6568d6fee4220fb5cf366aa2e39f494188b151d8706a34e",
       "bytes": 13733
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/monster.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/monster.json",
       "sha256": "d0530e4ada1777fca3ad55d84ba8e36d77163952d43f108858eafd75e2d67f38",
       "bytes": 313476
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/noun.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/noun.json",
       "sha256": "bb9b0f0a39a7023c9f3e9955f57d3f782577d641e8164ebef92ecf163b207f30",
       "bytes": 59211
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/item.json",
-      "sha256": "666cf023d534bfb14f04575c3ef70b288b21bdab44e39fabae47b9089ef8aeea",
-      "bytes": 1146631
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/item.json",
+      "sha256": "b759ba3bd58a72096d5d1959b31ae0c3ab0ae21cc12c715ac879ac80c5490216",
+      "bytes": 1147011
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1011.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1011.json",
       "sha256": "fb8ce6cdf2bb087ec8e47ffdf3c587a3249c0bd976a6ecd281574a1672a5dcb8",
       "bytes": 61716
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/noun.json",
-      "sha256": "e10d953d5806d7e2f914de8f4d0e3f1ab59d78f0b54d031afbf12ab0755a4635",
-      "bytes": 54020
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/noun.json",
+      "sha256": "d11dc7fbb5fcc84ecb55834e1aee9041682cf61d46d34f1325db93c71d9b106a",
+      "bytes": 54037
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/item.json",
-      "sha256": "6afb642c0312ed8159670c6774c82b263c4652365163296a3aa70201e1200281",
-      "bytes": 1136494
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/item.json",
+      "sha256": "0375799901bb81236d4fac02b4b068a05b42c5e5242afa958202767103819ee4",
+      "bytes": 1136874
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1011.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1011.json",
       "sha256": "1c9ae3c9d8c830c927b5af7692d9408fd18d613d09b130558ee0fe8e14516188",
       "bytes": 59632
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/noun.json",
-      "sha256": "81452b2cf2bee68c41a8ec44d386dc0c96413f7bfeace766348985d0c8522395",
-      "bytes": 64363
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/noun.json",
+      "sha256": "b2efecad86033e0ba117580d0a1a495c9df2f37404296ae432a30bf10cbffc17",
+      "bytes": 64345
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/item.json",
-      "sha256": "07e3f71e1a48e9a91b5d40ab76e6655865c35c751e04bf411b182d86e41161fc",
-      "bytes": 1164716
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/item.json",
+      "sha256": "87cf70afeecf677ac746657abfc0f453eef2f901748c6e9ccaba2f2ea9660d52",
+      "bytes": 1165096
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1011.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1011.json",
       "sha256": "3b9802800ea90006c7541c60991ac4e9d300f87369841cf531221ad564f67f78",
       "bytes": 63218
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/noun.json",
-      "sha256": "fa4d72fdac68a778c050cde1b7dff8869af3ee6bc1fc5e7883ce8fb1df9ab560",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/noun.json",
+      "sha256": "55b48c8ee51d416261be77a0615e7da7519378afb6231a4d4ff6b5dc63d98bfe",
       "bytes": 48838
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/item.json",
-      "sha256": "9d83d9ffa9b1163168b3b77088acf6c15f0345e2e2a1e23417588671d6b7e3c6",
-      "bytes": 1119127
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/item.json",
+      "sha256": "27241831aef3f8f6b5db8c648412e77d8b70d70cd2ddedab0cc72f7eb0386ae1",
+      "bytes": 1119534
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1011.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1011.json",
       "sha256": "525ca11c8a80d51e7f10b00957efe071a1573d038eb4e9c265c87a03e8f5b312",
       "bytes": 58647
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1431.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1431.json",
       "sha256": "727351b4cc3e85435609ebd75d95334a798d450f695a2156ffc9fd5071aedb93",
       "bytes": 132219
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1431.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1431.json",
       "sha256": "b10a35d2f4bae4a6f491ecdabcba9e7cdba6288b82d0bfbcda75ac706bc1d08f",
       "bytes": 129456
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1431.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1431.json",
       "sha256": "4b378725d8bbbf6f6bba07a27c5a8296801032903da20dd56758bf0622166a97",
       "bytes": 135800
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1431.json",
-      "sha256": "4a35eee5f2455fbe3df5d6564746a4d4988567dc3f77d38b6ad2fe7f4122dd7e",
-      "bytes": 121203
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1431.json",
+      "sha256": "282720a590ee5a049c224d3a8913b385199bec5da1be377bf97b44f058a40c83",
+      "bytes": 123171
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1021.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1021.json",
       "sha256": "614b21fcfaf20abc0c0de8e7a260deb054cea43a32c35399574aa2cd07666b1a",
       "bytes": 96311
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1021.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1021.json",
       "sha256": "5b84ad7ceebd6ed2b89df0163716e69a7ba1691cbcb959a4bf14eb64734c7324",
       "bytes": 88265
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1021.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1021.json",
       "sha256": "c2b87df3621ed8f7ad72cb48823f0afd69545bb5b5945e17fe19dfb0089edd8d",
       "bytes": 98979
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1021.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1021.json",
       "sha256": "2896f412cb5b115ba6fdc2a14eb9b6f905cb3502d669f3a4aecc7f2a980b2375",
       "bytes": 86913
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1031.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1031.json",
       "sha256": "425bf9f25fa5b51445ab520ba6a9211c662b78e5a1260dd9fec5bf408a872835",
       "bytes": 99296
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1031.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1031.json",
       "sha256": "fa5c1838e4fc1c7531637f4fc646fa5a4f39031a47bda8ff313d402038820521",
       "bytes": 96455
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1031.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1031.json",
       "sha256": "ae30b3b087f60711e9380a3fc9bec8a5d7a185a906f9089ac7a5bf34d3c9b4bc",
       "bytes": 101058
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1031.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1031.json",
       "sha256": "e93ed5a250ac93d010eee22800cdfefce09e12934c3a940608c72a5289aeefd0",
       "bytes": 95069
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1041.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1041.json",
       "sha256": "a19b2280ba93def18042f9be5515e0a4f13c0da89bbc0854c25312f32aa62ed1",
       "bytes": 88767
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1041.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1041.json",
       "sha256": "3bc5b7041fdcbb9920903303dfed53cb2c3e91d07b153ad8d800b7124bf95b2b",
       "bytes": 85904
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1041.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1041.json",
       "sha256": "9f6775c0a96b4978db2401a29647f20b9276805bdf069245525878f2ebd4efee",
       "bytes": 90207
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1041.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1041.json",
       "sha256": "60a967133f2bf8d31667dabadba03ec106348f1e573ee3d394bd6b62b229366b",
       "bytes": 84628
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1051.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1051.json",
       "sha256": "b35d63259c3ede5629589e542c266e325a3ac5ed4b69b9f86a7035c16886a7f2",
       "bytes": 98159
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1051.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1051.json",
       "sha256": "be6f61154528d3028e1d6dffe3a4cc7ed7cf78b87dfe074d4489d0814f51b32b",
       "bytes": 92777
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1051.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1051.json",
       "sha256": "e55668646a32772265dda1956a0c542d6f85f28901b9a3cd8fae3d05fa5d10b8",
       "bytes": 100494
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1051.json",
-      "sha256": "43310fd19ccf6b2a1cb271e86b68eedd2a3256b97f0a6f9283f3d36b1a644949",
-      "bytes": 88128
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1051.json",
+      "sha256": "c539b3c8814d1b76beb5788d3d05fed28dad1e2c4f91cb6dcc4744b9a0f850ea",
+      "bytes": 90739
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1061.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1061.json",
       "sha256": "be61c92d0d6b25a15d5932b350467f3d43c52beae8c2f1aa20dc9f819d7f41c0",
       "bytes": 70537
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1061.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1061.json",
       "sha256": "2bebe4ea1640ad20bddedb10b677ae6439fd93ec492ab5fe6a281eae2029f5fc",
       "bytes": 68657
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1061.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1061.json",
       "sha256": "4f3a182bc721cebed1c8571d1eb04f096139deecc7212da8c88e903bbdb2348d",
       "bytes": 72678
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1061.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1061.json",
       "sha256": "96ffd8bb866aa93f6e676b7f2796f034e29ef981ea1b8f5c1d88955d1f263c6b",
       "bytes": 67702
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1071.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1071.json",
       "sha256": "66c14ca7d17abf9b563829db794c1faac972915db5d29c48be39a4ce18598294",
       "bytes": 90669
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1071.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1071.json",
       "sha256": "c970a1e6d48cb204ef7c39b972031aff7e313696e13b2e09dbc1e910ec992b88",
       "bytes": 86965
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1071.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1071.json",
       "sha256": "2625e28490ffb63e32468d3e396609318e3e37ad40b1a5cd849d9383522d681c",
       "bytes": 93030
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1071.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1071.json",
       "sha256": "2c25cead747974e86072eecc38ea062af8d823f4c50f67b8dcff80b36991bf44",
       "bytes": 84715
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1081.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1081.json",
       "sha256": "b39db1dfa738886cddf29300b012e59ed6b573f015d497862c5a2720ddf7227c",
       "bytes": 65379
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1081.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1081.json",
       "sha256": "90160eb4ba99e89d55e2afb757fa7e9404552f05462c992a738ade7b5d688cf4",
       "bytes": 63408
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1081.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1081.json",
       "sha256": "aaf7b401ffd89121b56e97bc09a290a5ad2bf42fda4c0d0d7c85d5f204fa00fd",
       "bytes": 67534
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1081.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1081.json",
       "sha256": "8ee19a68bb0c8c0c0d8b1834385217d6fd9afb70d7ee19e13fefc52d1593cbc5",
       "bytes": 62453
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1091.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1091.json",
       "sha256": "cd1c42e654cd943c5bd138e2666e31b4c8b01ca3b3a96710d340a1c5bfa2c6f1",
       "bytes": 95383
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1091.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1091.json",
       "sha256": "99dc38a125a3e305867cdc30111ec019302e6d6bb4527e7e23dc66019fb545c3",
       "bytes": 90470
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1091.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1091.json",
       "sha256": "e29818ca3fb0be2211a4535c61fd6a580927b53fb47d2f4325366d8d8b5d3450",
       "bytes": 96775
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1091.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1091.json",
       "sha256": "348636c36dec650aa1b3d794f09f48e10cc37201b09ca2c124808c2f0fcc4241",
       "bytes": 87032
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1101.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1101.json",
       "sha256": "1008968ddc52835b2e82af83325b951e07f054c08845ff5683b5d1b57bfeb819",
       "bytes": 99315
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1101.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1101.json",
       "sha256": "87574ea1d4f5cd417e4610c296865bd9abc34721b6405a6f998be03ba7165d32",
       "bytes": 94677
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1101.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1101.json",
       "sha256": "2bd005772a77e6dceaf45e794ee32a8ec6863c45cfa56a482edea4577164f7ee",
       "bytes": 101524
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1101.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1101.json",
       "sha256": "6fb2fb183d9e2136f93147b0bc6543820504a288b08f6c7f5882a90f9950d373",
       "bytes": 91787
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1111.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1111.json",
       "sha256": "628719d062334744912b2b1d40be9c66c4617847181c3a252fb79adbb86b08e5",
       "bytes": 74897
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1111.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1111.json",
       "sha256": "a2d3b10b7150b60a6bcfb9901bd552940b4fd6552f429f7e6edbd21e696c4b75",
       "bytes": 72993
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1111.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1111.json",
       "sha256": "bd579b173dd2fc72ce672188cc13d5f8ae8a100d3db3dd7be4f36db3aa9484db",
       "bytes": 76878
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1111.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1111.json",
       "sha256": "189f74735cff31388d144d1bc2a7d6f775b27a35f88efccfb8501ebde502d0cf",
       "bytes": 71743
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1121.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1121.json",
       "sha256": "954781b1379a66c8f67dffc7dc11b5430597f44489a682aef1909e4ce08f902d",
       "bytes": 66759
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1121.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1121.json",
       "sha256": "ff30061a302728554155c26737e96293a70ceb64ba15621ab106885449259703",
       "bytes": 64853
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1121.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1121.json",
       "sha256": "f5bc72d1a613a9e8895245b2cbfec3c8eaede2cd92de13390d09fde03e2d999a",
       "bytes": 67497
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1121.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1121.json",
       "sha256": "b513965893a33ff48b845297f4c4b9d202cba5d9af7d8555a2762f052ceee9b0",
       "bytes": 63116
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1131.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1131.json",
       "sha256": "bdfd96a6e9cf3c45f5aeef3fc1a65b513d7440f579fb190e58574bc8ad75f9c1",
       "bytes": 84978
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1131.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1131.json",
       "sha256": "584126001c8a3fc9a64929ff64beec92a600f694206d56fc56b654c7376b6632",
       "bytes": 80648
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1131.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1131.json",
       "sha256": "7a688a416c86e540e6b676b910ee182de06428af4a72351adbce6d8b1a7abf5b",
       "bytes": 85849
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1131.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1131.json",
       "sha256": "306bbac5e994bb7864176c4322d51ffb62aa095af79abd04122bccb2a8a4306c",
       "bytes": 79197
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1141.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1141.json",
       "sha256": "a41129f5296e3430dca93c648615f66d3370bda9578fc6e20d1e707feae8fc92",
       "bytes": 122131
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1141.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1141.json",
       "sha256": "85d850e227b231f4081f31d9b2d64746b53589fa3e340a8b2d8f58b6723888bf",
       "bytes": 117222
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1141.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1141.json",
       "sha256": "c7a78f1b241a547e0393d3784e35ba8b4f8141efc8c7d4d417420006797c1021",
       "bytes": 124584
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1141.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1141.json",
       "sha256": "e2dad919185af7adf16c4589ead1719e598724abf879e193bc32595745732db3",
       "bytes": 112923
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1151.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1151.json",
       "sha256": "3dbaeeea704f1588867ce4cbe360338bc6f1ca908066bb82aee120c786b7b16b",
       "bytes": 79569
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1151.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1151.json",
       "sha256": "d32463915e92b9cd2e6cd21da3d5e01a6b06dde9e723f39d0383dadfd28541db",
       "bytes": 75710
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1151.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1151.json",
       "sha256": "96ebbdbb7754789831c5f4aae32f041657f112460ca43991a81da31f4599cdb0",
       "bytes": 81267
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1151.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1151.json",
       "sha256": "e190a637fb802fdc0a90e7cac9879b4c2ffb6f48df3b57eb1e10c45fe3a751d6",
       "bytes": 74448
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1161.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1161.json",
       "sha256": "b1b020575311793503ef937543f23fd75c2fde6f6f9032d43f658398793ba3f9",
       "bytes": 110598
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1161.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1161.json",
       "sha256": "9564516c3811f566f26f0077651c36bf838c16de66221da357fa76ed0f29cb24",
       "bytes": 105543
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1161.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1161.json",
       "sha256": "b325c1c2f75ae522dded4d7766e8a798dedf1becfa7b87be546f3619e9596712",
       "bytes": 114658
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1161.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1161.json",
       "sha256": "3aa139a8788f2d68e28b0f68d71bb16f36c9aa87ffecd5011cc2d8ff3c8e9fa6",
       "bytes": 101600
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1171.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1171.json",
       "sha256": "a6b8f1f8f4006aae61450356a111f8f0581edd666d2bec07134de4e2c9b1ad7f",
       "bytes": 105123
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1171.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1171.json",
       "sha256": "fc70a708420d959ba4a544ab356e093174bd6fe1fcac8e3410f670f332f4b299",
       "bytes": 99835
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1171.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1171.json",
       "sha256": "bdcc4eaf91d30a834cafd390c7834d5a443e6028875bca267645d892a4de64b4",
       "bytes": 111225
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1171.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1171.json",
       "sha256": "2f0fa44e1a4e782048ff81e3128f0f9c21467164ec2fb23454e5c7fae9ff2ef8",
       "bytes": 97094
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1181.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1181.json",
       "sha256": "b158d7a91dbd84b860ebebb348818cc60b4dbb5bbd00f4385972a8fe3e17dc4c",
       "bytes": 89273
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1181.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1181.json",
       "sha256": "b6239e707adb9749db1a3659f10fcd85056d17011ca9dda3bdb0f11f16607e9a",
       "bytes": 84187
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1181.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1181.json",
       "sha256": "fb91d3c211cb476bf41485087663e7430969c6046142d20c8cb1a480e373f639",
       "bytes": 92356
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1181.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1181.json",
       "sha256": "53c1d256631f253a7213fe26798bf0cd9332106d2aa92d124b5dedac666b63a9",
       "bytes": 82297
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1191.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1191.json",
       "sha256": "053f15900af67236ba8e9c876a0ee2ba4279b7f5daceecb9128531f98bd37ec7",
       "bytes": 112803
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1191.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1191.json",
       "sha256": "09d48294c9215c7b291b3edeceae19cbea7f9d45ce8dbe1f31609bd029af971a",
       "bytes": 109337
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1191.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1191.json",
       "sha256": "2736dac5f4fab4105bf75ad871243bb9138a36e2b26c565912a2680cd960ac60",
       "bytes": 116032
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1191.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1191.json",
       "sha256": "e2e1bdff3b10c751175bd588fc17181997053870469e65065744e43017e5e9b7",
       "bytes": 106283
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1201.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1201.json",
       "sha256": "ee1c9f073a045f8e6e5a2b5735a16cbf3c388f5ccc4db78a15895ade3755e5dd",
       "bytes": 111450
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1201.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1201.json",
       "sha256": "3f804b725493068489701c6127c853b676332b13d1899a8efb3f8bbb04eafca8",
       "bytes": 105810
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1201.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1201.json",
       "sha256": "3d882619e93c6ca6930caebc02e7770920b06df59fff2845357d1c6944fb2be8",
       "bytes": 111300
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1201.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1201.json",
       "sha256": "45fedc3dfeb4e803efc858c8143b4d68c00d769eff4ba1ce6f8ec58061fca4c0",
       "bytes": 101488
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1211.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1211.json",
       "sha256": "b5b1ab40d060a2d7aa2a1367df550c13d33f3761460917d502125c55e61e4b4a",
       "bytes": 76217
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1211.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1211.json",
       "sha256": "52b10660346d82dec7ff4a4b7ec6361c43f670ee771a4847f8fae25cc0a804fc",
       "bytes": 72628
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1211.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1211.json",
       "sha256": "c82c76a99b52efb95a719e9277acf035dbbb75147162ba2edfa59dea35f922b5",
       "bytes": 78225
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1211.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1211.json",
       "sha256": "c5f642ebe8976e09851e20935bc70d604af77312b70a0f77e0d34af3c4d7500c",
       "bytes": 71734
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1221.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1221.json",
       "sha256": "dd59890b9daee57ce8f21067b49fa9a5959fd0e0c35a9b528c9951a77d7db7c1",
       "bytes": 80553
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1221.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1221.json",
       "sha256": "11cefc53d9838bcc65d84dbde4ae3c41d11730fdca037a337935ba79721a3431",
       "bytes": 77549
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1221.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1221.json",
       "sha256": "e6ee6c247c272fc172d5cb0b2ad961a4a58337b6171df20b82fd1f59a198b15c",
       "bytes": 80618
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1221.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1221.json",
       "sha256": "09d953a2db1d13301a321921f80ca9fffbd893f0e583bca7c9ec5c9622743560",
       "bytes": 75324
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1241.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1241.json",
       "sha256": "02af761dad5c946d46b014050a3047284fdf81955b79c9ac181d663d03e4a244",
       "bytes": 78543
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1241.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1241.json",
       "sha256": "f457f9c47c93d953da0061bd5f1f04af60549439fc5fd61807dfab8e3a7e6952",
       "bytes": 76772
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1241.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1241.json",
       "sha256": "4e296f9ce74da26e501dc5c9ce59d830c17dd5fd0bc7f233fe67f33a64cd4e91",
       "bytes": 80203
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1241.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1241.json",
       "sha256": "aef42ff3686f0724978b5a9e26295c1316336d9ee16972e0bd0f6dd79f0f964b",
       "bytes": 74835
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1251.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1251.json",
       "sha256": "0567fe40416b6c743a3238334716054efbe6cb37b01e80d54f6577a4053cbafd",
       "bytes": 83167
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1251.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1251.json",
       "sha256": "99a6a2f9486e3852c2da341ac7b7d9837a5924f39d81d2a5ab65a04f03b39b3f",
       "bytes": 81188
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1251.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1251.json",
       "sha256": "98e93df3395f8ee67c7fa364addf66833303d01cca371351a87df86e9398eb9d",
       "bytes": 84436
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1251.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1251.json",
       "sha256": "2d8f0cc3f107c6a0b556ba07a459eee371503231ab276d62dcc064d315eb0336",
       "bytes": 78185
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1261.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1261.json",
       "sha256": "5dd5581c2c98bd987437c8a8959b835eff35fe39be96c0007ee1ccf1bc466c13",
       "bytes": 102010
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1261.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1261.json",
       "sha256": "468d6caabc7c217e560adb57423ead99085a69fb1d65d40677771f76e184d0e8",
       "bytes": 98584
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1261.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1261.json",
       "sha256": "6d69ad8a3692bdf20425b307097e40ea9087f6c64a10a72452a496a0b0408df2",
       "bytes": 103671
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1261.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1261.json",
       "sha256": "fc175e8acfb9a2768b251d150576f6389eac36c3917b569a1ab1b8361c16a683",
       "bytes": 96249
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1271.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1271.json",
       "sha256": "3fdfe070ef04a9f28258d4e7bc3b59ae387798c7160535f2782638b614d1d2cb",
       "bytes": 73085
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1271.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1271.json",
       "sha256": "a7d2020639926a7b7a69bc0d95a7a804ad2b28bcd04925b7acc8c4c4ac91afa3",
       "bytes": 70685
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1271.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1271.json",
       "sha256": "64f85286409a37f00991df31ecf8f761e964a8e583a8e03240c7d515a71f684c",
       "bytes": 74196
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1271.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1271.json",
       "sha256": "e7a4fc988fd1163191d862c6c9d435c6695b6cbde76d5955b48f0335c127836c",
       "bytes": 68638
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1281.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1281.json",
       "sha256": "c974b4b0870215b601b78d80033fe15e0b414b7164e3f8575fd98f6d609b93bc",
       "bytes": 72185
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1281.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1281.json",
       "sha256": "5fdef31a8d1acc5588867f954c10833f1c709162f907ae3e277bbd4632a1e6a5",
       "bytes": 69347
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1281.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1281.json",
       "sha256": "4e019144ad673c0827eee638842e6b1b0006ef12ca6c344407826ccbf00f4212",
       "bytes": 74194
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1281.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1281.json",
       "sha256": "38f87646550c137cfc8cb8ee3091627021b72ba87c788dd5f62151c5b014c307",
       "bytes": 67809
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1291.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1291.json",
       "sha256": "ecd131240a406630c5df5f2a125e9781d94dfeb287d5c9d0b6f7c67ec9ed072f",
       "bytes": 99440
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1291.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1291.json",
       "sha256": "4b38482dc589a6689f3c071feda72697eddc51c973990124d4ef53904ac68724",
       "bytes": 95294
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1291.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1291.json",
       "sha256": "6fda06e2df507da9fef125cc7016f1e2c4265d1ce6034581673a5a5133ea6464",
       "bytes": 101257
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1291.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1291.json",
       "sha256": "3cddd308f48e34d21c727b0d79a7f8d4eba0e4a995d831e72026717cce3f5dd3",
       "bytes": 91339
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1301.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1301.json",
       "sha256": "89c5b162683d48b3a7f3df28a8e5f7f1f722714bada92f635afd78dc34693272",
       "bytes": 90750
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1301.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1301.json",
       "sha256": "c3e358f41e196664819e910070afcf1d10d754afd8dde490d721a88fd20bafda",
       "bytes": 84505
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1301.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1301.json",
       "sha256": "e8829d4b8ca89c33b4b437c4fbcc4936b79a762d06c511fd702e3d74b913e321",
       "bytes": 93178
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1301.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1301.json",
       "sha256": "3ca3228565220472adf3f557810da87aec1e4094f6f9b531eb7ae77f6f635a49",
       "bytes": 83117
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1311.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1311.json",
       "sha256": "e0f8c3ce571e83bde034413bb70af2f6b6650c90fd3af72b1af2f46db9e46ead",
       "bytes": 88705
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1311.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1311.json",
       "sha256": "c65183becfba5ad713e5061758bd78e8ee4e29a758249455e1fc3edbc0045d7f",
       "bytes": 83294
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1311.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1311.json",
       "sha256": "81be52b485bc1b08b68af3a30ba28e1ba60ffbb92d528e3fa9367494bf122717",
       "bytes": 90265
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1311.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1311.json",
       "sha256": "f5764cb13d57ecaaaa66f0a129ca7686c5b8acd4664b4566a353f4155e919c90",
       "bytes": 81185
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1321.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1321.json",
       "sha256": "096bfaa6a40ba1ac61adcef3972a92dc50c7d2ee59c4eea8be6b028a01db7079",
       "bytes": 86490
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1321.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1321.json",
       "sha256": "0b9d39dd252c8ae04796392892ea2b5f12477a3bfe1e51780489e4b669fbdd76",
       "bytes": 83030
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1321.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1321.json",
       "sha256": "9e7151aee89f69b59b7478f4ffda8018f7e42c488bd32cc817c6d2d4435f4441",
       "bytes": 88813
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1321.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1321.json",
       "sha256": "3fa1592760031e20fb01b1602191b77f89a3ee30b3b163803798599387780755",
       "bytes": 80586
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1331.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1331.json",
       "sha256": "8d1c162b0713765138ef74f2978a9d9012fa31f238e89e9b3602d56020400aa5",
       "bytes": 84407
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1331.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1331.json",
       "sha256": "0ac19173322d5c205e3d22bfa278b7c4c8b4dcb7383d1859d71b382ae37786d7",
       "bytes": 79088
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1331.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1331.json",
       "sha256": "85fc98323c4289c60218b7fe3fcd99538a35a16d65710f2e6d190ec3f2f3a14f",
       "bytes": 87503
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1331.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1331.json",
       "sha256": "37cff329aaa87185ec48fb6aafa57f8b5e8a08ba0c72d939f2771c26dc120a55",
       "bytes": 77037
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1341.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1341.json",
       "sha256": "5c30b964193fbd970d65f77e3ca2c72fcee21bbf8cc855c95a25dab4b64efdef",
       "bytes": 87703
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1341.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1341.json",
       "sha256": "04b4a5c17edf5d66673e0dd2c38bea339101d3baa4b84b703015938e1bd409c5",
       "bytes": 82989
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1341.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1341.json",
       "sha256": "b0c6be0d21cbbbe155245d3c03ab9821fab2ae2e177588bb104efca7aece276a",
       "bytes": 89380
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1341.json",
-      "sha256": "87bb119aacdd2b8dee056d0ae5d192f69c9eaf55602d95d7b64c6ca6dd91697d",
-      "bytes": 77215
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1341.json",
+      "sha256": "ea1deb0f62147b51e99306848397743fab406b0d2e3a41aa0087ef81084a07f7",
+      "bytes": 80083
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1351.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1351.json",
       "sha256": "ba0d0174afece5aac46b4ba2d8a8ab93b2b9234c964f1cdcdee8c668e1d348fd",
       "bytes": 70152
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1351.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1351.json",
       "sha256": "fcbde912cc8b4c1d2ce4ae18b5bec5e8306c2ef29f67b3b18d4639b646072000",
       "bytes": 66909
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1351.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1351.json",
       "sha256": "0a0d1db6c9b3b859f94b9b19a76c2525136ee2f0317cd90f689308d3b2183611",
       "bytes": 71945
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1351.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1351.json",
       "sha256": "a27eff2c5913398bef4847120d5240f8e37f506a1f57a870f703ba44954124b5",
       "bytes": 64695
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1361.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1361.json",
       "sha256": "8b1d9de89b6a49680b651aed039c8588bcd728647c3c434ad362e9342c97c797",
       "bytes": 80738
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1361.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1361.json",
       "sha256": "b3747887e509e504f2ce088bce75210eb6ed0821fc496384c112890d7ba972bd",
       "bytes": 77223
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1361.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1361.json",
       "sha256": "22de84cdb3b5b3d75732c9dd7a479f77419fc3c0c1883326fc4a241ec8502299",
       "bytes": 83173
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1361.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1361.json",
       "sha256": "3515fb13a6bbc0e927b196a3097dc829366cde67debcd641cd0b9ad0899a1079",
       "bytes": 74819
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1371.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1371.json",
       "sha256": "d025e281cf32856834dae971e15ca06a420b8cf01c5a31108013d2b64b564860",
       "bytes": 104839
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1371.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1371.json",
       "sha256": "d87dd65672e7c2ec353971b792d66781621283f1132fb8d8ebad72d30b268c1a",
       "bytes": 100733
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1371.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1371.json",
       "sha256": "6e78bc7e765f96766468a185bbdc844e8372c2c988d03bb6eac67be33c081792",
       "bytes": 107145
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1371.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1371.json",
       "sha256": "681227bf50f86772db8771d89a88fdf8ae268404b6b5d376abd89201ff26e8ea",
       "bytes": 95704
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1381.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1381.json",
       "sha256": "a9441c75bc6e43df507fac1a42d15bfb3d849ba053af1d71fa08a72d8bbde934",
       "bytes": 95097
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1381.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1381.json",
       "sha256": "8892412447718466393e01d6bbedab40bb576b54473efb51d5847cd41f9df08a",
       "bytes": 91866
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1381.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1381.json",
       "sha256": "69cc7ffbf5418c3577af4aa78ae7244334039c58f496edbf9109ce05c7aad63f",
       "bytes": 97327
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1381.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1381.json",
       "sha256": "b1e48b2f6da3cbc4ee07ad995ee1b900cf1bb6c201bfbc7823d7992736b60b91",
       "bytes": 89641
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1391.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1391.json",
       "sha256": "523258fd073aa29932092ac59f4b131510996f266d889a5893a8c81818c133af",
       "bytes": 82604
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1391.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1391.json",
       "sha256": "01f9ee272076535fb7d2923a61e6f91817e5918b21a7be42c404b41d3695102a",
       "bytes": 79741
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1391.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1391.json",
       "sha256": "3c7485d52ac2473f96f4eed82237139a57c185b02fa02361a4d434a9af4c1f0c",
       "bytes": 85451
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1391.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1391.json",
       "sha256": "339a2ea504b1af994e5867584695c4da02bdca47f6f604ec2e8daf94c96c49df",
       "bytes": 76607
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1401.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1401.json",
       "sha256": "7c65a20674c8b2a82bcd990afeaef196372d8302e6d3edd191f1016a081fa91c",
       "bytes": 89913
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1401.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1401.json",
       "sha256": "efe0135bdaec37232500714bd32012a7baaef7e37cf815123a70353ef35f7dce",
       "bytes": 86870
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1401.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1401.json",
       "sha256": "f6ff0c0b5b153c31905e8c1c99684967bfc50b96ac897193b3263dd377eaf116",
       "bytes": 92096
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1401.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1401.json",
       "sha256": "100f9790d61741fbabeb640e84f9fef29c631c692e9e9094f975984d2810fff3",
       "bytes": 83481
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1411.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1411.json",
       "sha256": "fcac0a8d1e1c5505318a55bd368375f29b229f51e143ff9504a7686b7e3038f5",
       "bytes": 97111
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1411.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1411.json",
       "sha256": "ddf006f94f8e6a2b4cbd31fd6532e694abaff7c20b117c47dda46c2b48ec3a53",
       "bytes": 90524
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1411.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1411.json",
       "sha256": "6f376c063d97697b11878065603335fb530a65b197e762772efcb6735daec2d5",
       "bytes": 98175
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1411.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1411.json",
       "sha256": "81b3f59b872f1d21dfbf8d467910dc99262921e6cdf389fe58c302bf63d7f5cc",
       "bytes": 88206
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1421.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1421.json",
       "sha256": "fa646e36f537bd0f4e67b3c9c5b332f086cc06e595848f6dd985758480868903",
       "bytes": 73120
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1421.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1421.json",
       "sha256": "ec08306f900a1a7c53e56b999ecb8dcade76e0003810efef44f735c5ab4fc89c",
       "bytes": 70887
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1421.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1421.json",
       "sha256": "eac14084d9f840563fc2cecbafc3ee8858dbe471f827e8e2d0a7f2650ef0375f",
       "bytes": 74943
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1421.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1421.json",
       "sha256": "1f3191bda2a4f7e11fc69cf6c4bd7a2ea8a179b433feb1285bb7b1cc39ba2fdd",
       "bytes": 67927
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1441.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1441.json",
       "sha256": "cb8aea1a296d4581935021b10d226a2e40f3a853f67da917b47d8d5d1470c815",
       "bytes": 103923
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1441.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1441.json",
       "sha256": "1664e8e532464fe1bd3d03396b1f262ce2d56229dae2c7888f128a5f7c0be23e",
       "bytes": 100423
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1441.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1441.json",
       "sha256": "8f890cc96da805fb6dfca7b32db2474842a3e959e41c8fb4c7e5b4e070da1816",
       "bytes": 104855
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1441.json",
-      "sha256": "7a881b50d9a77d703cd347d96f1801c72413a8a1876a920ec108fc07b2646236",
-      "bytes": 94036
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1441.json",
+      "sha256": "364c0691b50611f25788651bd922ddb35b178e2bc33403746f6287c7700100c6",
+      "bytes": 96989
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1451.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1451.json",
       "sha256": "cae160702bc6a438677a155afb2cb6f43461e9c8b6db248fa00a35cd29c37273",
       "bytes": 99003
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1451.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1451.json",
       "sha256": "23ce0f4aee1b946f29c0178b174925444ca82536cd0ab1f10f9327956863d245",
       "bytes": 93040
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1451.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1451.json",
       "sha256": "2ad8b18ede23a9708593e0c049a7d141489f8543048d308e113def2052928111",
       "bytes": 101388
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1451.json",
-      "sha256": "73abe8d6c84e00e50fdd327f6d1d53498025bbe28c6fa3a1d11c54b09c8e5677",
-      "bytes": 87465
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1451.json",
+      "sha256": "2c2e33642a6df189a72df0c916c07871da1fa6ea1996ac37ef3c066ba1ed5545",
+      "bytes": 90939
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1461.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1461.json",
       "sha256": "1fc14cb4e3fff033099e15842f7253b28b4de54c1e615f88a6685c2386ee799d",
       "bytes": 97147
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1461.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1461.json",
       "sha256": "824b871759e1d82ae3a011bc6707f4b429881d8b475c6b8426aa9ffd9f98547e",
       "bytes": 92024
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1461.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1461.json",
       "sha256": "9a250d148b08c8e7216255bbded287717740d73401e01129e914d59f086cbfea",
       "bytes": 101170
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1461.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1461.json",
       "sha256": "a57ed1b726fad377e239fb9555b99b06cfd3286024846eaaa65ca375e1512731",
       "bytes": 88710
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1471.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1471.json",
       "sha256": "a9e8f4f1738ea6c21eea758b9067f9295808dfc331f411ebe40952c32cd8b2c6",
       "bytes": 128919
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1471.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1471.json",
       "sha256": "a6705980a83f11af23dc739117204b24a86ab5c942627c60523aec82ccdf7ffb",
       "bytes": 122869
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1471.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1471.json",
       "sha256": "de3d325e0e9433af51eda84b68ebb5f1a79e391257878d3817f0a6cf4cb16676",
       "bytes": 133865
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1471.json",
-      "sha256": "6fe57bc4c64ab090e2ede5f60da589a8bffc61907786abf9f0c9e215c214c6f8",
-      "bytes": 114406
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1471.json",
+      "sha256": "494bbb166f876a1004e7b503ec75d85c88ef903aa1590b76f9d818ccf1846339",
+      "bytes": 117710
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1481.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1481.json",
       "sha256": "2b2b4e9f982a1d0c214b45ea2e5f7f942b1cd57f1735bca3973d0e5c2cebee52",
       "bytes": 111198
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1481.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1481.json",
       "sha256": "dbbf30a14e6f4ecff8c51c97d376870d4300d72ef5c85eb81413737a542ef7a2",
       "bytes": 104458
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1481.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1481.json",
       "sha256": "f0ba26cd1b3c64cb2e337a21669f805fd62a6f12bef8ad0f3eccad961a107833",
       "bytes": 115419
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1481.json",
-      "sha256": "236b37abe12709bd58b2ed23441266ab39cba6e4ea2612dcad8037fab3dded08",
-      "bytes": 98162
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1481.json",
+      "sha256": "03c17f2190c3ba2a4fd1149d185da327cd13c92bb9210f19e11aa38ee161eea3",
+      "bytes": 100530
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1491.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1491.json",
       "sha256": "3d6f17f74926341dc4f95fea4c0b2dfd1f0a6c1f8e98f12b5221b324e181d9a1",
       "bytes": 94916
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1491.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1491.json",
       "sha256": "3bb3b81a85b75796b5dc5b833b8164c4f3817c42ac580fb1807ca80ac654de49",
       "bytes": 89576
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1491.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1491.json",
       "sha256": "988ca255137eb00e3c03a8639998c77801ef27e482684f7f9fc6f131146676ac",
       "bytes": 100181
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1491.json",
-      "sha256": "6c10bb1e135e94c0012051b4a2fa75d3daf60854a15a89df9ad5ac3b36be7189",
-      "bytes": 81868
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1491.json",
+      "sha256": "3ae95fae1c33206e783f391475f65480ed3460307338caf28e1f66fecdd794b8",
+      "bytes": 85645
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1501.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1501.json",
       "sha256": "50e1e19bb95936133c1317532f80fd8633053d2729eeda43e517783c2336318b",
       "bytes": 93330
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1501.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1501.json",
       "sha256": "db8acfefbb5973babcf3d587bcc233c4e3687129533d4f79a908f4cb0f03a34f",
       "bytes": 89526
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1501.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1501.json",
       "sha256": "19dce9e863becdda29bec2d70553e1ef54463d01a872a054910c4cfaf0125dca",
       "bytes": 96527
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1501.json",
-      "sha256": "c3d62e901981b1efed995be6dad939463006f4f77d37a8d4793fa6709667d7dd",
-      "bytes": 84908
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1501.json",
+      "sha256": "348f786a04bb180718d47c0792896754fb113ee1ea5884b621ac0e036a6f8486",
+      "bytes": 87660
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1511.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1511.json",
       "sha256": "ac681b41010d8be6ade71e665956abc41c5cc13cc9138494f6073b16238c3a56",
       "bytes": 114651
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1511.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1511.json",
       "sha256": "2a73823c00ff056830a9796e7ef8cbf5b45390a0ea2b0b1db6f0b23a3d8d3cb1",
       "bytes": 105991
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1511.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1511.json",
       "sha256": "61ac8abe232ff1cd357c7483022f7cb2118c2bcbf091f216c9318040f1ca4c77",
       "bytes": 119111
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1511.json",
-      "sha256": "99a5d1be1c1e9e027c588fb27153b9db264d6243c7434671db16375060014519",
-      "bytes": 98188
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1511.json",
+      "sha256": "f730215830f8a54eecb4c34bdc5c7d8246e087a8554c817cd0acaf5dd9c84c3c",
+      "bytes": 101558
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1521.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1521.json",
       "sha256": "24c331fe7c7c8f1302b6b79c1c4f20c17bd66c75c11e1bf10ded0779ee867ea0",
       "bytes": 80972
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1521.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1521.json",
       "sha256": "01a50d35d2ec1632d6e1aa60d5e947f3f2f089503f940e3ac479b73c2d4074d1",
       "bytes": 78195
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1521.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1521.json",
       "sha256": "0f07285365aba5e7ad0d8c11f900de0addbf6a0e56a9de4d156457704c69b23c",
       "bytes": 84596
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1521.json",
-      "sha256": "3b17ad9a531b9caabcc3f50b65b921d9e99f5e24377749f774506e1182da88e3",
-      "bytes": 71616
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1521.json",
+      "sha256": "b3657d1b2e408d136d61d47d3e8bb80d5bd6498fb61930dc8478dfd5c0eb8375",
+      "bytes": 74730
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1531.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1531.json",
       "sha256": "421d5131e5de640929385a03857f228cf1e3c769e180e8f59cab0e0d1af7bed1",
       "bytes": 93428
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1531.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1531.json",
       "sha256": "630a8f403989be09ed85722d20cfccfc6d646d328b13ee8f3ed92c6cadcf109e",
       "bytes": 88986
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1531.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1531.json",
       "sha256": "b634eb33e74ae79c7aa8a53a5f2614daa06a641fb1d1b0fbbab1b4e9d9747fc1",
       "bytes": 99954
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1531.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1531.json",
       "sha256": "9f9756b69cfc57053f7b2c357d7f782be670af9edee62eb59b435376308abd45",
       "bytes": 86412
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1541.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1541.json",
       "sha256": "364c164aaa95e1921d31050ef8984a8fa956e078531edb9e6dcaf614538b4bb2",
       "bytes": 103744
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1541.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1541.json",
       "sha256": "b3e8904d473230a0eec046f417ad9ef1f3cd3995be0a10fadd777a728528e7f5",
       "bytes": 97648
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1541.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1541.json",
       "sha256": "038560130fdacb5f3c49e250f4e85c45b2b1c5709fae00de78cd6b95d911a22e",
       "bytes": 105849
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1541.json",
-      "sha256": "26ddbfdc9f5a594276f6a4c6c76d8d9f4df1e127429284f6a5e6971f712026ed",
-      "bytes": 91556
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1541.json",
+      "sha256": "bb05f0dc36cbf3cdb1e2a60e094f9e818bf9e3b8232c9e680804e705f9c0023b",
+      "bytes": 93785
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1551.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1551.json",
       "sha256": "09327694bc2505e12709bd0ed951879ef145b85c4dfd5fdb9940643894a617b3",
       "bytes": 85433
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1551.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1551.json",
       "sha256": "451e928b088387537d2fac5cbef65311a7f0741076af06c148edac5598465ab6",
       "bytes": 83434
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1551.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1551.json",
       "sha256": "e6faba3b6092c322f582cb20e382745d2727063c2ec576f773c7071502207bc3",
       "bytes": 88787
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1551.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1551.json",
       "sha256": "7dd8ff55025c610bf851eeea97e3f62005ef10b8118117714d7ece4278908d98",
       "bytes": 79824
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1561.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1561.json",
       "sha256": "a8238331d2281044173c83924436fb88c1fa18358fba815db8f0e0561179d0a1",
       "bytes": 98831
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1561.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1561.json",
       "sha256": "1ecb773a579133c249da0e1fdbe6ebced92dcc5ecf0d2c45c93851cd4ea42962",
       "bytes": 95936
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1561.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1561.json",
       "sha256": "81e966608b8cc44edaf53861bd22f1481af7ad94673f993568a295b538bf8699",
       "bytes": 100790
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1561.json",
-      "sha256": "58b90f250216fe6ba6ff7f870f4516d8cfc62f82e0143c8dfdcbbfa8bf2d9af7",
-      "bytes": 87867
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1561.json",
+      "sha256": "6ba6148f7648cfb23b2ce51d935959941a34111b38c8f501ffc6fb03033edc49",
+      "bytes": 90338
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1571.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1571.json",
       "sha256": "8e0e20883e5140b8452adf61367c42f163ad4d01f8917a982305baa833cf34de",
       "bytes": 97193
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1571.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1571.json",
       "sha256": "521dc69fc7cb0d55054a7b2009cc2a55eaf6534aa81ac18945b7ad3428eff735",
       "bytes": 93889
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1571.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1571.json",
       "sha256": "4bdc8d608a15e0f16e3d279d7807a8a598435bd813c3379679321bd0a3fe3376",
       "bytes": 99314
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1571.json",
-      "sha256": "e282d8772f9593bbcab72019ae9871b1dbf8c1bd6dd14a2b53e25a334ba27bbb",
-      "bytes": 86145
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1571.json",
+      "sha256": "101b39e7a62fd6b080c49978d69f038798394d57e25b58223bde51db3c23c388",
+      "bytes": 88791
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1581.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1581.json",
       "sha256": "178800cc6e658104492858338367e183d81e405427f45eaacc6fac2447791b6d",
       "bytes": 99087
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1581.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1581.json",
       "sha256": "030e16022131b91aa50780b10ba628834313b9477c71a075967a20a4028bb496",
       "bytes": 95492
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1581.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1581.json",
       "sha256": "bce2d89577f9219c1adb8f87885f69a5dfa660f9cad530ac1d656cda925c7ca6",
       "bytes": 103018
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1581.json",
-      "sha256": "a58e5b1ed923d78626fa14a35a1611341071f1e57e2f6dc1636fcc15681f79e6",
-      "bytes": 86172
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1581.json",
+      "sha256": "cebe990fbe0b36fb25d09f86b2240f8d8db3ea77e2fecbbca897dcb56fe0aa7e",
+      "bytes": 89289
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1591.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1591.json",
       "sha256": "2834af639ef79c97b14141d2140b35374336cf3d074372ab86a6e731cb73a561",
       "bytes": 89012
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1591.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1591.json",
       "sha256": "71e780af59839af2afc0c63aeff06ce1eab5f9f117980b1585acaf2ef35e1cda",
       "bytes": 85049
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1591.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1591.json",
       "sha256": "0efd45d0b7bb9671d930fea79066b4a3d791e5f5bdd6403f5bf2d15e956601af",
       "bytes": 93164
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1591.json",
-      "sha256": "6974e62d7b52e69c80985fa67dc63a7c9b041fe67565e14949eb7fb1111e1987",
-      "bytes": 78453
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1591.json",
+      "sha256": "b029fdd3c3bc67b175773c20a9865662eccf24c19d1ffa52da8db983a5c67763",
+      "bytes": 81702
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1611.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1611.json",
       "sha256": "33b780b02562475a0de592f62f8640d5b4bc338079c1b7fd3b692127d25466b4",
       "bytes": 105774
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1611.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1611.json",
       "sha256": "a7142c539eb04910dd60d282fc0edada8107135670dfdd51b3f826cea17f1669",
       "bytes": 102501
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1611.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1611.json",
       "sha256": "52f5584a44e002fb530d68165d4f50b0426079d16119a53ab203d3e416f9e9f7",
       "bytes": 110246
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1611.json",
-      "sha256": "88cac940e6e008f4081d39afb7c19159ef0168d4d87a0bce70fc29c45ae49b7d",
-      "bytes": 93728
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1611.json",
+      "sha256": "7e4ea618277eb357e961f5ba20807db82dd3382d8c49afe04d85152212bf6ebd",
+      "bytes": 96015
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1621.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1621.json",
       "sha256": "4d8316637fd77565069427aeba85619583374bed5ffdda84490afff76f520720",
       "bytes": 99908
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1621.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1621.json",
       "sha256": "47cd353649f4bf38f68252332b086151faff9cbb41f8eaae069d87cae4781a99",
       "bytes": 94546
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1621.json",
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1621.json",
       "sha256": "649caeaa4df0b57881185fc2eece9d6833d67103e8512813baad62f4eba72275",
       "bytes": 101575
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1621.json",
-      "sha256": "566110a0351be7d5575c1d6243d8fc4eed82c2f3bf0e9b57d384e038898a96fc",
-      "bytes": 87461
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1621.json",
+      "sha256": "cc4d5a6fe04e1332a511f93e5c3960a369bc7ccac4b1595b24ef48a1745f4610",
+      "bytes": 89870
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1631.json",
-      "sha256": "6ce42ad05efc9feee19e034383e79d1cc8e4b812d22e85dfece41b303e627385",
-      "bytes": 87641
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1631.json",
+      "sha256": "59cc0cd361b4299e5ab1ee451c749893d70cb1498f9605e0ebbf370cabbe7e7a",
+      "bytes": 87766
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1631.json",
-      "sha256": "2ec7c5ce86c899f17d0e32a7f392672af96c60b26afd0774b58e44e9d1884785",
-      "bytes": 83114
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1631.json",
+      "sha256": "f47955db84c29245149f126640e4f6cb4f5160efe8ff0f7d8e5fbe18f8bec20a",
+      "bytes": 83427
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1631.json",
-      "sha256": "377cf22d7e004f47787cb5137600429b386e94c0a0f491cf4ca537cb00a25062",
-      "bytes": 89839
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1631.json",
+      "sha256": "57cf6cbbeee7f4adce555a39029117104a9ebbc96ee74f1348292419728e9671",
+      "bytes": 89932
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1631.json",
-      "sha256": "e11a229e3f7aa758611daa3c806f59cb1424e02f10751e569ad0f1bf46491adf",
-      "bytes": 80279
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1631.json",
+      "sha256": "863ddbf5b0e83aec36966e4a4379aabfd938a58c04b3f247dbe953b2f6587e2a",
+      "bytes": 80336
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ko/character/1641.json",
-      "sha256": "6868988887fac04c6998222dcf975771082096ec16183880b077c054cd65db19",
-      "bytes": 89055
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ko/character/1641.json",
+      "sha256": "ee94d11ddca705163bd498f30868e3fd29abf7dc4e864b95adf84e22b08f4c06",
+      "bytes": 89198
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/en/character/1641.json",
-      "sha256": "366c722fc372c0942424854c51f4237c881fcdeca204e7dafd75011a9aaa6ee0",
-      "bytes": 85033
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/en/character/1641.json",
+      "sha256": "fc4d429ec79c08827624a8cf5371802d48068e94ffc40986ac5f99269f46e5b8",
+      "bytes": 85184
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/ja/character/1641.json",
-      "sha256": "ed5b8b114cc9748441fc127ca5f4f39d70499aedf6847f3616df01304a9023cc",
-      "bytes": 91410
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/ja/character/1641.json",
+      "sha256": "d8fb4e695e6792db249f986a44f23b09324609b660cb4c53a184e0bc8d402659",
+      "bytes": 91545
     },
     {
-      "url": "https://static.nanoka.cc/zzz/3.3.12+19536047/zh/character/1641.json",
-      "sha256": "da4b5454a8959a684cf7678d55636834ff491cbe0cc72bfd6ee3a64af98f237a",
-      "bytes": 81797
+      "url": "https://static.nanoka.cc/zzz/3.3.12+19629936/zh/character/1641.json",
+      "sha256": "85d8bc3a889ce8d24646f12d698af4be877c4240b23a80fe87e6dbce6a2502ba",
+      "bytes": 81902
     }
   ],
   "excluded": [

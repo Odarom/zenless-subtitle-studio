@@ -103,7 +103,7 @@ test('Ollama rejects cloud models and sends structured requests only to loopback
 });
 test('glossary updates verify hashes, retain baseline on failure and recheck active jobs', async t => {
   const root = temp(t); mkdirSync(join(root, 'glossary')); copyFileSync('glossary/zzz.json', join(root, 'glossary/zzz.json'));
-  const bytes = readFileSync('glossary/zzz.json'), sha256 = glossaryHash(bytes), manifest = { schema: 1, version: 'test-v1', sha256, file: `releases/${sha256}.json`, bytes: bytes.length, count: 2312 };
+  const bytes = readFileSync('glossary/zzz.json'), sha256 = glossaryHash(bytes), manifest = { schema: 1, version: 'test-v1', sha256, file: `releases/${sha256}.json`, bytes: bytes.length, count: JSON.parse(bytes).entries.length };
   let busy = false, corrupt = false, race = false;
   const updates = new GlossaryUpdates({ root, dataDir: join(root, 'data'), busy: () => busy, fetcher: async url => {
     if (url.endsWith('latest.json')) return new Response(JSON.stringify(manifest));

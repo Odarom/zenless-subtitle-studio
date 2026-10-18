@@ -10,7 +10,7 @@ export function buildGlossaryRelease(root = resolve(import.meta.dirname, '..'), 
   const version = `${catalog.retrievedAt || 'reviewed'}-${sha256.slice(0, 12)}`;
   mkdirSync(join(output, 'releases'), { recursive: true }); mkdirSync(join(output, 'catalog'), { recursive: true });
   writeFileSync(join(output, 'releases', `${sha256}.json`), bytes);
-  for (const file of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'README.md', 'ABBREVIATIONS.md']) copyFileSync(join(root, 'glossary', file), join(output, 'catalog', file));
+  for (const file of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md']) copyFileSync(join(root, 'glossary', file), join(output, 'catalog', file));
   const manifest = { schema: 1, version, sha256, bytes: bytes.length, count: catalog.entries.length, file: `releases/${sha256}.json`, sourceVersion: catalog.sourceVersion || null };
   writeFileSync(join(output, 'latest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   const guides = {

@@ -169,7 +169,7 @@ test('boss slang and an unbracketed barrier reach every provider with canonical 
       const body=JSON.parse(init.body);
       const payload=JSON.parse(provider==='gemini'?body.contents[0].parts[0].text:provider==='openai'?body.input:body.messages[1].content);
       const terms=new Map(payload.glossary.map(e=>[e.id,e]));
-      assert.equal(terms.get('monster:30009')?.outputPreferred.ko,'미지의 복합 침식체');
+      assert.equal(terms.get('monster:30009')?.outputPreferred.ko,'침식체');
       assert.equal(terms.get('community:typhon-family-name')?.outputPreferred.ko,'티폰');
       assert.equal(terms.get('community:scorched-horizon-base-name')?.outputPreferred.ko,'태양의 잔불');
       assert.equal(terms.get('community:shill-buff')?.outputPreferred.ko,'접대');

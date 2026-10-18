@@ -116,6 +116,7 @@ test('modal key entry is private, never prefilled, one-time and immediately pers
   const opening = openInteraction();
   assert.equal(await respondToApi(opening, deps, new SerialQueue()), true);
   assert.equal(modalField(opening.modal, 'key').value, undefined);
+  assert(opening.modal.components.some(label => label.description?.includes('운영자가 복호화할 수 있습니다')));
   const submit = submitInteraction(opening);
   await respondToApi(submit, deps, new SerialQueue());
   assert.equal(submit.responses[0].flags, MessageFlags.Ephemeral);

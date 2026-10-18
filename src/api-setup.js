@@ -43,7 +43,7 @@ export class ApiSetup {
       new LabelBuilder().setLabel('모델 선택').setDescription('무료 여부·요금·사용 한도는 API 프로젝트 설정에 따릅니다.').setStringSelectMenuComponent(select),
       input('model', '직접 입력할 모델 이름', '위에서 「직접 입력」을 선택했을 때만 사용합니다.', 80,
         { required: false, value: custom ? model : undefined, placeholder: `예: ${API_MODELS[provider]}` }),
-      input('key', 'API 키', current ? '비워 두면 이 서버에 저장된 키를 유지합니다. 입력 글자는 가려지지 않습니다.' : '현재 서비스의 API 키를 입력하세요. 입력 글자는 가려지지 않습니다.', 512,
+      input('key', 'API 키', current ? '비워 두면 기존 키를 유지합니다. 암호화 저장되며 운영자가 복호화할 수 있습니다. 입력 글자는 가려지지 않습니다.' : '암호화 저장되며 API 호출을 위해 운영자가 복호화할 수 있습니다. 입력 글자는 가려지지 않습니다.', 512,
         { required: !current }),
       input('limit', '하루 최대 요청 횟수', '0은 번역 중지. API 제공사의 한도·금액 한도와는 별도입니다.', 6,
         { value: String(saved?.dailyLimit ?? this.config.dailyLimit) }),

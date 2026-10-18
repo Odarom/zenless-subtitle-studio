@@ -186,7 +186,7 @@ for (const entry of JSON.parse(readFileSync('glossary/community.json', 'utf8')).
     if (entry.verifiedAt) matched.communityVerifiedAt = entry.verifiedAt;
     if (entry.reviewedAt) matched.communityReviewedAt = entry.reviewedAt;
     if (entry.sourceNotes) matched.communitySourceNotes = entry.sourceNotes;
-  } else entries.push({ ...entry, category: 'community', rule: entry.rule, retrievedAt });
+  } else entries.push({ ...entry, category: entry.category === 'stat' ? 'stat' : 'community', rule: entry.rule, retrievedAt });
 }
 const counts = Object.fromEntries([...new Set(entries.map(e => e.category))].map(c => [c, entries.filter(e => e.category === c).length]));
 mkdirSync('glossary', { recursive: true });

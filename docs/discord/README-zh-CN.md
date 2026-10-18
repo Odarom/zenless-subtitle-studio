@@ -1,65 +1,54 @@
 # 绝区零 Discord 翻译机器人
 
-[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md)
+[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
-[使用条款](TERMS.md) · [隐私政策](PRIVACY.md)
+## [➕ 添加翻译机器人到 Discord 服务器](https://discord.com/oauth2/authorize?client_id=1557261995215028254&scope=bot%20applications.commands&permissions=536939520&integration_type=0)
 
-连接韩语、英语、日语与简体中文文字频道，用绝区零术语表翻译新消息。两个频道即可使用，每条消息的所有目标语言合并为一次 AI 请求，并显示投稿者昵称、头像与翻译标记。
+邀请 Odarom 运营的 **zzz translator** 即可使用，无需安装程序或自行运行服务器。连接韩语、英语、日语、简体中文文字频道，参考绝区零词库翻译新消息。
 
-这是可自行部署的机器人源码。需要自己的 Discord 应用和令牌、**Node.js 24.17以上**以及保持运行的电脑或服务器。公开源码不会改变维护者正在运行的机器人。
+[服务条款](TERMS.md) · [隐私政策](PRIVACY.md)
 
-## 安装
+## 开始使用
 
-1. 点击 **Code → Download ZIP**，完整解压并安装[Node.js](https://nodejs.org/en/download)。
-2. 在[Discord Developer Portal](https://discord.com/developers/applications)创建应用，准备 **Application ID** 与 **Bot Token**。
-3. 在 Bot 设置启用 **Message Content Intent**。
-4. 选择 **Guild Install**，使用 `bot`、`applications.commands` 范围邀请至服务器。需要**查看频道、发送消息、阅读消息历史、管理 Webhook**权限，不需要完整管理员权限。
-5. 复制`.env.example`为`.env`，填写`DISCORD_TOKEN`与`DISCORD_APPLICATION_ID`。使用服务器单独设置 API 时，翻译密钥和`DISCORD_GUILD_ID`可留空。不要覆盖已有设置。
-
-在解压目录运行：
-
-```sh
-npm ci --ignore-scripts
-npm run check
-npm run register
-npm start
-```
-
-首次及命令变更时注册，程序也会输出邀请链接。之后用`npm start`启动。Windows 的`run.cmd`中1为注册、2为运行。`Ctrl+C`退出。同一个机器人不要同时在两处运行，离线期间的消息不会补翻译。
-
-## API 与频道
-
-服务器管理者使用`/zzz api-set`保存 Gemini/OpenAI、模型、密钥与每日请求上限。推荐[Google AI Studio 免费密钥](https://aistudio.google.com/apikey)与 **Gemini 3.1 Flash-Lite**（`gemini-3.1-flash-lite`）。请在账号查看[价格与免费额度](https://ai.google.dev/gemini-api/docs/pricing)，保存设置并不验证密钥或免费可用性。
-
-设置表单仅向调用者显示，但输入的密钥字符不会遮挡。密钥在机器人电脑中加密保存，运营者可为调用而解密。仅向信任的运营者提交密钥。同一服务仅更换模型时，留空密钥即可保留原密钥。
-
-将两个不同文字频道连接到相同分组：
+1. 点击添加链接，选择自己管理的服务器，允许查看频道、发送消息、读取消息历史、管理 Webhook。
+2. 服务器管理员运行 `/zzz api-set`，登记**本服务器自己的 Gemini 或 OpenAI API 密钥**、模型和每日请求上限。
+3. 将至少两个语言频道加入同一分组。
 
 ```text
-/zzz link group:friends channel:#korean language:한국어
-/zzz link group:friends channel:#english language:English
+/zzz link group:friends channel:#한국어 language:한국어
+/zzz link group:friends channel:#中文 language:简体中文
 ```
 
-同一分组每种语言仅可连接一个频道，第二个频道连接后开始处理新消息。`/zzz status`检查，`/zzz pause group:friends`与`/zzz resume group:friends`暂停、继续，`/zzz unlink`解除连接。设置需要管理服务器权限。
+连接第二个频道后开始翻译新消息。同一分组每种语言限一个频道。API 和频道设置需要管理服务器权限。
 
-## 使用与举报
+## 免费 API 推荐 — 截至2026年10月19日（韩国标准时间）
 
-- 编辑、删除仍在记录中的原文会同步到译文，编辑需额外翻译请求。支持转发消息文字。
-- 仅图片、GIF 或表情时不调用 AI，直接分享。附带文字则只翻译文字，不识别图片内文字。
-- `/zzz usage`、`/zzz api-status`、`/zzz api-delete`管理用量、设置与密钥。每日上限不是金额上限，失败请求也计数。配额错误不会自动重试；Gemini 临时服务器错误可重试一次，也计入请求数。
-- 回复译文发送 **`!report`**，点击开始举报；也可使用消息菜单**应用 → 举报误译**或`/zzz-report submit message:消息链接`。
-- `/zzz-report mine`与`/zzz-report status id:接收编号`仅查看自己的举报。举报界面随 Discord 语言显示韩、英、日、中文。举报不调用 AI，也不会自动更改词库。
+**推荐 Gemini 3.1 Flash-Lite，作为现阶段可免费使用的 API。** [在 Google AI Studio 申请免费 API 密钥](https://aistudio.google.com/apikey)，将模型设为 `gemini-3.1-flash-lite`。**在模型的免费额度内使用，即可免费使用翻译机器人。** 免费层也有请求次数和 token 用量限制，提供政策今后可能变化，请查看 [Google 官方最新免费额度与价格](https://ai.google.dev/gemini-api/docs/pricing)。选择付费服务时，费用由登记密钥所属账号承担。
 
-## 本地翻译、更新与数据
+**密钥在运营服务器加密保存，可为调用 API 解密。有服务器访问权限的运营者可访问密钥。**设置表单仅执行者可见，输入字符不隐藏。登记前请阅读隐私政策。
 
-另行安装 Ollama，执行`ollama pull qwen3:8b`并保持运行。在`.env`指定`TRANSLATION_PROVIDER=ollama`、`DISCORD_GUILD_ID=自己的服务器ID`、`OLLAMA_MODEL=qwen3:8b`。默认配置仅适用于指定服务器，已保存的服务器 API 设置优先。删除 API 后不会自动恢复本地配置。质量取决于所选模型。
+## 命令与功能
 
-词库自带于`glossary/zzz.json`。参考[共享数据库](https://github.com/Odarom/zenless-translation-database)与[更新流程](https://github.com/Odarom/zenless-discord-translator/blob/main/glossary/LIFECYCLE.md)。公开词库更新不会自动替换其他人正在运行的机器人资料。
+| 命令 | 功能 |
+|---|---|
+| `/zzz status` | 查看频道连接 |
+| `/zzz pause group:friends` · `/zzz resume group:friends` | 暂停、继续 |
+| `/zzz unlink` | 解除频道连接 |
+| `/zzz usage` · `/zzz api-status` | 查看用量与 API 设置 |
+| `/zzz api-delete` | 删除并停用本服务器保存的 API 设置 |
 
-更新前停止机器人，将`.env`、`data/`、`.secrets/`一起私密备份。替换源码、安装依赖并重启，切勿将私密资料上传 GitHub。运营者可用`node scripts/reports-cli.mjs export --status pending`导出本安装环境的举报。项目维护者统一检查自己的机器人与视频举报，其他人独立部署的机器人不会自动向项目服务器发送举报。
+每条消息的所有目标语言合并为一次 AI 请求。仍在记录中的原文编辑、删除会同步到译文，编辑会产生额外请求。只有图片、GIF、表情时无需 AI，直接分享。不翻译图片内文字、私信、讨论串、论坛或语音。额度错误不自动重试；Gemini 临时服务器错误可重试一次。失败和重试计入用量，每日次数上限不是费用上限。
 
-已连接消息及设置的上下文会发送到其他语言频道；Gemini/OpenAI 模式还会由外部 API 处理。近期上下文在内存中限制使用，提交举报的原文、译文与说明最多保存90天。仅面向普通文字频道，不支持私信、讨论串、论坛或语音翻译。
+## 举报误译
 
-看不到命令时请检查使用应用命令权限和服务器安装。无法翻译时依次检查运行状态、Message Content Intent、频道权限、`/zzz api-status`与`/zzz status`。参考[官方设置](https://docs.discord.com/developers/quick-start/getting-started)、[Intents](https://docs.discord.com/developers/events/gateway#privileged-intents)与[权限](https://docs.discord.com/developers/topics/permissions)。检查命令为`npm test`。
+回复译文发送 **`!report`**，点击举报按钮。也可使用消息菜单 **应用 → 举报误译** 或 `/zzz-report submit message:消息链接`。通过 `/zzz-report mine`、`/zzz-report status id:接收编号`查看自己的举报。
 
-[视频字幕工作室](https://github.com/Odarom/zenless-subtitle-studio)是另一个程序。本机器人为同人制作，并非游戏官方产品。
+无需在 GitHub 发帖。举报私密发送给运营者，与视频程序举报统一审核。**只有审核后的修改才会进入[共享词库](https://github.com/Odarom/zenless-translation-database)。**不会将整个聊天自动收集到数据库。举报最多保存90天。
+
+## 更新与帮助
+
+运营者负责更新机器人和词库，用户无需下载更新或维护服务器。连接前请告知参与者消息将转发到其他频道并由外部 AI 处理。免费 Gemini 的数据使用、成人资格等条件请查阅提供者条款。
+
+找不到命令时检查使用应用命令权限与服务器安装；不翻译时检查频道权限、`/zzz api-status`、`/zzz status`。解除连接或移除机器人即可停用，提供者侧密钥需另行撤销。
+
+[联系运营者](https://github.com/Odarom/zenless-discord-translator/issues/new)时勿公开密钥、私人对话或个人资料。[字幕工作室](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)是独立 PC 程序。本项目并非游戏官方服务。

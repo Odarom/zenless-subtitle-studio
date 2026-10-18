@@ -160,7 +160,7 @@ test('basic attribute words match separately from damage bonuses and AP uses rev
     assert.equal(relevantTerms(entries,`${en.toLowerCase()} weak`).find(e=>e.id===`attribute:${en.toLowerCase()}`)?.preferred.ko,ko);
   }
   assert(!relevantTerms(entries,'windyPlayer').some(e=>e.id==='attribute:wind'));
-  for(const text of ['AP','상마','이상마','이마']) {
+  for(const text of ['AP','상마','이상마']) {
     const ap=relevantTerms(entries,text).find(e=>e.id==='stat:31300');
     assert(ap,text);assert.equal(ap.communityPreferred.ko,'이상마');
     assert.equal(ap.preferred.ko,'이상 마스터리');
@@ -290,7 +290,7 @@ test('percent, flat, base and penetration abbreviations preserve distinct concep
 });
 
 test('stat abbreviations and equipment expressions resolve while CD retains competing meanings', () => {
-  for (const [text,id] of [['치확','stat:31000'],['치피','stat:32700'],['이마','stat:31300'],['AP','stat:31300'],['이장','stat:33000'],['AM','stat:33000'],['주옵','community:main-stat'],['부옵','community:sub-stat'],['8.3 subs','community:sub-stat'],['전무','community:signature-engine'],['astra sig','community:signature-engine'],['餅武器','community:signature-engine'],['专武','community:signature-engine']]) {
+  for (const [text,id] of [['치확','stat:31000'],['치피','stat:32700'],['이상마','stat:31300'],['AP','stat:31300'],['장악','stat:33000'],['AM','stat:33000'],['주옵','community:main-stat'],['부옵','community:sub-stat'],['8.3 subs','community:sub-stat'],['전무','community:signature-engine'],['astra sig','community:signature-engine'],['餅武器','community:signature-engine'],['专武','community:signature-engine']]) {
     assert(relevantTerms(entries,text).some(e=>e.id===id),text);
   }
   const cd = relevantTerms(entries,'CD');
@@ -303,7 +303,7 @@ test('stat abbreviations and equipment expressions resolve while CD retains comp
 });
 
 test('new combat aliases retain earlier contextual rules and source provenance', () => {
-  for (const [text,id] of [['평타','combat:basic-attack'],['회반','combat:dodge-counter'],['EX','combat:ex-special-attack'],['지돌','combat:assist-follow-up'],['극회','combat:perfect-dodge']]) {
+  for (const [text,id] of [['평타','combat:basic-attack'],['회반','combat:dodge-counter'],['EX','combat:ex-special-attack'],['지돌','combat:assist-follow-up'],['극한회피','combat:perfect-dodge']]) {
     assert(relevantTerms(entries,text).some(e=>e.id===id),text);
   }
   assert(entries.find(e=>e.id==='combat:ex-special-attack').communityRule.includes('길게 누르기'));
@@ -322,6 +322,44 @@ test('san-z is preserved in every language without matching inside another Latin
     assert(entry.rule.includes('대소문자')); assert(entry.rule.includes('음역'));
   }
   assert(!relevantTerms(entries, 'otherSan-Zname').some(e=>e.id==='community:preserve-san-z'));
+});
+
+test('reviewed Korean aliases and outputs preserve full-name fallback and flat PEN specificity', () => {
+  const community=JSON.parse(readFileSync('glossary/community.json','utf8')).entries;
+  for(const alias of ['이마','이장','임팩트','화피증','빙피증','연계스킬','궁기','극회','방어 지원','방어지원','타이폰']){
+    assert(!community.some(e=>e.aliases.includes(alias)),alias);
+  }
+  for(const [text,id] of [['꽝꽝이','weapon:13115'],['관통','stat:31100'],['콤스','combat:chain-attack'],['치치','community:crit-pair']]){
+    assert(relevantTerms(entries,text).some(e=>e.id===id),text);
+  }
+  for(const [id,output] of [['stat:31100','관통%'],['stat:33000','장악'],['stat:31600','에회'],['stat:32500','얼피증'],['community:crit-pair','치치'],['community:signature-engine','전무'],['community:resistance-reduction','속저깎'],['monster:30009','침식체']]){
+    assert.equal(entries.find(e=>e.id===id).communityPreferred.ko,output,id);
+  }
+  for(const id of ['combat:assist-follow-up','combat:perfect-dodge']) assert.equal(entries.find(e=>e.id===id).communityPreferred?.ko,undefined);
+  assert.equal(entries.find(e=>e.id==='community:signature-engine').preferred.ko,'전용 W-엔진');
+  for(const text of ['깡관통','고정 관통','고정관통']) {
+    const found=relevantTerms(entries,text);
+    assert(found.some(e=>e.id==='stat-flat-pen'),text);
+    assert(!found.some(e=>e.id==='stat:31100'),text);
+  }
+  const mixed=relevantTerms(entries,'깡관통과 관통 24%');
+  assert(mixed.some(e=>e.id==='stat-flat-pen'));
+  assert(mixed.some(e=>e.id==='stat:31100'));
+});
+
+test('resistance reduction and ignore have separate concepts and preserve qualified source effects', () => {
+  for(const text of ['불 속성 피해 저항을 25% 무시한다','모든 속성 피해 저항이 15% 감소한다','ignore 25% of Fire RES','15% All-Attribute RES reduction']){
+    const found=relevantTerms(entries,text);
+    const reduction=found.find(e=>e.id==='community:resistance-reduction');
+    const ignore=found.find(e=>e.id==='community:resistance-ignore');
+    assert(reduction,text);assert(ignore,text);
+    assert.equal(reduction.preferred.ko,'속성 피해 저항 감소');
+    assert.equal(reduction.communityPreferred.ko,'속저깎');
+    assert.equal(ignore.preferred.ko,'속성 피해 저항 무시');
+    assert.equal(ignore.communityPreferred,undefined);
+    assert(ignore.rule.includes('속저깎으로 치환하지 않는다'));
+    assert(ignore.rule.includes('수치'));assert(reduction.rule.includes('수치'));
+  }
 });
 
 test('Soaring Light and Return to Dust remain distinct named skills in four languages and Korean shorthand', () => {

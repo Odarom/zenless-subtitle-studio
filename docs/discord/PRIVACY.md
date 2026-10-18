@@ -31,7 +31,7 @@
 
 ### 접근 보호와 이용자 권리
 
-API 키는 암호화하고 실행 자료는 공개 저장소에서 제외합니다. 신고 목록·운영 도구는 운영자 접근으로 제한합니다. Discord 이용자는 본인 신고를 조회할 수 있고, 서버 관리자는 해당 서버의 신고 상태를 확인할 수 있습니다. 영상 신고에는 공개 목록 조회 기능이 없습니다.
+API 키는 암호화하고 실행 자료는 공개 저장소에서 제외합니다. **암호화는 저장 파일을 보호하기 위한 것이며 운영자에게서 키를 숨기는 방식은 아닙니다. 서버 프로그램은 API 요청 시 키를 복호화해 메모리에서 사용하므로, 서버 접근 권한이 있는 운영자는 키에 접근할 수 있습니다.** 다른 Discord 이용자에게 저장된 키를 조회하는 기능은 제공하지 않습니다. Discord 입력 창에 등록한 키는 Discord를 통해 운영 서버로 전달되며 일반 채팅 메시지로 게시하지 않습니다. 신고 목록·운영 도구는 운영자 접근으로 제한합니다. Discord 이용자는 본인 신고를 조회할 수 있고, 서버 관리자는 해당 서버의 신고 상태를 확인할 수 있습니다. 영상 신고에는 공개 목록 조회 기능이 없습니다.
 
 이용자는 자신의 정보에 대한 열람·정정·삭제·처리 중지를 요청할 수 있습니다. 서버 관리자는 번역을 일시 중지하거나 채널을 해제하고 API 설정을 삭제할 수 있습니다. 운영자에게 요청하려면 [GitHub 문의 창구](https://github.com/Odarom/zenless-discord-translator/issues/new)에 **개인정보 없이 비공개 연락 방법을 먼저 요청**하세요. 비공개 채널을 정한 뒤 접수 번호 등 최소 정보로 본인 여부와 요청 범위를 확인합니다. 토큰·키·신분증·비공개 대화는 공개 이슈에 올리지 마세요. 제공자 계정의 키 폐기 및 Discord 메시지 삭제는 해당 서비스에서도 별도로 진행해야 할 수 있습니다.
 
@@ -43,7 +43,7 @@ API 키는 암호화하고 실행 자료는 공개 저장소에서 제외합니�
 
 The bot processes linked message text, reply/forward context, display names, avatar URLs, Discord IDs, attachments, channel configuration and usage counters to translate, relay and synchronize messages. Normal conversation bodies are not saved in bot state files. Recent context is limited in memory to 15 minutes and the configured count; restart or connection changes clear it. Message mapping is limited to 1,000 recent source messages per server. Configuration, usage and relevant identifiers remain as needed for operation and are subject to deletion requests. Shared images pass through bounded memory rather than permanent bot files; copies may remain on Discord.
 
-Per-server API keys are encrypted with AES-256-GCM and a separate key. The operator can decrypt them for API requests. `/zzz api-delete` or removing the bot clears the stored per-server settings.
+Per-server API keys are encrypted with AES-256-GCM and a separate key. **Encryption protects stored files; it does not hide keys from the operator. The server decrypts keys in memory for API requests, so an operator with server access can access them.** Other Discord users have no feature for retrieving stored keys. Keys submitted through Discord’s setup form pass through Discord to the operator’s server and are not posted as ordinary chat messages. `/zzz api-delete` or removing the bot clears the stored per-server settings.
 
 Discord feedback stores submitted source/translation/explanation, suggestions, reporter/message/server IDs, model/glossary information and review status for up to 90 days. Video feedback stores the selected cue’s text, explanation, suggestion, timing/type, model/glossary information and optional video URL for up to 90 days. It excludes API keys, local paths, video files and frame images. Keyed hashes of random installation IDs and connection IPs support abuse prevention for up to 90 days; IPs are also processed transiently for network communication.
 

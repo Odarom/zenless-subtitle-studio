@@ -14,4 +14,4 @@ Recommended: a [Google AI Studio free API key](https://aistudio.google.com/apike
 
 Fan-made software; not an official game product.
 
-[Discord bot source and setup / 디스코드 봇 사용법](https://github.com/Odarom/zenless-discord-translator)
+[Add the Discord bot and usage guide / 디스코드 봇 초대·사용법](https://github.com/Odarom/zenless-discord-translator)

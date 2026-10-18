@@ -12,7 +12,7 @@
 
 ## 播放与保存
 
-推荐先申请[Google AI Studio 免费 API 密钥](https://aistudio.google.com/apikey)，并选择 **Gemini 3.1 Flash-Lite**（`gemini-3.1-flash-lite`）。准确型号名称为 Flash-Lite。[免费额度](https://ai.google.dev/gemini-api/docs/pricing)受账号、地区、RPM 与每日配额限制，并非无限使用。
+推荐先申请[Google AI Studio 免费 API 密钥](https://aistudio.google.com/apikey)，并选择 **Gemini 3.1 Flash-Lite**（`gemini-3.1-flash-lite`）。[免费额度](https://ai.google.dev/gemini-api/docs/pricing)受账号、地区、RPM 与每日配额限制，并非无限使用。
 
 默认整段视频翻译会先将语音片段合并为句子，再把全部语音、画面文字与相关术语放入一次请求。AI 仅返回字幕编号和译文，程序按原有时间与位置重新组合，生成 SRT/VTT。本地估算令牌数量，预计超过输出上限时会在发送前停止。长视频分批翻译需要手动选择，报错后不会自动重试。默认每分钟一次的请求间隔也适用于下个视频与继续任务。同一密钥被其他程序使用的请求及每日额度仍会另外计入。
 
