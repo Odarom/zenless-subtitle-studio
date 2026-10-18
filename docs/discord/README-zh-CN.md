@@ -1,4 +1,4 @@
-# 绝区零 Discord翻译器
+# ZZZ Discord翻译器
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 

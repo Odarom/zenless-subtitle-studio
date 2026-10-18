@@ -49,7 +49,7 @@ export async function buildRunner(root = resolve(import.meta.dirname, '..')) {
   writeFileSync(join(folder, 'Start.cmd'), '@echo off\r\nsetlocal\r\nchcp 65001 >nul\r\ncd /d "%~dp0app"\r\n"%~dp0runtime\\node.exe" "%~dp0app\\scripts\\runner-ui.mjs"\r\nif errorlevel 1 pause\r\n');
   for (const locale of ['ko','en','ja','zh-CN']) copy(join(root, 'docs/discord', `README-${locale}.md`), join(folder, `README-${locale}.md`));
   for (const file of ['TERMS.md','PRIVACY.md','HOSTING.md','ARCHITECTURE.md']) copy(join(root,'docs/discord',file),join(folder,file));
-  writeFileSync(join(folder,'README.md'),'# Zenless Discord Runner\n\n[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)\n\nExtract the entire ZIP and run Start.cmd. / ZIP 전체를 풀고 Start.cmd를 실행하세요.\n');
+  copy(join(root, 'docs/discord/README.md'), join(folder, 'README.md'));
   const files = [];
   const walk = directory => { for (const entry of readdirSync(directory, { withFileTypes:true })) { const file=join(directory,entry.name); if(entry.isSymbolicLink())throw new Error('Symlink in package'); if(entry.isDirectory())walk(file);else{const path=relative(folder,file).replaceAll('\\','/');if(/(?:^|\/)(?:\.env[^/]*|\.secrets|data|reports|\.tools|node_modules)(?:\/|$)/i.test(path))throw new Error('Private file in runner package');files.push({path,sha256:sha(readFileSync(file))});} } };
   walk(folder); writeFileSync(join(folder,'release-manifest.json'),JSON.stringify({app:'zenless-discord-runner',version:RUNNER_VERSION,platform:'win32-x64',node:{version,archiveSha256:expected},files},null,2));

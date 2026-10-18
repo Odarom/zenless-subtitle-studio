@@ -6,7 +6,7 @@ export const rows = [
   ['관련 용어만 (작은 모델용)', 'Related terms only (small models)', '関連用語のみ（小型モデル用）', '仅相关术语（适用于小模型）'],
   ['영상은 전체 용어집을 기본으로 사용합니다. 작은 모델은 관련 용어만 직접 선택하세요. DeepL은 전체 DB를 로컬 용어 적용에 사용합니다.', 'Videos use the entire glossary by default. Choose related terms manually for smaller models. DeepL applies the full DB locally.', '動画では用語集全体を標準で使用します。小型モデルでは関連用語のみを手動選択してください。DeepLではDB全体をローカルで用語適用に使用します。', '视频默认使用完整术语表。较小模型请手动选择仅相关术语。DeepL在本地使用完整数据库应用术语。'],
   ['음성 문장과 화면 글자, 용어집을 함께 보냅니다. 전체 요청이 너무 크면 전송 전에 안내하며 자동으로 분할하지 않습니다.', 'Speech, screen text and the glossary are sent together. Oversized requests stop before sending; splitting is never automatic.', '音声文・画面テキスト・用語集を一緒に送信します。大きすぎる場合は送信前に停止し、自動分割しません。', '语音句子、画面文字与术语表一起发送。请求过大时会在发送前停止，不会自动拆分。'],
-  ['젠레스 자막 작업실', 'Zenless Subtitle Studio', 'ゼンレス字幕スタジオ', '绝区零字幕工作室'],
+  ['ZZZ 자막 작업실', 'ZZZ Subtitle Studio', 'ZZZ字幕スタジオ', 'ZZZ字幕工作室'],
   ['자막 작업실', 'Subtitle Studio', '字幕スタジオ', '字幕工作室'],
   ['화면 언어', 'UI language', '表示言語', '界面语言'],
   ['작업실 메뉴', 'Studio navigation', 'スタジオメニュー', '工作室菜单'],

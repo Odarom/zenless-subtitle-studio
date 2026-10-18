@@ -1,4 +1,4 @@
-# 젠레스 자막 작업실 0.5.1
+# ZZZ 자막 작업실 0.5.2
 
 [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 

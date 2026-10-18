@@ -63,8 +63,8 @@ export async function buildExternalPackage(root = ROOT) {
   const launcher = script => `@echo off\r\nsetlocal\r\nchcp 65001 >nul\r\ncd /d "%~dp0"\r\n"%~dp0runtime\\node.exe" "%~dp0app\\scripts\\${script}"${script === 'video-setup.mjs' ? ' --portable' : ''}\r\nif errorlevel 1 echo 준비 또는 실행에 실패했습니다. 위 안내를 확인하세요.\r\npause\r\n`;
   writeFileSync(join(folder, 'Start.cmd'), launcher('video-launch.mjs')); writeFileSync(join(folder, 'Setup.cmd'), launcher('video-setup.mjs'));
   for (const locale of ['ko', 'en', 'ja', 'zh-CN']) copy(join(root, 'video/docs', 'README-' + locale + '.md'), join(folder, 'README-' + locale + '.md'));
-  writeFileSync(join(folder, 'README.md'), '# Zenless Subtitle Studio ' + VIDEO_VERSION + '\n\n[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)\n\nExtract the entire ZIP and run Start.cmd. / ZIP 전체를 풀고 Start.cmd를 실행하세요.\n');
-  writeFileSync(join(folder, 'THIRD-PARTY-NOTICES.md'), `# 구성 요소와 출처\n\n- Node.js ${runtime.version}: ${runtime.url}. 포함된 runtime/LICENSE-Node.txt에 Node 및 포함 구성 요소의 라이선스 원문이 있습니다.\n- yt-dlp: https://github.com/yt-dlp/yt-dlp . 첫 실행 시 공식 릴리스에서 다운로드하고 SHA-256을 검증합니다.\n- whisper.cpp: https://github.com/ggml-org/whisper.cpp . Windows 실행 파일 출처: https://github.com/SubtitleEdit/support-files . 첫 실행 시 CPU·Vulkan 배포본을 다운로드합니다.\n- FFmpeg: https://github.com/yt-dlp/FFmpeg-Builds . 첫 실행 시 다운로드합니다. 배포본의 LICENSE·소스 정보와 https://ffmpeg.org/legal.html 을 참고하세요.\n- 음성 모델: https://huggingface.co/ggerganov/whisper.cpp . 모델 파일은 첫 실행 시 다운로드합니다. 원본 모델: https://github.com/openai/whisper .\n- RapidOCR-json: https://github.com/hiroi-sora/RapidOCR-json . 선택 시 검증된 공식 배포본과 언어 모델을 다운로드합니다. 각 배포본의 라이선스를 참고하세요.\n- 젠레스 용어 자료: app/glossary/README.md, app/glossary/sources.json 및 각 JSON 항목의 출처·검수·정식/미출시 상태를 참고하세요. 팬 자료를 포함하며 게임 제작사의 공식 프로그램으로 표시하지 않습니다.\n`);
+  copy(join(root, 'video/docs/README.md'), join(folder, 'README.md'));
+  copy(join(root, 'video/docs/THIRD-PARTY-NOTICES.md'), join(folder, 'THIRD-PARTY-NOTICES.md'));
   const included = filesIn(folder);
   for (const path of included) {
     const local = slash(relative(folder, path));

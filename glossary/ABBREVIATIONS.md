@@ -1,10 +1,14 @@
-# 커뮤니티 약어 목록
+# 커뮤니티 약어 · Community shorthand · コミュニティ略語 · 社区简称
+
+[한국어](#한국어) · [English](#english) · [日本語](#日本語) · [简体中文](#简体中文)
+
+## 한국어
 
 확인일: 2026-10-19. 관리 그룹 73개. 입력 별칭과 번역 출력은 별도로 관리합니다. 한 표기는 문맥에 따라 여러 뜻을 가질 수 있습니다.
 
 기존 게임 명칭에 연결되는 별칭은 해당 개념의 네 언어 명칭을 참조합니다. 별도 개념은 커뮤니티 번역이며 공식 UI 표제라는 뜻이 아닙니다. 영문 대소문자는 구분하지 않습니다. 문맥이 부족하면 원래 표현을 유지합니다.
 
-| 인식하는 표기 | 한국어 | 영어 | 일본어 | 중국어 간체 |
+| 입력 / Input / 表記 / 写法 | 한국어 | English | 日本語 | 简体中文 |
 |---|---|---|---|---|
 | 빛나 · YSG · Ye · YeShunguang | 엽빛나 | Ye Shunguang | 葉瞬光 | 叶瞬光 |
 | YX | 의현 | Yixuan | 儀玄 | 仪玄 |
@@ -96,7 +100,7 @@
 
 아래에 등록한 언어별 표현만 우선 사용합니다. 대시(—)는 별도 단축 출력이 없다는 뜻이며 기존 명칭으로 번역합니다. 정식 명칭 스타일에서는 전체 명칭을 사용합니다.
 
-| 용어 | 한국어 출력 | 영어 출력 | 일본어 출력 | 중국어 출력 |
+| 개념 / Concept / 概念 | 한국어 | English | 日本語 | 简体中文 |
 |---|---|---|---|---|
 | 엽빛나 | 빛나 | YSG | — | — |
 | 의현 | — | YX | — | — |
@@ -154,6 +158,66 @@
 
 ## 출처와 유지보수
 
-상세 의미·적용 조건·출처는 [community.json](community.json)에 기록합니다. 표기 변형과 커뮤니티 출력은 출처의 개념을 바탕으로 정리한 것으로, 모든 별칭이 원문 출처에 등장한다는 뜻은 아닙니다.
+상세 의미·적용 조건·출처는 [community.json](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/community.json)에 기록합니다. 표기 변형과 커뮤니티 출력은 출처의 개념을 바탕으로 정리한 것으로, 모든 별칭이 원문 출처에 등장한다는 뜻은 아닙니다.
 
-[갱신 절차](LIFECYCLE.md)에 따라 후보를 검토·적용한 후 관리 프로젝트에서 scripts/glossary-abbreviations.mjs를 실행해 이 표를 갱신합니다.
+[갱신 절차](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/LIFECYCLE.md)에 따라 후보를 검토·적용한 후 관리 프로젝트에서 scripts/glossary-abbreviations.mjs를 실행해 이 표를 갱신합니다.
+
+---
+
+## English
+
+Input aliases and translation output are separate. The tables in the Korean section show the same four-language data for all readers. A spelling may have several contextual meanings. Existing game aliases link to the concept's original four-language names; standalone community concepts are not official UI labels. English matching ignores case and insufficient context preserves the source.
+
+### Disambiguation
+
+- Flat ATK/DEF/HP and percentage ATK/DEF/HP are distinct; flat ATK is not base ATK.
+- Flat PEN stays fixed. 관통/관통% in stat context means PEN Ratio; never add % to a fixed value.
+- 이상마/상마/AP means Anomaly Proficiency, 장악/AM Anomaly Mastery; not ordinary I am or time-of-day AM.
+- CD can mean CRIT DMG in stats or cooldown in timing context.
+- Character M0–M6 and W-Engine overclocking are separate. 전무/sig means signature W-Engine without inventing a character or item name.
+- 속저깎 means RES reduction. RES ignore is a different effect. Preserve element, value, target, attack and condition.
+- 지돌 is an input alias only; Korean output is 지원 돌격. Do not arbitrarily shorten Perfect Dodge.
+- 침식체 abbreviates Unknown Corruption Complex only when context identifies that boss.
+- Preserve DA/Astral ambiguity and distinctions between held-basic/EBA and repeated combo expressions.
+
+Use only registered language-specific shorthand in communityPreferred. A dash (—) means no shorthand and falls back to the original name; official-name style uses full names. Meaning, conditions and sources are in community.json. Not every spelling variant appears literally in its cited source. After candidate review/application under LIFECYCLE.md, run node scripts/glossary-abbreviations.mjs in the maintainer project to regenerate the tables. The review date and managed-group count above are generated from community.json.
+
+---
+
+## 日本語
+
+入力別名と翻訳出力は別管理です。韓国語節の表は全読者共通の4言語データです。同じ表記に文脈別の意味がある場合があります。既存概念は元の4言語名に接続し、独自コミュニティ概念を公式UI名とは主張しません。英語は大文字小文字を区別せず、文脈不足なら原文を保持します。
+
+### 識別ルール
+
+- 攻撃力・防御力・HPの固定値とパーセントを分け、固定攻撃力と基礎攻撃力も区別します。
+- 固定貫通値に%を付けません。能力値文脈の관통/관통%は貫通率です。
+- 이상마/상마/APは異常マスタリー、장악/AMは異常掌握です。一般英語I amや午前AMには適用しません。
+- CDは能力値の会心ダメージと時間文脈のクールタイムを区別します。
+- キャラM0〜M6と音動機の段階は別です。전무/sigはモチーフ音動機で、キャラや装備名を推測しません。
+- 속저깎は耐性低下です。耐性無視と混同せず属性・値・対象・攻撃・条件を保ちます。
+- 지돌は入力だけに残し、韓国語出力は지원 돌격です。極限回避も勝手に略しません。
+- 침식체は文脈上そのボスを指す場合だけ未確認複合侵蝕体の略称とします。
+- DA/Astralの多義、長押し通常攻撃/EBAと反復コンボを区別します。
+
+communityPreferredの登録済み言語別出力だけを優先し、—なら元名、正式名スタイルなら全名を使います。意味・条件・出典はcommunity.jsonで管理し、全別名が出典にそのまま現れるとは限りません。LIFECYCLE.mdで確認・適用後、管理プロジェクトでnode scripts/glossary-abbreviations.mjsを実行して表を更新します。冒頭の確認日と件数はcommunity.jsonから生成します。
+
+---
+
+## 简体中文
+
+输入别名与翻译输出分别管理。韩文部分的表格是所有读者共用的四语言数据。同一写法可能有多种语境含义。已有概念连接其原四语言名称，独立社区概念不声称为官方UI。英文匹配不区分大小写，语境不足保留原文。
+
+### 区分规则
+
+- 固定攻击/防御/生命与百分比不同，固定攻击也不同于基础攻击。
+- 固定穿透值不加%。属性语境的관통/관통%表示穿透率。
+- 이상마/상마/AP为异常精通，장악/AM为异常掌控；不用于普通英文I am或上午AM。
+- CD在属性中可指暴击伤害，在时间语境指冷却。
+- 角色M0–M6与音擎叠层分开。전무/sig表示专属音擎，不推断角色或装备名。
+- 속저깎表示抗性降低，无视抗性是另一效果，必须保留属性、数值、对象、攻击与条件。
+- 지돌只保留输入，韩文输出지원 돌격；极限闪避也不随意缩写。
+- 침식체只在语境指向未知复合侵蚀体时作为该首领简称。
+- 保留DA/Astral多义、长按普攻/EBA及重复连招的区别。
+
+只优先使用communityPreferred登记的语言输出，—表示无简称而用原名，正式名称风格用全名。含义、条件、来源见community.json，不意味着每个变体都逐字出现于来源。按LIFECYCLE.md审核应用后，在管理项目运行node scripts/glossary-abbreviations.mjs生成表格。顶部审核日期及组数由community.json自动生成。
