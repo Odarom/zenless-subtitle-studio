@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "app": "zenless-subtitle-studio",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "platform": "win32-x64",
   "minimumNode": "24.17.0",
-  "bytes": 35586567,
-  "sha256": "248bb6d8e87732d2b2727a3fd5180cf49b623c2744caabbbd2560fa6b036e4bc",
-  "url": "https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.5.0/zenless-subtitle-studio-0.5.0-win-x64.zip"
+  "bytes": 35586145,
+  "sha256": "405d6669355f11cba1e3f66f40070228730bbd9bf28db8714b91cba275e58632",
+  "url": "https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.5.1/zenless-subtitle-studio-0.5.1-win-x64.zip"
 }
