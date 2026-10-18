@@ -1,0 +1,1920 @@
+{
+  "version": 1,
+  "description": "공식 명칭과 구분해 관리하는 약어·커뮤니티 표현. 사용자 제공 또는 확인한 출처를 기록하며 build-glossary.js가 원본 명칭 자료와 병합합니다.",
+  "entries": [
+    {
+      "id": "ye-shunguang-short-names",
+      "targetId": "character:1431",
+      "aliases": [
+        "빛나",
+        "YSG",
+        "Ye",
+        "YeShunguang"
+      ],
+      "meaning": "엽빛나(Ye Shunguang)를 부르는 한국어 이름 약칭 빛나와 영어 약칭 YSG, Ye.",
+      "rule": "캐릭터·돌파·변신·극치·스킬·팀 편성 문맥의 빛나/YSG/Ye는 엽빛나를 뜻하며 character:1431의 언어별 이름으로 번역한다. 버니스(Burnice)로 바꾸지 않는다. 빛나가, 빛나는, 빛나의처럼 조사가 붙어도 캐릭터를 가리키면 적용한다. 반면 별이 빛나, 빛나는 맹세 등 일반 동사나 다른 긴 고유명사의 일부인 빛나는 이 캐릭터로 치환하지 않는다. Ye Shiyuan 등 다른 사람의 전체 이름에 포함된 Ye를 엽빛나로 바꾸지 않는다. 다른 이름·일반 영어 ye보다 캐릭터 약칭이라는 문맥이 확인될 때만 적용하며 불분명한 약어는 임의로 확장하지 않는다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-12",
+      "sources": [
+        "빛나 및 영어 약자 YSG, Ye가 엽빛나를 가리킨다는 사용자 확인, 2026-10-12",
+        "https://static.nanoka.cc/zzz/3.2/character.json"
+      ],
+      "communityPreferred": {
+        "ko": "빛나",
+        "en": "YSG"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "yixuan-short-name",
+      "targetId": "character:1371",
+      "aliases": [
+        "YX"
+      ],
+      "meaning": "의현(Yixuan)을 뜻하는 영어 이니셜 YX.",
+      "rule": "젠레스 캐릭터·팀 편성·스킬·장비·돌파 문맥의 YX는 의현이며 character:1371의 언어별 이름을 사용한다. YSG/Ye/엽빛나와 구분한다. 일반 변수나 다른 이름의 약어로 쓰인 경우에는 확장하지 않으며 문맥이 불분명하면 YX를 유지한다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-12",
+      "sources": [
+        "YX가 의현이라는 사용자 확인, 2026-10-12",
+        "https://static.nanoka.cc/zzz/3.2/character.json"
+      ],
+      "communityPreferred": {
+        "en": "YX"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:ex-ex-basic-combo",
+      "aliases": [
+        "강강평",
+        "강 강 평",
+        "강-강-평",
+        "강특강특평",
+        "강특 강특 평타",
+        "EX → EX → BA",
+        "EX→EX→BA",
+        "EX -> EX -> BA",
+        "EX-EX-BA",
+        "EX EX BA",
+        "강특강특평타"
+      ],
+      "preferred": {
+        "ko": "강특 → 강특 → 평타",
+        "en": "EX Special Attack → EX Special Attack → Basic Attack",
+        "ja": "強化特殊スキル → 強化特殊スキル → 通常攻撃",
+        "zh-CN": "强化特殊技 → 强化特殊技 → 普通攻击"
+      },
+      "meaning": "전투 입력 순서에서 강화 특수 스킬 두 번 다음 일반 공격을 뜻하는 강강평 약칭.",
+      "rule": "해당 입력 콤보 문맥에서 강은 강특(강화 특수 스킬), 평은 평타(일반 공격)다. 순서와 반복 횟수를 유지한다. Enhanced-Enhanced-Basic처럼 enhanced 형용사만으로 동작 이름을 누락하지 않는다. 강화 일반 공격(EBA)이나 대미지 강도로 해석하지 않는다. 원문에 없는 스킬 세부 이름·입력 유지 시간·소모량을 추가하지 않는다. 일반 단어 안의 한 글자 강을 무조건 강특으로 치환하지 않는다. 영어 EX/BA 입력 표기도 번역 대상이다. 한국어 출력에서는 등록된 강강평 또는 강특 → 강특 → 평타로 옮기고, 원문 콤보를 영어 그대로 남기지 않는다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-12",
+      "sources": [
+        "신고자의 강강평에서 강은 강특이라는 설명을 공식 동작 명칭과 대조, 2026-10-12",
+        "https://static.nanoka.cc/zzz/3.2/ko/character/1431.json",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1431.json"
+      ],
+      "communityPreferred": {
+        "ko": "강강평",
+        "en": "EX → EX → BA"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:hold-ex-special",
+      "aliases": [
+        "강꾹",
+        "강 꾹",
+        "강특꾹",
+        "강특 꾹",
+        "hold EX",
+        "holding EX"
+      ],
+      "preferred": {
+        "ko": "강화 특수 스킬 길게 누르기",
+        "en": "hold EX Special Attack",
+        "ja": "強化特殊スキル長押し",
+        "zh-CN": "长按强化特殊技"
+      },
+      "meaning": "강화 특수 스킬 버튼을 길게 누르는 조작을 뜻하는 커뮤니티 표현.",
+      "rule": "전투 입력 문맥에서 꾹은 길게 누르기(hold)다. EX Special Attack이라는 동작 종류를 유지하고 Enhanced-Hold처럼 형용사만 남기지 않는다. 평꾹(일반 공격 길게 누르기), 강화 평타(EBA)와 구분한다. 조작을 설명하는 말이지 모든 캐릭터의 공식 스킬 이름이 아니며 세부 스킬명·버튼 키·유지 시간을 임의로 추가하지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-12",
+      "sources": [
+        "한국어 전투 조작 표현과 엽빛나 스킬 설명 대조, 2026-10-12",
+        "https://static.nanoka.cc/zzz/3.2/ko/character/1431.json",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1431.json"
+      ],
+      "communityPreferred": {
+        "ko": "강꾹",
+        "en": "hold EX"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:preserve-san-z",
+      "aliases": [
+        "san-z"
+      ],
+      "preferred": {
+        "ko": "san-z",
+        "en": "san-z",
+        "ja": "san-z",
+        "zh-CN": "san-z"
+      },
+      "meaning": "사용자가 원문 표기 유지를 지정한 san-z 문자열.",
+      "rule": "모든 대상 언어에서 원문의 san-z 표기를 그대로 유지한다. 싼즈·산즈 등으로 음역하거나 의미를 추정해 번역하지 않는다. 원문이 SAN-Z 또는 San-Z처럼 대소문자를 달리 썼으면 그 대소문자도 유지한다. 원문의 하이픈을 유지하고 주변 문장만 번역한다. 이름의 정체나 뜻에 대한 설명을 덧붙이지 않는다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-09",
+      "sources": [
+        "san-z가 싼즈로 번역되었으며 원문 표기를 유지하라는 사용자 요청, 2026-10-09"
+      ]
+    },
+    {
+      "id": "notorious-dead-end-butcher-short-name",
+      "targetId": "monster:300072",
+      "aliases": [
+        "매살자",
+        "매지컬 도살자",
+        "매지컬도살자",
+        "노토리우스 죽음의 도살자"
+      ],
+      "meaning": "매살자와 매지컬 도살자는 노토리우스·죽음의 도살자를 가리키는 한국어 커뮤니티 별칭이다. 일반 죽음의 도살자 및 갓 태어난 죽음의 도살자와 별개 변형이다.",
+      "rule": "사용자가 확인한 해당 보스의 약칭일 때만 이 항목의 네 언어 preferred 명칭을 쓴다. 매지컬을 Magical로 직역하지 말고 Notorious 변형을 유지한다. 단순히 도살자나 Butcher라고만 했을 때 이 변형으로 단정하지 않는다. 원문에 일반형 또는 갓 태어난 변형이 명시되면 해당 다른 보스 항목을 선택한다.",
+      "status": "source-supported-community",
+      "verifiedAt": "2026-10-08",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/monster.json",
+        "매살자=매지컬 도살자=노토리우스 죽음의 도살자라는 사용자 확인, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "매살자"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "infernal-revenant-short-name",
+      "targetId": "monster:30052",
+      "aliases": [
+        "연옥"
+      ],
+      "meaning": "한국어 보스 공략 문맥에서 연옥을 누비는 자를 줄여 부르는 표현. 일반적인 지옥·연옥이나 다른 작품의 고유명사와 구분한다.",
+      "rule": "강습·보스·부싯돌·빙결 면역·그로기·이상 축적 등 해당 보스 공략 문맥에서 연옥을 누비는 자를 뜻할 때만 preferred를 적용한다. 연옥이라는 일반 단어를 Purgatory로 직역하거나 다른 보스를 이 항목으로 바꾸지 않는다. 긴 전체 보스명이 있는 경우 긴 이름을 우선한다.",
+      "status": "source-supported-community",
+      "verifiedAt": "2026-10-08",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/monster.json",
+        "사용자가 제출한 보스 공략 번역 신고, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "연옥"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "quick-assist",
+      "targetId": "combat:quick-assist",
+      "aliases": [
+        "QA",
+        "Quick Assist",
+        "빠른 지원",
+        "빠른지원",
+        "퀵어시스트",
+        "퀵 어시스트",
+        "빠지"
+      ],
+      "preferred": {
+        "ko": "빠른 지원",
+        "en": "Quick Assist"
+      },
+      "meaning": "Zenless Zone Zero의 Quick Assist 전투 기능. QA와 한국어 약칭 빠지를 포함하며 일반 업무의 quality assurance 및 일반 동사 빠지다와 구분한다.",
+      "rule": "지원·교체·전투 조작·스킬·디스크 효과 등 게임 문맥에서만 QA 또는 빠지를 Quick Assist로 해석하고 병합 대상 combat:quick-assist의 언어별 preferred를 사용한다. 빠지로 교체처럼 조사가 붙은 약칭도 해당 문맥이면 빠른 지원이다. 일반 업무의 quality assurance나 물에 빠지다, 빠지면, 빠지지 마처럼 일반 동사에 포함된 글자는 게임 용어로 바꾸지 않는다. 일반 문장에 빠지라는 글자가 포함됐다는 사실만으로 빠른 지원을 선택하지 않는다. 근거가 부족하면 원래 약칭을 유지한다.",
+      "status": "user-provided",
+      "sources": [
+        "프로젝트 기획 대화의 사용자 설명, 2026-10-06",
+        "한국어 약칭 빠지에 대한 사용자 예시, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "빠지",
+        "en": "QA"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "ex-special-attack-korean-short-name",
+      "targetId": "combat:ex-special-attack",
+      "aliases": [
+        "강특",
+        "EX",
+        "EX special",
+        "EXスキル",
+        "强化E"
+      ],
+      "meaning": "강화 특수 스킬(EX Special Attack)을 뜻하는 한국어 커뮤니티 약칭.",
+      "rule": "게임의 스킬·전투 조작·공격 순서·에너지 사용 문맥에서 강화 특수 스킬을 뜻하는 강특은 combat:ex-special-attack의 언어별 preferred로 번역한다. 강특을, 강특으로 등 조사가 붙어도 같은 의미로 판단한다. 일반 특수 스킬(Special Attack)과 구분하며 원문에 없는 버튼 입력·길게 누르기·효과를 추가하지 않는다. 다른 뜻의 약칭으로 쓰인 문맥에는 적용하지 않는다.\n에너지를 사용하는 강화 특수 스킬과 일반 특수 스킬을 구별한다. EX가 예전 연인 등을 뜻하면 적용하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "user-provided",
+      "sources": [
+        "한국어 약칭 강특에 대한 사용자 예시, 2026-10-08",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ],
+      "reviewedAt": "2026-10-09",
+      "communityPreferred": {
+        "ko": "강특",
+        "en": "EX"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "kaboom-the-cannon-short-name",
+      "targetId": "weapon:13115",
+      "aliases": [
+        "Kaboom"
+      ],
+      "meaning": "음동기 Kaboom the Cannon(호전적인 꽝꽝이)을 줄여 부르는 표현. 일반적인 폭발 의성어 kaboom과 구분한다.",
+      "rule": "장비·루시·음동기·장착·교체·공격력 버프·중첩·빌드 계산 문맥의 Kaboom은 weapon:13115의 음동기를 뜻한다. 해당 문맥에서는 언어별 preferred의 정식 명칭을 사용한다. 폭발 소리나 감탄사 kaboom!은 이 장비명으로 바꾸지 말고 해당 언어의 자연스러운 의성어로 번역한다. 근거가 부족한 경우 장비명이라고 단정하지 않는다. 숫자 다음에 stacks가 오면 중첩 수를 뜻하며 소수인 경우에도 게임 버전으로 바꾸지 않는다.",
+      "status": "source-supported-community",
+      "verifiedAt": "2026-10-08",
+      "sources": [
+        "https://zzz.akademiya.app/en/weapons/13115",
+        "https://www.reddit.com/r/ZenlessZoneZero/comments/1i5mnhu/",
+        "사용자가 제공한 Kaboom 중첩·공격력 비교 원문, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "en": "Kaboom"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "dash-attack-da",
+      "targetId": "combat:dash-attack",
+      "aliases": [
+        "DA"
+      ],
+      "meaning": "DA가 전투 동작 Dash Attack(대시 공격)을 뜻하는 경우. 같은 약어를 쓰는 Deadly Assault 콘텐츠와 구분한다.",
+      "rule": "DA는 mode:deadly-assault와 공유하는 다의적 약어다. 회피 후 공격, 버튼 입력, 공격 순서·콤보 안의 개별 동작을 설명하는 문맥에서 Dash Attack임이 확인될 때만 이 항목의 preferred를 사용한다. 예를 들어 dodge then use a DA의 DA는 수행하는 공격 동작이다. 반면 in DA처럼 그 전투가 진행되는 콘텐츠를 가리키는 DA는 Deadly Assault 후보로 구분한다. 점수·별·시즌·도전 콘텐츠 문맥의 DA는 Deadly Assault 후보도 검토한다. 단순히 전투나 보스를 언급했다는 이유만으로 대시 공격을 선택하지 않는다. 문장·답글·최근 문맥만으로 판별하기 어려우면 DA를 그대로 유지한다. 같은 문장 안에서도 각각의 DA는 뜻이 다를 수 있으며 한 쪽으로 통일하지 않는다.",
+      "status": "user-provided",
+      "sources": [
+        "DA가 Dash Attack과 Deadly Assault 모두의 약어라는 사용자 설명, 2026-10-08"
+      ]
+    },
+    {
+      "id": "deadly-assault-da",
+      "targetId": "mode:deadly-assault",
+      "aliases": [
+        "DA",
+        "강습"
+      ],
+      "meaning": "DA 또는 한국어 약칭 강습이 도전 콘텐츠 Deadly Assault(위험한 강습전)를 뜻하는 경우. 같은 영어 약어를 쓰는 Dash Attack 전투 동작 및 일반적인 강습 작전과 구분한다.",
+      "rule": "DA는 combat:dash-attack과 공유하는 다의적 약어다. 콘텐츠의 점수·별 획득·시즌·주기·리셋·보상·도전 편성 등을 설명하는 문맥에서 Deadly Assault임이 확인될 때만 이 항목의 preferred를 사용한다. 한국어 강습도 이번 강습 9별, 강습 보상처럼 해당 콘텐츠임이 확인되면 같은 preferred를 사용하며 강습은 등 조사가 붙은 약칭도 문맥으로 판단한다. 일반적인 군사 강습·공격 작전·강습 공격은 이 콘텐츠로 바꾸지 않는다. in DA처럼 전투가 진행되는 콘텐츠·환경을 가리키는 구문도 이 후보를 판단하는 근거다. 예를 들어 In DA, dodge then use a DA에서 앞의 DA는 콘텐츠이고 뒤의 a DA는 대시 공격 동작이므로 각각 별도로 번역한다. 회피 후 공격이나 공격 순서 안의 개별 동작을 뜻하는 DA는 Dash Attack 후보도 검토한다. 단순히 전투나 보스를 언급했다는 이유만으로 콘텐츠를 선택하지 않는다. 문장·답글·최근 문맥만으로 판별하기 어려우면 원래 약칭을 그대로 유지한다. 같은 문장 안에서도 각각의 DA는 뜻이 다를 수 있으며 한 쪽으로 통일하지 않는다. 콘텐츠 간 타이머를 비교하는 DA timer는 대시 공격이 아니라 강습 타이머다. Notorious 타이머와 별개로 유지하며 Notorious를 강습으로 바꾸지 않는다.",
+      "status": "source-supported-community",
+      "sources": [
+        "DA가 Dash Attack과 Deadly Assault 모두의 약어라는 사용자 설명, 2026-10-08",
+        "한국어 약칭 강습에 대한 사용자 예시, 2026-10-08",
+        "https://www.hoyolab.com/article/40732314"
+      ],
+      "communityPreferred": {
+        "ko": "강습",
+        "en": "DA"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "astral-voice-short-name",
+      "targetId": "equipment:32800",
+      "aliases": [
+        "Astral",
+        "고요"
+      ],
+      "meaning": "디스크 세트 Astral Voice(고요 속의 별)의 약칭. 같은 영어 이름을 쓰는 세트 효과 Astral(별)과 구분한다.",
+      "rule": "디스크 세트·장착·빌드·세트 효과 발동 여부를 뜻하는 문맥의 Astral 또는 고요는 이 항목의 preferred로 번역한다. 예를 들어 entry skill counts as a Quick Assist for the sake of Astral은 고요 속의 별 효과의 빠른 지원 판정을 이야기한다. 반면 stacks of Astral, gain Astral처럼 이름이 붙은 버프의 스택을 직접 뜻하면 effect:32800:astral의 별 후보를 선택한다. Astral Voice라는 전체 세트 이름은 항상 이 항목이다. 아스트라 캐릭터와 혼동하지 않는다. 일반적인 astral projection이나 고요한 분위기는 게임 명칭으로 바꾸지 않는다. 문장·답글·최근 문맥으로 구분할 근거가 부족하면 원래 약칭을 유지한다.",
+      "status": "source-supported-community",
+      "verifiedAt": "2026-10-08",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/equipment.json",
+        "사용자가 제공한 for the sake of astral 원문과 고요 약칭, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "고요"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "enhanced-basic-attack",
+      "aliases": [
+        "EBA",
+        "Enhanced Basic Attack",
+        "강화 평타",
+        "강화평타",
+        "강화된 일반 공격",
+        "강화 일반 공격",
+        "평꾹"
+      ],
+      "preferred": {
+        "ko": "강화 평타",
+        "en": "Enhanced Basic Attack"
+      },
+      "meaning": "강화된 일반 공격을 가리키는 커뮤니티 표현. 평꾹은 일반 공격 버튼을 길게 누르는 조작 표현으로 의미 범위가 다르다.",
+      "rule": "EBA와 평꾹을 무조건 서로 치환하지 않는다. 해당 캐릭터와 길게 누르는 조작이 문맥에서 확인될 때만 평꾹을 쓴다. 평꾹을 영문으로 옮길 때 공격 유형이 불명확하면 hold Basic Attack으로 조작 자체를 옮긴다. 선호 표현은 모든 캐릭터의 공식 스킬 이름이라는 뜻이 아니다.",
+      "status": "user-provided",
+      "sources": [
+        "프로젝트 기획 대화의 사용자 설명, 2026-10-06"
+      ]
+    },
+    {
+      "id": "stat-percent-atk",
+      "aliases": [
+        "공퍼",
+        "공퍼센트",
+        "공%",
+        "공격력%",
+        "공격력 %",
+        "ATK%",
+        "ATK %",
+        "ATK percent",
+        "攻撃力%",
+        "攻撃力％",
+        "大攻击",
+        "攻击力百分比"
+      ],
+      "preferred": {
+        "ko": "공격력%",
+        "en": "ATK%",
+        "ja": "攻撃力%",
+        "zh-CN": "攻击力百分比"
+      },
+      "meaning": "공격력의 퍼센트 옵션. 고정 수치와 구별한다.",
+      "rule": "퍼센트 단위를 유지한다. 수치형 옵션이나 기초 능력치로 바꾸지 않는다. 원문에 주옵션인지 부옵션인지 없으면 추가하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "한국어 능력치 약어 등록 요청, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "공퍼",
+        "en": "ATK%",
+        "zh-CN": "大攻击"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-flat-atk",
+      "aliases": [
+        "깡공",
+        "깡공격력",
+        "공격력 고정",
+        "flat ATK",
+        "ATK flat",
+        "攻撃力実数",
+        "攻撃力実数値",
+        "小攻击",
+        "固定攻击力"
+      ],
+      "preferred": {
+        "ko": "고정 공격력",
+        "en": "flat ATK",
+        "ja": "攻撃力実数値",
+        "zh-CN": "固定攻击力"
+      },
+      "meaning": "공격력를 일정 수치로 더하는 옵션.",
+      "rule": "flat은 고정 수치이며 base(기초 수치)와 다르다. 퍼센트 옵션으로 치환하지 않는다. 캐릭터 자체의 기초 수치 또는 캐릭터+음동기의 기초 수치 합계라고 추정하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "사용자가 제시한 깡공·깡방 등, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "깡공",
+        "zh-CN": "小攻击"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-percent-def",
+      "aliases": [
+        "방퍼",
+        "방퍼센트",
+        "방%",
+        "방어력%",
+        "방어력 %",
+        "DEF%",
+        "DEF %",
+        "DEF percent",
+        "防御力%",
+        "防御力％",
+        "大防御",
+        "防御力百分比"
+      ],
+      "preferred": {
+        "ko": "방어력%",
+        "en": "DEF%",
+        "ja": "防御力%",
+        "zh-CN": "防御力百分比"
+      },
+      "meaning": "방어력의 퍼센트 옵션. 고정 수치와 구별한다.",
+      "rule": "퍼센트 단위를 유지한다. 수치형 옵션이나 기초 능력치로 바꾸지 않는다. 원문에 주옵션인지 부옵션인지 없으면 추가하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "한국어 능력치 약어 등록 요청, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "방퍼",
+        "en": "DEF%",
+        "zh-CN": "大防御"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-flat-def",
+      "aliases": [
+        "깡방",
+        "깡방어력",
+        "방어력 고정",
+        "flat DEF",
+        "DEF flat",
+        "防御力実数",
+        "防御力実数値",
+        "小防御",
+        "固定防御力"
+      ],
+      "preferred": {
+        "ko": "고정 방어력",
+        "en": "flat DEF",
+        "ja": "防御力実数値",
+        "zh-CN": "固定防御力"
+      },
+      "meaning": "방어력를 일정 수치로 더하는 옵션.",
+      "rule": "flat은 고정 수치이며 base(기초 수치)와 다르다. 퍼센트 옵션으로 치환하지 않는다. 캐릭터 자체의 기초 수치 또는 캐릭터+음동기의 기초 수치 합계라고 추정하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "사용자가 제시한 깡공·깡방 등, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "깡방",
+        "zh-CN": "小防御"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-percent-hp",
+      "aliases": [
+        "체퍼",
+        "체퍼센트",
+        "체%",
+        "HP%",
+        "HP %",
+        "HP percent",
+        "HP％",
+        "大生命",
+        "生命值百分比"
+      ],
+      "preferred": {
+        "ko": "HP%",
+        "en": "HP%",
+        "ja": "HP%",
+        "zh-CN": "生命值百分比"
+      },
+      "meaning": "HP의 퍼센트 옵션. 고정 수치와 구별한다.",
+      "rule": "퍼센트 단위를 유지한다. 수치형 옵션이나 기초 능력치로 바꾸지 않는다. 원문에 주옵션인지 부옵션인지 없으면 추가하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "한국어 능력치 약어 등록 요청, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "체퍼",
+        "en": "HP%",
+        "zh-CN": "大生命"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-flat-hp",
+      "aliases": [
+        "깡체",
+        "깡HP",
+        "HP 고정",
+        "flat HP",
+        "HP flat",
+        "HP実数",
+        "HP実数値",
+        "小生命",
+        "固定生命值"
+      ],
+      "preferred": {
+        "ko": "고정 HP",
+        "en": "flat HP",
+        "ja": "HP実数値",
+        "zh-CN": "固定生命值"
+      },
+      "meaning": "HP를 일정 수치로 더하는 옵션.",
+      "rule": "flat은 고정 수치이며 base(기초 수치)와 다르다. 퍼센트 옵션으로 치환하지 않는다. 캐릭터 자체의 기초 수치 또는 캐릭터+음동기의 기초 수치 합계라고 추정하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "사용자가 제시한 깡공·깡방 등, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "깡체",
+        "zh-CN": "小生命"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-flat-pen",
+      "aliases": [
+        "깡관",
+        "깡관통",
+        "고정 관통",
+        "flat PEN",
+        "PEN flat",
+        "flat penetration",
+        "穿透值",
+        "貫通値"
+      ],
+      "preferred": {
+        "ko": "고정 관통 수치",
+        "en": "flat PEN",
+        "ja": "貫通値",
+        "zh-CN": "穿透值"
+      },
+      "meaning": "일정 수치의 방어력을 무시하는 관통 수치.",
+      "rule": "관통률(PEN Ratio, %)과 구분하며 퍼센트를 임의로 붙이지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats"
+      ],
+      "communityPreferred": {
+        "ko": "깡관"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "stat-base-atk",
+      "aliases": [
+        "기초공",
+        "기초 공격력",
+        "기초공격력",
+        "base ATK",
+        "base attack",
+        "基礎攻撃力",
+        "基础攻击力"
+      ],
+      "preferred": {
+        "ko": "기초 공격력",
+        "en": "base ATK",
+        "ja": "基礎攻撃力",
+        "zh-CN": "基础攻击力"
+      },
+      "meaning": "계산의 기준인 기초 공격력.",
+      "rule": "깡공(flat ATK)·총공격력·전투 중 공격력과 다르다. 원문에 캐릭터/음동기 합산 여부가 있을 때만 그 범위를 유지한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "사용자의 880 base atk + 684 standard engine 계산 예시, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "기초공"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-31000",
+      "targetId": "stat:31000",
+      "aliases": [
+        "치확",
+        "치명확률",
+        "크확",
+        "CR",
+        "crit rate",
+        "暴率"
+      ],
+      "meaning": "치명타 확률의 줄임말.",
+      "rule": "CR은 능력치 문맥에서만 치명타 확률이며 치명타 피해와 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes"
+      ],
+      "communityPreferred": {
+        "ko": "치확",
+        "en": "CR"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-32700",
+      "targetId": "stat:32700",
+      "aliases": [
+        "치피",
+        "치뎀",
+        "크뎀",
+        "CD",
+        "CDMG",
+        "crit dmg",
+        "crit damage",
+        "会心ダメ",
+        "暴伤",
+        "爆伤"
+      ],
+      "meaning": "치명타 피해의 줄임말.",
+      "rule": "CD는 능력치 비교에서는 치명타 피해 후보이나 스킬 재사용 시간(cooldown) 문맥과 구분한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes"
+      ],
+      "communityPreferred": {
+        "ko": "치피",
+        "en": "CDMG",
+        "ja": "会心ダメ",
+        "zh-CN": "暴伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-31100",
+      "targetId": "stat:31100",
+      "aliases": [
+        "관퍼",
+        "관통퍼",
+        "관통%",
+        "관통률%",
+        "PEN%",
+        "PEN Ratio%",
+        "penetration ratio",
+        "穿透率",
+        "貫通率"
+      ],
+      "meaning": "관통률 퍼센트 옵션.",
+      "rule": "깡관·고정 관통 수치(flat PEN)와 구분한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes"
+      ],
+      "communityPreferred": {
+        "ko": "관퍼",
+        "en": "PEN%"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-31300",
+      "targetId": "stat:31300",
+      "aliases": [
+        "이마",
+        "이상마",
+        "AP",
+        "異常マス",
+        "异常精通",
+        "상마"
+      ],
+      "meaning": "이상 마스터리의 약어.",
+      "rule": "AP는 Anomaly Proficiency이다. AM(Anomaly Mastery, 이상 장악력)과 바꾸지 않는다. 이마는 얼굴 부위의 동음어도 있으므로 능력치·디스크 문맥에서만 적용한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/characters/jane-doe",
+        "https://gall.dcinside.com/mgallery/board/view/?id=zenless_zone_zero&no=2671894",
+        "신고 R-20261013-f9bccb92cad9의 AP=이상 마스터리/상마/이상마 사용자 설명, 2026-10-13"
+      ],
+      "communityPreferred": {
+        "ko": "이상마",
+        "en": "AP",
+        "ja": "異常マス"
+      },
+      "outputReviewedAt": "2026-10-13",
+      "communitySourceNotes": "기존 이마는 입력 인식용으로 유지하되 한국어 출력은 사용자가 확인한 이상마를 우선한다. 상마와 이상마도 동일 개념으로 인식한다."
+    },
+    {
+      "id": "aliases-stat-33000",
+      "targetId": "stat:33000",
+      "aliases": [
+        "이장",
+        "이상장악",
+        "AM",
+        "异常掌控"
+      ],
+      "meaning": "이상 장악력의 약어.",
+      "rule": "AM은 Anomaly Mastery이다. AP(Anomaly Proficiency, 이상 마스터리)와 구분한다. I am 같은 일반 영어 동사나 오전 시간 표시는 이 능력치가 아니다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://steamcommunity.com/sharedfiles/filedetails/?id=3729439699"
+      ],
+      "communityPreferred": {
+        "ko": "이장",
+        "en": "AM"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-31600",
+      "targetId": "stat:31600",
+      "aliases": [
+        "에충",
+        "에회",
+        "에너지회복",
+        "energy regen",
+        "ER",
+        "能量回复",
+        "自動回復"
+      ],
+      "meaning": "에너지 자동 회복 관련 줄임말.",
+      "rule": "이 능력치를 뜻할 때만 적용한다. ER을 응급실 등 일반 약어에 적용하지 않는다. 에너지 획득 효율(Energy Generation Rate)은 자동 회복과 별개이므로 원문이 획득 효율을 명시하면 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes"
+      ],
+      "communityPreferred": {
+        "ko": "에충",
+        "en": "ER"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-31200",
+      "targetId": "stat:31200",
+      "aliases": [
+        "충격",
+        "임팩트"
+      ],
+      "meaning": "충격력의 문맥형 약칭.",
+      "rule": "능력치·디스크 옵션인 충격력만 해당한다. 충격을 받았다는 감탄·일반 현상은 번역 사전의 능력치로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes"
+      ]
+    },
+    {
+      "id": "aliases-stat-32200",
+      "targetId": "stat:32200",
+      "aliases": [
+        "불피증",
+        "화피증",
+        "불피",
+        "火伤"
+      ],
+      "meaning": "해당 속성 피해 보너스의 커뮤니티 약칭.",
+      "rule": "장비 옵션·피해 보너스를 뜻할 때만 적용하며 다른 속성이나 내성 감소로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats"
+      ],
+      "communityPreferred": {
+        "ko": "불피증",
+        "zh-CN": "火伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-32300",
+      "targetId": "stat:32300",
+      "aliases": [
+        "에테르피증",
+        "에피증",
+        "以太伤"
+      ],
+      "meaning": "해당 속성 피해 보너스의 커뮤니티 약칭.",
+      "rule": "장비 옵션·피해 보너스를 뜻할 때만 적용하며 다른 속성이나 내성 감소로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats"
+      ],
+      "communityPreferred": {
+        "ko": "에피증",
+        "zh-CN": "以太伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-32400",
+      "targetId": "stat:32400",
+      "aliases": [
+        "전피증",
+        "전기피증",
+        "电伤"
+      ],
+      "meaning": "해당 속성 피해 보너스의 커뮤니티 약칭.",
+      "rule": "장비 옵션·피해 보너스를 뜻할 때만 적용하며 다른 속성이나 내성 감소로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats"
+      ],
+      "communityPreferred": {
+        "ko": "전피증",
+        "zh-CN": "电伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-32500",
+      "targetId": "stat:32500",
+      "aliases": [
+        "얼피증",
+        "빙피증",
+        "冰伤"
+      ],
+      "meaning": "해당 속성 피해 보너스의 커뮤니티 약칭.",
+      "rule": "장비 옵션·피해 보너스를 뜻할 때만 적용하며 다른 속성이나 내성 감소로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats"
+      ],
+      "communityPreferred": {
+        "ko": "빙피증",
+        "zh-CN": "冰伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-stat-32600",
+      "targetId": "stat:32600",
+      "aliases": [
+        "물피증",
+        "물리피증",
+        "物伤"
+      ],
+      "meaning": "해당 속성 피해 보너스의 커뮤니티 약칭.",
+      "rule": "장비 옵션·피해 보너스를 뜻할 때만 적용하며 다른 속성이나 내성 감소로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats"
+      ],
+      "communityPreferred": {
+        "ko": "물피증",
+        "zh-CN": "物伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-combat-basic-attack",
+      "targetId": "combat:basic-attack",
+      "aliases": [
+        "평타",
+        "평공",
+        "기본공격",
+        "BA",
+        "NA",
+        "普攻"
+      ],
+      "meaning": "일반 공격의 약어.",
+      "rule": "일반 공격 종류를 뜻하며 평꾹 같은 길게 누르는 입력이나 강화 평타와 구별한다. NA가 지역 North America 또는 해당 없음이라는 뜻이면 적용하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "평타",
+        "en": "BA"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-combat-dodge-counter",
+      "targetId": "combat:dodge-counter",
+      "aliases": [
+        "회피반격",
+        "회반",
+        "DC"
+      ],
+      "meaning": "회피 반격 약어.",
+      "rule": "회피 후 반격이라는 동작일 때만 DC를 확장한다. 접속 종료·직류·커뮤니티 사이트 DC는 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "회반",
+        "en": "DC"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-combat-chain-attack",
+      "targetId": "combat:chain-attack",
+      "aliases": [
+        "콤보스킬",
+        "연계스킬",
+        "連携"
+      ],
+      "meaning": "콤보 스킬의 문맥형 약칭.",
+      "rule": "일반적인 콤보 공격 순서 전체가 아니라 게임의 Chain Attack 동작을 가리킬 때만 적용한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ]
+    },
+    {
+      "id": "aliases-combat-ultimate",
+      "targetId": "combat:ultimate",
+      "aliases": [
+        "궁",
+        "궁기",
+        "ult",
+        "ulti",
+        "大招"
+      ],
+      "meaning": "궁극기의 약칭.",
+      "rule": "궁은 궁극기 사용·에너지·전투 문맥일 때만 해당하며 궁금하다 또는 궁전의 일부를 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "궁",
+        "en": "ult"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-combat-assist-follow-up",
+      "targetId": "combat:assist-follow-up",
+      "aliases": [
+        "지원돌격",
+        "지돌",
+        "AFU"
+      ],
+      "meaning": "지원 돌격의 약칭.",
+      "rule": "지원 발동 뒤 이어지는 공격을 뜻할 때만 적용한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "지돌",
+        "en": "AFU"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-combat-perfect-dodge",
+      "targetId": "combat:perfect-dodge",
+      "aliases": [
+        "극회",
+        "극한회피",
+        "perfect dodge"
+      ],
+      "meaning": "극한 회피 약칭.",
+      "rule": "회피 또는 회피 반격과 별개이다. 극한/perfect 수식어를 유지한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ],
+      "communityPreferred": {
+        "ko": "극회"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "aliases-combat-defensive-assist",
+      "targetId": "combat:defensive-assist",
+      "aliases": [
+        "패링지원",
+        "방어지원"
+      ],
+      "meaning": "패링 지원 표기 변형.",
+      "rule": "단순 패링이나 캐릭터 자체 자동 반격은 패링 지원으로 단정하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary",
+        "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
+      ]
+    },
+    {
+      "id": "community:crit-pair",
+      "aliases": [
+        "쌍치",
+        "쌍치옵",
+        "双暴",
+        "双爆"
+      ],
+      "preferred": {
+        "ko": "치명타 확률·치명타 피해",
+        "en": "CRIT Rate and CRIT DMG",
+        "ja": "会心率・会心ダメージ",
+        "zh-CN": "暴击率与暴击伤害"
+      },
+      "meaning": "두 종류의 치명타 능력치를 함께 가리키는 표현.",
+      "rule": "한 가지 능력치로 축약하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗"
+      ],
+      "communityPreferred": {
+        "ko": "쌍치",
+        "zh-CN": "双暴"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:main-stat",
+      "aliases": [
+        "주옵",
+        "주옵션",
+        "main stat",
+        "mainstat",
+        "main stats",
+        "メインステ",
+        "主词条"
+      ],
+      "preferred": {
+        "ko": "주옵션",
+        "en": "main stat",
+        "ja": "メインステータス",
+        "zh-CN": "主词条"
+      },
+      "meaning": "디스크의 주 능력치 옵션.",
+      "rule": "부옵션과 구분한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗"
+      ],
+      "communityPreferred": {
+        "ko": "주옵",
+        "ja": "メインステ"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:sub-stat",
+      "aliases": [
+        "부옵",
+        "부옵션",
+        "substat",
+        "substats",
+        "sub stat",
+        "sub stats",
+        "subs",
+        "サブステ",
+        "副词条"
+      ],
+      "preferred": {
+        "ko": "부옵션",
+        "en": "substat",
+        "ja": "サブステータス",
+        "zh-CN": "副词条"
+      },
+      "meaning": "디스크의 부가 능력치 옵션 또는 비교에 쓰는 부옵션 환산량.",
+      "rule": "subs는 구독자·자막도 뜻한다. 장비 계산의 8.3 subs는 부옵션 8.3개분이며 디스크에 실제로 옵션 칸이 8.3개 있다는 뜻이 아니다. 숫자와 소수점을 보존한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/disk-drives-stats",
+        "https://moegirl.icu/绝区零/梗",
+        "사용자의 8.3 subs / astra sig 6.7 subs 예시, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "부옵",
+        "ja": "サブステ"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:signature-engine",
+      "aliases": [
+        "전무",
+        "전용무기",
+        "전엔",
+        "전용엔진",
+        "signature W-Engine",
+        "signature engine",
+        "sig",
+        "signature weapon",
+        "餅武器",
+        "餅",
+        "モチーフ音動機",
+        "专武",
+        "专属音擎"
+      ],
+      "preferred": {
+        "ko": "전용 음동기",
+        "en": "signature W-Engine",
+        "ja": "モチーフ音動機",
+        "zh-CN": "专属音擎"
+      },
+      "meaning": "캐릭터에 맞춰 설계된 음동기를 뜻하는 커뮤니티 표현.",
+      "rule": "어떤 캐릭터의 음동기인지 원문을 유지하며 구체적인 장비 이름·소유 여부·재련 수치를 추가하지 않는다. without sig/無餅/无专武 같은 부정을 보존한다. 회사 전무·떡·일반적인 서명 sig는 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ],
+      "communityPreferred": {
+        "ko": "전무",
+        "en": "sig",
+        "ja": "餅武器",
+        "zh-CN": "专武"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:cooldown",
+      "aliases": [
+        "쿨",
+        "쿨타임",
+        "쿨탐",
+        "CD",
+        "cooldown",
+        "クールタイム",
+        "冷却"
+      ],
+      "preferred": {
+        "ko": "재사용 대기시간",
+        "en": "cooldown",
+        "ja": "クールタイム",
+        "zh-CN": "冷却时间"
+      },
+      "meaning": "스킬을 다시 쓸 때까지의 시간.",
+      "rule": "CD는 치명타 피해 후보와 공유한다. 시간·초·재사용 문맥에서만 cooldown으로 판단한다. CD 하나만으로 뜻을 확정하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://wikiwiki.jp/mukankeizone/用語集",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary"
+      ],
+      "communityPreferred": {
+        "ko": "쿨타임"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:damage-bonus",
+      "aliases": [
+        "피증",
+        "뎀증",
+        "DMG bonus",
+        "damage bonus",
+        "ダメバフ",
+        "增伤"
+      ],
+      "preferred": {
+        "ko": "피해 증가",
+        "en": "DMG Bonus",
+        "ja": "与ダメージアップ",
+        "zh-CN": "伤害加成"
+      },
+      "meaning": "주는 피해의 증가 효과.",
+      "rule": "받는 피해 증가(취약), 방어력 감소, 내성 감소와 구분하며 같은 계산 항으로 합치지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ],
+      "communityPreferred": {
+        "ko": "피증",
+        "ja": "ダメバフ",
+        "zh-CN": "增伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:damage-reduction",
+      "aliases": [
+        "피감",
+        "뎀감",
+        "damage reduction",
+        "ダメージ軽減",
+        "减伤"
+      ],
+      "preferred": {
+        "ko": "받는 피해 감소",
+        "en": "damage taken reduction",
+        "ja": "被ダメージ軽減",
+        "zh-CN": "受到的伤害降低"
+      },
+      "meaning": "받는 피해가 줄어드는 효과.",
+      "rule": "피해를 받는 주체를 보존한다. 이상피감의 이상 등 수식어를 생략하지 않으며 내성 감소나 주는 피해 증가로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://wikiwiki.jp/mukankeizone/用語集",
+        "신고에서 확인한 이상피감/내성 감소 구분, 2026-10-08"
+      ],
+      "communityPreferred": {
+        "ko": "피감",
+        "zh-CN": "减伤"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:defense-reduction",
+      "aliases": [
+        "방깎",
+        "방어깎",
+        "DEF shred",
+        "DEF reduction",
+        "防御ダウン",
+        "减防"
+      ],
+      "preferred": {
+        "ko": "방어력 감소",
+        "en": "DEF reduction",
+        "ja": "防御力ダウン",
+        "zh-CN": "防御力降低"
+      },
+      "meaning": "적 등의 방어력을 낮추는 효과.",
+      "rule": "방어력 무시·관통률·내성 감소는 서로 다른 효과이므로 섞지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ],
+      "communityPreferred": {
+        "ko": "방깎",
+        "en": "DEF shred",
+        "zh-CN": "减防"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:resistance-reduction",
+      "aliases": [
+        "내성깎",
+        "내성깎기",
+        "내성 감소",
+        "RES shred",
+        "RES reduction",
+        "耐性ダウン",
+        "减抗"
+      ],
+      "preferred": {
+        "ko": "내성 감소",
+        "en": "RES reduction",
+        "ja": "耐性ダウン",
+        "zh-CN": "抗性降低"
+      },
+      "meaning": "특정 속성 등에 대한 내성을 낮추는 효과.",
+      "rule": "속성·대상·수치를 보존하고 방어력 감소 또는 피감으로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://www.prydwen.gg/zenless/guides/agents-attributes",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ],
+      "communityPreferred": {
+        "ko": "내성깎",
+        "en": "RES shred",
+        "zh-CN": "减抗"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:on-field",
+      "aliases": [
+        "온필드",
+        "on-field",
+        "on field",
+        "表運用",
+        "站场"
+      ],
+      "preferred": {
+        "ko": "온필드",
+        "en": "on-field",
+        "ja": "表で操作",
+        "zh-CN": "站场"
+      },
+      "meaning": "전투에서 현재 직접 조작하며 필드에 나와 있는 상태.",
+      "rule": "캐릭터 특성의 공식 강공/격파/이상 분류로 바꾸지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:off-field",
+      "aliases": [
+        "오프필드",
+        "off-field",
+        "off field",
+        "裏運用",
+        "后台"
+      ],
+      "preferred": {
+        "ko": "오프필드",
+        "en": "off-field",
+        "ja": "控え",
+        "zh-CN": "后台"
+      },
+      "meaning": "현재 직접 조작하지 않는 대기 상태.",
+      "rule": "적용 중인 효과·딜링 유무를 원문 없이 추정하지 않는다. 일반적인 컴퓨터 백그라운드와 문맥으로 구분한다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:best-in-slot",
+      "aliases": [
+        "종결장비",
+        "BiS",
+        "best in slot",
+        "best-in-slot"
+      ],
+      "preferred": {
+        "ko": "최적 장비",
+        "en": "best-in-slot",
+        "ja": "最適装備",
+        "zh-CN": "最优装备"
+      },
+      "meaning": "해당 조건에서 가장 적합하다고 평가하는 장비.",
+      "rule": "주관적 평가와 조건을 보존한다. 모든 캐릭터·모든 버전에서 절대적 최선으로 단정하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://wikiwiki.jp/mukankeizone/用語集",
+        "https://zenless-zone-zero.fandom.com/wiki/Glossary"
+      ],
+      "communityPreferred": {
+        "en": "BiS"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "community:mindscape-0",
+      "aliases": [
+        "M0",
+        "0돌",
+        "0凸",
+        "0影",
+        "0命",
+        "명함",
+        "노돌",
+        "無凸",
+        "无凸",
+        "零命",
+        "零影"
+      ],
+      "preferred": {
+        "ko": "명함",
+        "en": "M0",
+        "ja": "無凸",
+        "zh-CN": "0影"
+      },
+      "meaning": "캐릭터 형상 시네마 0단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:mindscape-1",
+      "aliases": [
+        "M1",
+        "1돌",
+        "1凸",
+        "1影",
+        "1命"
+      ],
+      "preferred": {
+        "ko": "1돌",
+        "en": "M1",
+        "ja": "1凸",
+        "zh-CN": "1影"
+      },
+      "meaning": "캐릭터 형상 시네마 1단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:mindscape-2",
+      "aliases": [
+        "M2",
+        "2돌",
+        "2凸",
+        "2影",
+        "2命"
+      ],
+      "preferred": {
+        "ko": "2돌",
+        "en": "M2",
+        "ja": "2凸",
+        "zh-CN": "2影"
+      },
+      "meaning": "캐릭터 형상 시네마 2단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:mindscape-3",
+      "aliases": [
+        "M3",
+        "3돌",
+        "3凸",
+        "3影",
+        "3命"
+      ],
+      "preferred": {
+        "ko": "3돌",
+        "en": "M3",
+        "ja": "3凸",
+        "zh-CN": "3影"
+      },
+      "meaning": "캐릭터 형상 시네마 3단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:mindscape-4",
+      "aliases": [
+        "M4",
+        "4돌",
+        "4凸",
+        "4影",
+        "4命"
+      ],
+      "preferred": {
+        "ko": "4돌",
+        "en": "M4",
+        "ja": "4凸",
+        "zh-CN": "4影"
+      },
+      "meaning": "캐릭터 형상 시네마 4단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:mindscape-5",
+      "aliases": [
+        "M5",
+        "5돌",
+        "5凸",
+        "5影",
+        "5命"
+      ],
+      "preferred": {
+        "ko": "5돌",
+        "en": "M5",
+        "ja": "5凸",
+        "zh-CN": "5影"
+      },
+      "meaning": "캐릭터 형상 시네마 5단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ]
+    },
+    {
+      "id": "community:mindscape-6",
+      "aliases": [
+        "M6",
+        "6돌",
+        "6凸",
+        "6影",
+        "6命",
+        "풀돌",
+        "完凸",
+        "满命",
+        "满影"
+      ],
+      "preferred": {
+        "ko": "6돌",
+        "en": "M6",
+        "ja": "6凸",
+        "zh-CN": "6影"
+      },
+      "meaning": "캐릭터 형상 시네마 6단계의 커뮤니티 표기.",
+      "rule": "캐릭터 중복 획득 단계만 해당한다. 음동기 재련·레벨 돌파와 구분하고, 무기 소유 여부나 재련 단계는 추가하지 않는다. 일본어 음동기의 無凸는 캐릭터 M0와 다르므로 적용하지 않는다. 명함을 건네는 일반 대화도 해당하지 않는다. 게임의 해당 능력치·장비·전투 문맥에서만 적용한다. 일반 대화의 동음어·영문 약어는 치환하지 않는다. 뜻을 확정할 문맥이 없으면 원문 약어를 유지한다. 원문에 없는 수치·효과·공식 명칭을 만들지 않는다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-09",
+      "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
+      "sources": [
+        "https://moegirl.icu/绝区零/梗",
+        "https://wikiwiki.jp/mukankeizone/用語集"
+      ],
+      "communityPreferred": {
+        "ko": "풀돌",
+        "ja": "完凸",
+        "zh-CN": "满影"
+      },
+      "outputReviewedAt": "2026-10-12"
+    },
+    {
+      "id": "culmination-plural",
+      "targetId": "effect:1431:culmination",
+      "aliases": [
+        "Culminations"
+      ],
+      "meaning": "엽빛나의 극치(Culmination)를 중첩 단위로 세는 영어 복수형.",
+      "rule": "엽빛나 변신·스택 소모 문맥의 Culminations는 단수형과 동일한 극치 효과다. 개수·초당 소모량·시간 비교를 유지하며 일반적인 절정이라는 뜻에는 적용하지 않는다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-12",
+      "sources": [
+        "사용자 제공 극치 소모량 비교 원문에서 확인한 영어 복수형, 2026-10-12"
+      ]
+    },
+    {
+      "id": "community:notorious-label",
+      "aliases": [
+        "Notorious",
+        "노토리우스"
+      ],
+      "preferred": {
+        "ko": "노토리우스",
+        "en": "Notorious"
+      },
+      "meaning": "사용자가 타이머 비교에서 지칭한 Notorious 명칭. 위험한 강습전(Deadly Assault)과 구별해 표기를 보존한다.",
+      "rule": "젠레스 보스·도전 타이머 문맥의 단독 Notorious는 한국어 노토리우스로 옮긴다. DA/위험한 강습전/강습과 같은 콘텐츠로 합치지 않는다. 원문에 없는 전체 콘텐츠명이나 보스명을 추측해 확장하지 않는다. 더 긴 보스 이름에 포함되면 해당 전체 보스 항목을 우선하며, 일반 형용사 notorious는 문맥에 맞게 번역한다. 등록되지 않은 언어의 고유명사는 원문을 유지한다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-12",
+      "sources": [
+        "Notorious 타이머와 DA 타이머는 별개이며 노토리우스로 옮겨야 한다는 사용자 확인, 2026-10-12"
+      ]
+    },
+    {
+      "id": "shunguang-special-3-short-names",
+      "targetId": "skill:1431:special:3",
+      "aliases": [
+        "섬광",
+        "명심경 섬광",
+        "명심경섬광",
+        "명심경·섬광",
+        "Soaring Light",
+        "Enlightened Mind - Soaring Light"
+      ],
+      "meaning": "엽빛나의 명심경·섬광 스킬 전체 이름과 약칭.",
+      "rule": "엽빛나의 변신·강특·첫 타격·타이머 문맥에서 섬광/Soaring Light는 이 스킬이다. 명심경이라는 상태 이름만 남기지 않고 스킬을 구별하는 섬광/Soaring Light를 유지한다. 일반적인 빛의 섬광이나 논리적 귀결을 이 기술로 번역하지 않는다.",
+      "status": "source-supported-community",
+      "reviewedAt": "2026-10-13",
+      "communityPreferred": {
+        "ko": "섬광",
+        "en": "Soaring Light"
+      },
+      "outputReviewedAt": "2026-10-13",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/ko/character/1431.json",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1431.json",
+        "한국어·영어 /skill/special/description/3/name 대조; 이름을 줄여 부르는 출력 표기, 2026-10-13"
+      ]
+    },
+    {
+      "id": "shunguang-special-4-short-names",
+      "targetId": "skill:1431:special:4",
+      "aliases": [
+        "귀결",
+        "명심경 귀결",
+        "명심경귀결",
+        "명심경·귀결",
+        "Return to Dust",
+        "Enlightened Mind - Return to Dust"
+      ],
+      "meaning": "엽빛나의 명심경·귀결 스킬 전체 이름과 약칭.",
+      "rule": "엽빛나의 변신·강특·첫 타격·타이머 문맥에서 귀결/Return to Dust는 이 스킬이다. 명심경이라는 상태 이름만 남기지 않고 스킬을 구별하는 귀결/Return to Dust를 유지한다. 일반적인 빛의 섬광이나 논리적 귀결을 이 기술로 번역하지 않는다.",
+      "status": "source-supported-community",
+      "reviewedAt": "2026-10-13",
+      "communityPreferred": {
+        "ko": "귀결",
+        "en": "Return to Dust"
+      },
+      "outputReviewedAt": "2026-10-13",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/ko/character/1431.json",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1431.json",
+        "한국어·영어 /skill/special/description/4/name 대조; 이름을 줄여 부르는 출력 표기, 2026-10-13"
+      ]
+    },
+    {
+      "id": "deadly-assault-adversity-short-names",
+      "targetId": "mode:deadly-assault-adversity",
+      "aliases": [
+        "절망모드",
+        "절망",
+        "Adversity",
+        "逆境モード",
+        "绝境模式"
+      ],
+      "meaning": "강습전 절망 모드의 띄어쓰기 변형과 짧은 이름.",
+      "rule": "절망/Adversity/逆境/绝境은 강습의 고난도 모드·보스 점수·클리어 문맥일 때만 이 모드의 이름이다. 일반적인 절망감·역경이나 다른 게임 모드는 해당 명칭으로 바꾸지 않는다. 명칭을 논하는 문자 그대로의 인용에는 표기 보존 원칙을 적용한다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-13",
+      "sources": [
+        "https://zenless.hoyoverse.com/ko-kr/news/165414?catchSpider=1&page=news",
+        "https://zenless.hoyoverse.com/en-us/news/165414",
+        "https://steamcommunity.com/app/4162040?l=japanese",
+        "https://zzz.mihoyo.com/news/166026"
+      ],
+      "communityPreferred": {
+        "ko": "절망",
+        "ja": "逆境",
+        "zh-CN": "绝境"
+      },
+      "outputReviewedAt": "2026-10-13"
+    },
+    {
+      "id": "community:m0w1-build",
+      "aliases": [
+        "명전",
+        "명함전무",
+        "명함 전무",
+        "M0W1",
+        "M0 W1",
+        "M0/W1"
+      ],
+      "preferred": {
+        "ko": "명함과 전용 음동기 1단계",
+        "en": "M0 with a signature W-Engine at overclock level 1",
+        "ja": "M0W1",
+        "zh-CN": "M0W1"
+      },
+      "communityPreferred": {
+        "ko": "명전",
+        "en": "M0W1",
+        "ja": "M0W1",
+        "zh-CN": "M0W1"
+      },
+      "meaning": "젠레스 캐릭터 세팅 문맥의 명전은 명함 캐릭터와 전용 음동기 1단계의 조합을 뜻하는 M0W1 약칭.",
+      "rule": "캐릭터·팀·장비·돌파 세팅 문맥에서만 명전/M0W1을 적용한다. 명함(M0)과 전용 음동기를 함께 보존하며 all-clear처럼 클리어 여부로 바꾸지 않는다. 한 캐릭터의 세팅을 팀 전원의 세팅으로 확대하지 않는다. 다른 형상·음동기 단계가 원문에 명시되면 그 숫자를 유지하고 M0W1으로 덮어쓰지 않는다. 인명·일반 단어에 포함된 글자는 적용하지 않는다. 일본어·중국어 출력도 같은 숫자 표기 M0W1을 보존하며 제작사 공식 UI 명칭이라는 뜻은 아니다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-13",
+      "outputReviewedAt": "2026-10-13",
+      "sources": [
+        "신고 R-20261013-1bf04face58f의 올명전 팀=full M0W1이라는 사용자 설명, 2026-10-13"
+      ]
+    },
+    {
+      "id": "community:all-m0w1-team",
+      "aliases": [
+        "올명전",
+        "올 명전",
+        "올명전 팀",
+        "올 명전 팀",
+        "전원 명전",
+        "전부 명전",
+        "full M0W1",
+        "all M0W1"
+      ],
+      "preferred": {
+        "ko": "팀 전원이 명함과 전용 음동기 1단계",
+        "en": "a team with every member at M0 and their signature W-Engine at overclock level 1",
+        "ja": "全員M0W1",
+        "zh-CN": "全队M0W1"
+      },
+      "communityPreferred": {
+        "ko": "올명전",
+        "en": "full M0W1",
+        "ja": "全員M0W1",
+        "zh-CN": "全队M0W1"
+      },
+      "meaning": "팀원 전부가 명전(M0W1) 세팅이라는 한국어 커뮤니티 표현. 모두 클리어했다는 뜻이 아니다.",
+      "rule": "팀·파티 구성 문맥의 올명전/전원 명전은 full M0W1이며 팀 전체에 적용되는 범위를 보존한다. 팀이라는 단어가 함께 있으면 full M0W1 team처럼 자연스럽게 연결하고 team을 중복하지 않는다. 더 긴 올명전 표현은 안쪽 명전보다 우선한다. all-clear/fully cleared team으로 바꾸거나 풀돌/완전 재련 세팅으로 해석하지 않는다. 팀원의 다른 형상·음동기 단계가 명시되면 그 수치를 보존한다. 일반 단어·사람 이름에는 적용하지 않는다.",
+      "status": "user-provided",
+      "reviewedAt": "2026-10-13",
+      "outputReviewedAt": "2026-10-13",
+      "sources": [
+        "신고 R-20261013-1bf04face58f의 올명전 팀=full M0W1이라는 사용자 설명, 2026-10-13"
+      ]
+    },
+    {
+      "id": "deadly-assault-trial-short-names",
+      "targetId": "mode:deadly-assault-trial",
+      "aliases": [
+        "시련모드",
+        "시련",
+        "Trial",
+        "試練モード",
+        "试炼模式"
+      ],
+      "meaning": "강습전 시련 모드의 띄어쓰기 변형과 짧은 이름.",
+      "rule": "강습전 보스·킬·점수·별 획득·모드 비교 문맥에서 시련/Trial/試練/试炼은 해당 모드다. 일반적인 시련·법정 재판·시험판이나 다른 콘텐츠에는 적용하지 않는다. 절망(Adversity)과 별개로 유지한다.",
+      "status": "reviewed-community",
+      "reviewedAt": "2026-10-13",
+      "sources": [
+        "https://zenless.hoyoverse.com/ko-kr/news/165414?catchSpider=1&page=news",
+        "https://zenless.hoyoverse.com/en-us/news/165414",
+        "https://steamcommunity.com/app/4162040?l=japanese",
+        "https://zzz.mihoyo.com/news/166026"
+      ],
+      "communityPreferred": {
+        "ko": "시련",
+        "ja": "試練",
+        "zh-CN": "试炼"
+      },
+      "outputReviewedAt": "2026-10-13"
+    },
+    {
+      "id": "unknown-corruption-complex-initials",
+      "targetId": "monster:30009",
+      "aliases": [
+        "UCC"
+      ],
+      "meaning": "미지의 복합 침식체(Unknown Corruption Complex)의 영어 이니셜 UCC.",
+      "rule": "젠레스 보스·강습·클리어·킬·점수 문맥의 UCC는 미지의 복합 침식체다. 한국어 출력에서는 원문 이니셜만 남기지 않고 연결된 한국어 보스 이름을 사용한다. 다른 서비스나 일반 문맥의 UCC에는 적용하지 않는다.",
+      "communityPreferred": {
+        "en": "UCC"
+      },
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/monster.json",
+        "신고 R-20261013-2cb495750b08의 보스 약칭 오역 검토, 2026-10-13"
+      ],
+      "status": "user-provided",
+      "reviewedAt": "2026-10-13",
+      "outputReviewedAt": "2026-10-13"
+    },
+    {
+      "id": "community:scorched-horizon-base-name",
+      "aliases": [
+        "Scorched Horizon",
+        "태양의 잔불"
+      ],
+      "preferred": {
+        "ko": "태양의 잔불",
+        "en": "Scorched Horizon",
+        "ja": "焦天残火",
+        "zh-CN": "焚昼余火"
+      },
+      "meaning": "태양의 잔불·파에톤 및 융합·태양의 잔불 보스 이름의 공통 부분을 줄여 부르는 표현.",
+      "rule": "젠레스 보스·강습·킬·점수 문맥의 Scorched Horizon은 태양의 잔불이며 불타는 지평선으로 직역하지 않는다. 이 짧은 표기만으로 일반형·파에톤·융합형을 단정해 전체 이름을 추가하지 않는다. Integrated 등 변형이 명시된 긴 보스 이름은 해당 전체 항목을 우선한다. 일반적인 풍경·지평선의 표현에는 적용하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/monster.json",
+        "신고 R-20261013-0118a4282b5e의 보스 부분 이름 검토, 2026-10-13"
+      ],
+      "status": "user-provided",
+      "reviewedAt": "2026-10-13",
+      "outputReviewedAt": "2026-10-13"
+    },
+    {
+      "id": "community:typhon-family-name",
+      "aliases": [
+        "Typhon",
+        "티폰",
+        "타이폰"
+      ],
+      "preferred": {
+        "ko": "티폰",
+        "en": "Typhon",
+        "ja": "テューポーン",
+        "zh-CN": "提丰"
+      },
+      "meaning": "젠레스 티폰 계열 적의 공통 이름. 챌린저·슬러거·디스트로이어 등 특정 변형명은 원문이 있을 때 보존한다.",
+      "rule": "젠레스 적·보스·강습·전투 문맥의 Typhon은 한국어 티폰으로 표기하고 타이폰으로 음역하지 않는다. 원문에 없는 계열 변형 이름을 추가하지 않으며 전체 적 이름이 주어지면 긴 이름의 해당 항목을 우선한다. 신화 등 다른 문맥의 이름에는 이 게임 적의 변형을 적용하지 않는다.",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/monster.json",
+        "신고 R-20261013-d11e6b5f6775의 티폰 표기 사용자 확인, 2026-10-13"
+      ],
+      "status": "user-provided",
+      "reviewedAt": "2026-10-13",
+      "outputReviewedAt": "2026-10-13"
+    },
+    {
+      "id": "community:shill-buff",
+      "aliases": [
+        "shill buffs",
+        "shill buff",
+        "shill",
+        "접대 버프",
+        "접대버프",
+        "접대"
+      ],
+      "preferred": {
+        "ko": "접대",
+        "en": "buffs favoring a particular character",
+        "ja": "特定キャラ向けの強化効果",
+        "zh-CN": "针对特定角色的增益"
+      },
+      "communityPreferred": {
+        "ko": "접대",
+        "en": "shill buffs"
+      },
+      "meaning": "특정 캐릭터·속성·파티를 유리하게 만드는 스테이지 버프나 환경을 가리키는 커뮤니티 표현.",
+      "rule": "젠레스 스테이지 버프·캐릭터·환경 평가 문맥의 shill buffs는 접대 버프다. 실전 버프로 바꾸거나 유리한 캐릭터·수치를 임의로 추가하지 않는다. 원문의 비판·추정 말투를 유지한다. 일반적인 광고·홍보 인력 shill이나 손님 접대에는 게임 버프 의미를 적용하지 않는다. 문장에 buffs/버프가 있으면 해당 명사를 중복하지 않는다.",
+      "sources": [
+        "신고 R-20261013-d31e9ee5c112의 shill=접대 사용자 확인, 2026-10-13"
+      ],
+      "status": "user-provided",
+      "reviewedAt": "2026-10-13",
+      "outputReviewedAt": "2026-10-13"
+    }
+  ]
+}

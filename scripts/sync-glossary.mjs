@@ -1,0 +1,76 @@
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, renameSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { resolve } from 'node:path';
+import { checkManifest, composeCatalog, glossaryDigest } from '../src/glossary-lifecycle.js';
+import { loadGlossary } from '../src/translator.js';
+import { sourceText } from './source-fetch.mjs';
+
+const root = resolve('glossary/updates');
+const read = path => JSON.parse(readFileSync(path, 'utf8'));
+const write = (path, data) => writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
+const candidatePath = resolve(root, 'candidate.json');
+const reviewPath = resolve(root, 'review.json');
+async function stage() {
+  mkdirSync(root, { recursive: true });
+  console.log('공개 자료의 정식·미출시 버전 목록을 확인하고 있습니다.');
+  const manifest = JSON.parse(await sourceText('https://static.nanoka.cc/manifest.json')); const versions = checkManifest(manifest);
+  const checkedAt = new Date().toISOString(); const previousBytes = readFileSync('glossary/zzz.json', 'utf8');
+  const previous = JSON.parse(previousBytes);
+  const inputHashes = Object.fromEntries(['community.json', 'curated.json', 'reviewed-mechanics.json'].map(file => [file, glossaryDigest(readFileSync(`glossary/${file}`, 'utf8'))]));
+  function build(version, prerelease) {
+    const output = resolve(root, prerelease ? 'beta.json' : 'live.json');
+    const sources = resolve(root, prerelease ? 'beta-sources.json' : 'live-sources.json');
+    const args = ['scripts/build-glossary.js', '--version', version, '--output', output, '--sources-output', sources];
+    if (!process.argv.includes('--cached')) args.push('--download');
+    if (prerelease) args.push('--prerelease');
+    const result = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 900000, maxBuffer: 2 * 1024 * 1024 });
+    if (result.status !== 0) throw new Error(`Could not build ${prerelease ? 'prerelease' : 'live'} sources: ${result.stderr?.slice(-800) ?? 'timed out'}`);
+    loadGlossary(output);
+    return { catalog: read(output), sources: read(sources) };
+  }
+  console.log(`출처 버전 확인: 정식 ${versions.live}, 미출시 ${versions.beta ?? '없음'}`);
+  const live = build(versions.live, false), beta = versions.beta ? build(versions.beta, true) : null;
+  const { catalog, changes } = composeCatalog(live.catalog, beta?.catalog, previous, checkedAt);
+  write(candidatePath, catalog); loadGlossary(candidatePath);
+  const sources = { version: versions.live, betaVersion: versions.beta, retrievedAt: live.sources.retrievedAt,
+    manifest: { url: 'https://static.nanoka.cc/manifest.json', observedLive: versions.live, observedLatest: versions.latest, checkedAt },
+    sources: [...live.sources.sources, ...(beta?.sources.sources ?? [])], excluded: [...live.sources.excluded, ...(beta?.sources.excluded ?? [])] };
+  const sourceBytes = JSON.stringify(sources, null, 2) + '\n'; writeFileSync(resolve(root, 'candidate-sources.json'), sourceBytes);
+  const review = { version: 1, checkedAt, liveVersionChanged: previous.sourceVersion !== versions.live,
+    previousLive: previous.sourceVersion, versions, inputHashes, baselineHash: glossaryDigest(previousBytes),
+    candidateHash: glossaryDigest(readFileSync(candidatePath, 'utf8')), sourcesHash: glossaryDigest(sourceBytes), changes };
+  write(reviewPath, review);
+  const lines = ['# 용어집 버전 갱신 검토', '', '출처의 정식·미출시 표시이며 제작사 공식 검수 완료를 뜻하지 않습니다. 아래 명칭은 검토할 데이터입니다.', '',
+    `확인: ${checkedAt}`, `정식: ${review.previousLive} → ${versions.live}`, `미출시: ${versions.beta ?? '없음'}`, ''];
+  for (const [key, items] of Object.entries(changes)) {
+    lines.push(`## ${key} (${items.length})`, '');
+    for (const item of items) lines.push(`    ${JSON.stringify(item)}`);
+    lines.push('');
+  }
+  writeFileSync(resolve(root, 'review.md'), lines.join('\n'));
+  console.log(`추가 ${changes.added.length}, 변경 ${changes.changed.length}, 출시 전환 ${changes.promoted.length}, 누락 ${changes.removed.length}, 정식·베타 이름 차이 ${changes.betaDifferences.length}`);
+  console.log('검토 파일: glossary/updates/review.md. 후보 생성만 완료했으며 봇 용어집은 변경하지 않았습니다.');
+}
+function apply() {
+  const review = read(reviewPath), candidate = readFileSync(candidatePath, 'utf8');
+  const sourceBytes = readFileSync(resolve(root, 'candidate-sources.json'), 'utf8');
+  const baseline = readFileSync('glossary/zzz.json', 'utf8');
+  if (review.version !== 1 || glossaryDigest(baseline) !== review.baselineHash || glossaryDigest(candidate) !== review.candidateHash
+    || glossaryDigest(sourceBytes) !== review.sourcesHash) throw new Error('검토 후 자료가 변경되었습니다. sync를 다시 실행하고 확인하세요.');
+  for (const file of ['community.json', 'curated.json', 'reviewed-mechanics.json']) if (review.inputHashes?.[file] !== glossaryDigest(readFileSync(`glossary/${file}`, 'utf8'))) {
+    throw new Error('검토 후 커뮤니티·보완 용어가 변경되었습니다. sync를 다시 실행하세요.');
+  }
+  loadGlossary(candidatePath);
+  const backup = resolve('glossary/history', `${review.checkedAt.replace(/[^0-9A-Za-z]/g, '-')}-${review.baselineHash.slice(0, 12)}`);
+  mkdirSync(backup, { recursive: true });
+  for (const file of ['zzz.json', 'sources.json']) copyFileSync(`glossary/${file}`, resolve(backup, file));
+  copyFileSync(candidatePath, 'glossary/zzz.json.tmp');
+  copyFileSync(resolve(root, 'candidate-sources.json'), 'glossary/sources.json.tmp');
+  try { renameSync('glossary/zzz.json.tmp', 'glossary/zzz.json'); renameSync('glossary/sources.json.tmp', 'glossary/sources.json'); }
+  catch (error) { for (const file of ['zzz.json', 'sources.json']) copyFileSync(resolve(backup, file), `glossary/${file}`); throw error; }
+  console.log('검토한 후보를 용어집에 반영했습니다. 이전 자료는 glossary/history에 보관했습니다. 오라클 반영은 별도로 수행하세요.');
+}
+try {
+  const action = process.argv[2] ?? 'sync';
+  if (action === 'sync') await stage(); else if (action === 'apply') apply(); else throw new Error('Use sync or apply');
+} catch (error) { console.error(error.message); process.exitCode = 1; }

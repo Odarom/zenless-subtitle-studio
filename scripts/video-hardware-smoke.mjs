@@ -1,0 +1,20 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { runTool, tools, transcribeWithRuntime } from '../video/media.mjs';
+import { parseSubtitles } from '../video/subtitles.mjs';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const device = process.argv.includes('--cpu') ? 'cpu' : 'vulkan';
+const wav = join(root, 'data', 'video', 'smoke', 'jfk.wav');
+if (!existsSync(wav)) throw new Error('먼저 video-smoke.mjs로 공개 음성 예제를 준비하세요.');
+const folder = join(root, 'data', 'video', 'smoke', `hardware-${device}`); mkdirSync(folder, { recursive: true });
+const output = join(folder, 'transcript'), started = Date.now(), deviceLines = [];
+const result = await transcribeWithRuntime({ t: tools(root), options: { sourceLanguage: 'en', speechDevice: device }, wav, output, signal: new AbortController().signal, update: patch => { if (patch.message) console.log(patch.message); }, run: (exe, args, options) => runTool(exe, args, { ...options, onText: text => {
+  options.onText(text);
+  for (const line of text.split(/\r?\n/)) if (/ggml_vulkan:|whisper_backend_init_gpu:/.test(line) && deviceLines.length < 12) deviceLines.push(line.trim());
+} }) });
+const cues = parseSubtitles(readFileSync(`${output}.srt`, 'utf8'));
+const text = cues.map(cue => cue.sourceText).join(' ');
+if (!/ask not/i.test(text) || !/country/i.test(text)) throw new Error('표본 음성의 핵심 문장이 누락되었습니다.');
+const report = { ...result, elapsedMs: Date.now() - started, cueCount: cues.length, firstStartMs: cues[0].startMs, lastEndMs: cues.at(-1).endMs, translationApiCalls: 0, deviceLines };
+writeFileSync(join(folder, 'result.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report));

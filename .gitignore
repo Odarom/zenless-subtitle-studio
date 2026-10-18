@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+.secrets/
+.tools/
+.models/
+node_modules/
+data/
+reports/
+dist/
+glossary/cache/
+glossary/history/
+glossary/candidates/
+glossary/updates/

@@ -1,0 +1,62 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { sentenceCues, translationPlan } from '../video/translation-plan.mjs';
+import { RequestGate } from '../video/request-gate.mjs';
+import { translateBatch } from '../video/translation.mjs';
+import { deepLTranslation } from '../video/providers.mjs';
+
+test('local sentence grouping joins incomplete speech across screen cues and retains screen positions', () => {
+  const cues = [{ id: '1', startMs: 0, endMs: 2000, sourceText: 'Use Quick Assist after' }, { id: '2', startMs: 500, endMs: 3000, sourceText: 'EX Special Attack', kind: 'screen', region: { x: .1, y: .2, w: .3, h: .1 } }, { id: '3', startMs: 2100, endMs: 4000, sourceText: 'the EX Special Attack.' }, { id: '4', startMs: 4500, endMs: 6000, sourceText: 'Save the next attack.' }];
+  const result = sentenceCues(cues);
+  assert.equal(result.length, 3); assert.equal(result[0].sourceText, 'Use Quick Assist after the EX Special Attack.');
+  assert.equal(result[0].startMs, 0); assert.equal(result[0].endMs, 4000); assert.deepEqual(result[1].region, cues[1].region);
+});
+test('normal video sends all speech, screen text and glossary in one API request', async () => {
+  const cues = Array.from({ length: 100 }, (_, i) => ({ id: String(i + 1), startMs: i * 4000, endMs: i * 4000 + 3500, sourceText: `Use Quick Assist ${i + 1}.`, ...(i % 2 ? { kind: 'screen' } : {}) }));
+  const config = { provider: 'gemini', model: 'gemini-3.1-flash-lite', apiKey: 'DUMMY', maxOutputTokens: 65536, timeoutMs: 1000, dailyLimit: 100 };
+  const plan = translationPlan(cues, config); assert.equal(plan.requests, 1);
+  let calls = 0;
+  const result = await translateBatch({ allCues: cues, batch: plan.batches[0], options: { sourceLanguage: 'en', targetLanguage: 'ko' }, config, glossaryPath: 'glossary/zzz.json', usage: { reserve: () => 'day', record: () => {} }, fetcher: async (url, init) => {
+    calls++; const body = JSON.parse(init.body), data = JSON.parse(body.contents[0].parts[0].text);
+    assert.equal(data.cues.length, 100); assert(data.glossary.some(term => term.preferred.en === 'Quick Assist')); assert(data.cues.some(c => c.kind === 'screen'));
+    assert(body.systemInstruction.parts[0].text.includes('generates SRT/VTT/project files in code'));
+    return { ok: true, status: 200, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ cues: data.cues.map(c => ({ id: c.id, text: '빠른 지원' })) }) }] } }] }) };
+  } });
+  assert.equal(calls, 1); assert.equal(result.length, 100); assert.equal(result[99].endMs, cues[99].endMs);
+});
+test('oversized single requests stop before any API call, splitting is explicit', () => {
+  const cues = Array.from({ length: 100 }, (_, i) => ({ id: String(i + 1), sourceText: '긴 영상 번역 '.repeat(100), startMs: i * 1000, endMs: i * 1000 + 900 }));
+  const config = { provider: 'openai', model: 'gpt-4.1-mini', maxOutputTokens: 32768 };
+  assert.throws(() => translationPlan(cues, config), /API를 호출하지 않았습니다/);
+  assert(translationPlan(cues, config, { translationMode: 'large-batches' }).requests > 1);
+});
+test('Gemini rate limits and explicit server failures do not trigger video retries', async () => {
+  const cues = [{ id: '1', sourceText: 'Quick Assist.', startMs: 0, endMs: 2000 }];
+  for (const status of [429, 503]) {
+    let calls = 0;
+    await assert.rejects(translateBatch({ allCues: cues, batch: cues, options: { sourceLanguage: 'en', targetLanguage: 'ko' }, config: { provider: 'gemini', model: 'gemini-3.1-flash-lite', apiKey: 'DUMMY', timeoutMs: 1000, maxOutputTokens: 1000, dailyLimit: 10 }, glossaryPath: 'glossary/zzz.json', usage: { reserve: () => 'day', record: () => {} }, fetcher: async () => { calls++; return { ok: false, status }; } }));
+    assert.equal(calls, 1);
+  }
+});
+test('request spacing survives restart without storing the API key and cancellation aborts waiting', async t => {
+  const directory = mkdtempSync(join(tmpdir(), 'zzz-rpm-')); t.after(() => rmSync(directory, { force: true, recursive: true }));
+  let now = 100000, waited = 0; const options = { now: () => now, wait: async ms => { now += ms; waited += ms; } };
+  const config = { provider: 'gemini', apiKey: 'SECRET-NEVER-STORE', requestsPerMinute: 1 };
+  await new RequestGate(directory, options).enter(config);
+  await new RequestGate(directory, options).enter(config); assert.equal(waited, 60000);
+  assert(!readFileSync(join(directory, 'request-gate.json'), 'utf8').includes(config.apiKey));
+  const controller = new AbortController(); controller.abort();
+  await assert.rejects(new RequestGate(directory, options).enter(config, { signal: controller.signal }), { name: 'AbortError' });
+});
+test('DeepL can translate more than 50 sentences in one XML document and recover all IDs', async () => {
+  const payload = { wholeDocument: true, sourceLanguage: 'en', targetLanguage: 'ko', glossary: [], before: [], after: [], cues: Array.from({ length: 100 }, (_, i) => ({ id: String(i + 1), text: 'Sentence.' })) };
+  let calls = 0;
+  const result = await deepLTranslation({ model: 'deepl-free', apiKey: 'DUMMY', timeoutMs: 1000 }, payload, async (url, init) => {
+    calls++; const body = JSON.parse(init.body); assert.equal(body.text.length, 1); assert.equal((body.text[0].match(/<c /g) || []).length, 100);
+    return { ok: true, json: async () => ({ translations: [{ text: body.text[0].replaceAll('Sentence.', '문장입니다.') }] }) };
+  });
+  assert.equal(calls, 1); assert.equal(JSON.parse(result.output).cues.length, 100);
+});

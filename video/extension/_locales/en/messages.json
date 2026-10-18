@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "Zenless Subtitle Studio"
+  },
+  "extensionDescription": {
+    "message": "Display pretranslated Zenless subtitles on YouTube. Import SRT/VTT files too."
+  }
+}

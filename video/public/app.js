@@ -1,0 +1,360 @@
+import { videoContentRect, cueRegionAt, buildCueIndex, activeCuesAt } from './geometry.mjs';
+import { reviewCues, reviewTime } from './review.mjs';
+import { bindDocument, createI18n, UI_LANGUAGE_STORAGE_KEY } from './i18n.mjs';
+const i18n = createI18n(navigator.languages);
+try { const saved = localStorage.getItem(UI_LANGUAGE_STORAGE_KEY); if (saved) i18n.setLocale(saved); } catch {}
+const t = (...args) => i18n.t(...args);
+const applyStaticLanguage = bindDocument(document, i18n);
+applyStaticLanguage();
+const $ = id => document.getElementById(id);
+const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), uploadController: null };
+const statusLabel = status => ({ queued: t('대기 중'), running: t('처리 중'), completed: t('완료'), failed: t('확인 필요'), cancelled: t('중단됨'), interrupted: t('이어하기 가능') })[status] || status;
+function node(tag, attrs = {}, ...children) {
+  const element = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key.startsWith('on')) element.addEventListener(key.slice(2), value);
+    else if (key === 'class') element.className = value;
+    else if (key === 'text') element.textContent = value;
+    else if (key in element) element[key] = value;
+    else element.setAttribute(key, value);
+  }
+  for (const child of children.flat()) if (child != null) element.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  return element;
+}
+let toastTimer;
+function toast(message, error = false) { $('toast').textContent = i18n.message(message); $('toast').className = error ? 'error' : ''; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; }, error ? 9000 : 4500); }
+async function api(path, { method = 'GET', body, raw, signal } = {}) {
+  const headers = { Authorization: `Bearer ${state.token}` };
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  const response = await fetch(path, { method, headers, body: body === undefined ? raw : JSON.stringify(body), signal });
+  if (!response.ok) { const value = await response.json().catch(() => ({})); throw new Error(value.error || t('요청 실패 ({status})', { status: response.status })); }
+  return response;
+}
+const apiJson = async (path, options) => (await api(path, options)).json();
+function view(name) {
+  $('studioView').hidden = name !== 'studio'; $('settingsView').hidden = name !== 'settings'; $('historyView').hidden = name !== 'history';
+  for (const button of document.querySelectorAll('[data-view]')) button.classList.toggle('selected', button.dataset.view === name);
+}
+function mode(name) { state.mode = name; $('urlInput').hidden = name !== 'url'; $('fileInput').hidden = name !== 'file'; $('urlTab').classList.toggle('active', name === 'url'); $('fileTab').classList.toggle('active', name === 'file'); }
+function selectedFile(file) { state.file = file; $('fileName').textContent = file ? `${file.name} · ${(file.size / 1048576).toFixed(1)} MB` : t('영상·음성·자막 파일 선택'); }
+function time(ms) { const seconds = Math.floor(ms / 1000); return `${String(Math.floor(seconds / 3600)).padStart(2, '0')}:${String(Math.floor(seconds / 60) % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`; }
+function bindModelOptions(changeModel = false) {
+  const presets = state.settings?.presets?.[$('provider').value] || [];
+  $('modelOptions').replaceChildren(...presets.map(preset => node('option', { value: preset.value, label: i18n.message(preset.label) })));
+  if (changeModel) $('model').value = presets[0]?.value || ($('provider').value === 'ollama' ? 'qwen3:8b' : '');
+  const local = $('provider').value === 'ollama', deepl = $('provider').value === 'deepl';
+  $('modelField').hidden = deepl; $('model').required = !deepl; $('planField').hidden = !deepl; $('keyField').hidden = local;
+  $('providerHelp').textContent = local ? t('Ollama를 설치하고 모델을 내려받아 실행하세요. 번역은 이 PC에서 처리하며 API 키가 필요 없습니다.') : deepl ? t('DeepL API Free/Pro 키를 사용합니다. 무료 한도와 지원 지역은 DeepL 계정에서 확인하세요.') : '';
+  if (changeModel && deepl) $('deeplPlan').value = presets[0]?.value || 'deepl-free';
+}
+async function loadSettings() {
+  state.settings = await apiJson('/api/settings');
+  const s = state.settings;
+  $('provider').value = s.provider; $('model').value = s.model; if (s.provider === 'deepl') $('deeplPlan').value = s.model; $('dailyLimit').value = s.dailyLimit; $('requestsPerMinute').value = s.requestsPerMinute || 1;
+  $('speechDevice').value = s.speechDevice || 'auto'; $('speechThreads').value = s.speechThreads || 0;
+  renderSettingsLabels();
+}
+function renderSettingsLabels() {
+  const s = state.settings; if (!s) return;
+  $('keyState').textContent = s.configured ? t('설정 완료') : t('설정 필요'); $('apiNotice').hidden = s.configured || $('transcribeOnly').checked;
+  bindModelOptions();
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const usage = s.usage[day] || {};
+  $('usage').textContent = t('오늘 요청 {requests}회 · 입력 {input} / 출력 {output} 토큰', { requests: usage.requests || 0, input: (usage.inputTokens || 0).toLocaleString(i18n.locale), output: (usage.outputTokens || 0).toLocaleString(i18n.locale) }) + (usage.characters ? ' · ' + t('DeepL {count}자', { count: usage.characters.toLocaleString(i18n.locale) }) : '');
+}
+async function loadTools() {
+  state.tools = await apiJson('/api/tools'); renderTools();
+}
+function renderTools() {
+  const result = state.tools; if (!result) return;
+  const labels = { cpu: t('CPU 음성 인식'), vulkan: t('GPU 음성 인식 (Vulkan)'), model: t('다국어 음성 모델'), ytdlp: t('유튜브 영상 처리'), ffmpeg: t('오디오 변환'), ocr: t('화면 글자 인식 (OCR)') };
+  $('toolStatus').replaceChildren(...Object.entries(labels).map(([key, label]) => node('div', { class: 'tool-row' }, node('span', { text: label }), node('span', { class: result.ready[key] ? 'ok' : 'missing', text: result.ready[key] ? t('● 준비됨') : t('○ 준비 필요') }))));
+  const ready = result.ready.whisper && result.ready.model && result.ready.ytdlp && result.ready.ffmpeg;
+  $('toolHelp').textContent = ready ? t('{model} · 문장 번역에는 등록한 API를 사용합니다.', { model: result.modelName }) : t('시작 파일을 실행하면 필요한 음성·영상 도구를 자동으로 준비합니다. SRT/VTT 파일은 음성 도구 없이도 번역할 수 있습니다.');
+  $('hardwareInfo').textContent = t('{cpu} · 메모리 {memory}GB', { cpu: result.cpuLabel, memory: result.memoryGiB });
+}
+function renderJobLists() {
+  $('jobCount').textContent = state.jobs.length;
+  $('historyList').replaceChildren(...(state.jobs.length ? state.jobs.map(job => node('button', { class: 'card history-item', type: 'button', onclick: () => selectJob(job.id) }, node('strong', { text: job.title || t('영상 준비 중') }), node('span', { text: t('{status} · {count}개 구간', { status: statusLabel(job.status), count: job.cueCount }) }), node('small', { text: new Date(job.createdAt).toLocaleString(i18n.locale, { timeZone: 'Asia/Seoul' }) }))) : [node('p', { class: 'description', text: t('아직 작업 기록이 없습니다. 영상이나 자막 파일을 선택해 첫 작업을 시작하세요.') })]));
+  $('jobList').replaceChildren(...(state.jobs.length ? state.jobs.map(job => node('button', { class: state.selected === job.id ? 'active' : '', type: 'button', onclick: () => selectJob(job.id) }, node('strong', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {count}개 구간', { status: statusLabel(job.status), count: job.cueCount }) }))) : [node('p', { class: 'empty-jobs', text: t('새 작업을 시작하면 여기에 차곡차곡 보관됩니다.') })]));
+}
+async function refreshJobs() {
+  state.jobs = await apiJson('/api/jobs'); renderJobLists();
+  if (state.selected) {
+    const summary = state.jobs.find(job => job.id === state.selected);
+    if (summary && (summary.updatedAt !== state.shownVersion || !state.detail)) {
+      state.detail = await apiJson(`/api/jobs/${state.selected}`); state.shownVersion = state.detail.updatedAt; renderDetail();
+    }
+  }
+}
+async function selectJob(id) { state.selected = id; state.shownVersion = null; state.page = 0; view('studio'); await refreshJobs(); $('jobDetail').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+async function action(name) {
+  try { await apiJson(`/api/jobs/${state.selected}/${name}`, { method: 'POST' }); await refreshJobs(); }
+  catch (error) { toast(error.message, true); }
+}
+async function download(format, positioned = false) {
+  try {
+    const mode = $('downloadMode')?.value || 'translated';
+    const response = await api(`/api/jobs/${state.selected}/export?format=${format}&mode=${mode}&positioned=${positioned ? 1 : 0}`);
+    const url = URL.createObjectURL(await response.blob());
+    const anchor = node('a', { href: url, download: `${(state.detail.title || t('젠레스 자막')).replace(/[<>:"/\\|?*]/g, '_')}.${mode}${positioned ? ".positioned" : ""}.${format}` });
+    document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } catch (error) { toast(error.message, true); }
+}
+function renderPreview(job) {
+  const fileInput = node('input', { type: 'file', accept: 'video/*,audio/*', hidden: true, onchange: () => {
+    const file = fileInput.files[0]; if (!file) return;
+    const old = state.previewUrls.get(job.id); if (old) URL.revokeObjectURL(old);
+    state.previewUrls.set(job.id, URL.createObjectURL(file)); renderDetail();
+  } });
+  const container = node('div', {}, node('div', { class: 'button-row' }, node('button', { class: 'secondary', type: 'button', text: t('로컬 영상으로 자막 미리보기'), onclick: () => fileInput.click() }), fileInput));
+  const url = state.previewUrls.get(job.id); if (!url) return container;
+  const video = node('video', { controls: true, src: url });
+  const label = node('span'); const caption = node('button', { type: 'button', class: 'preview-caption', title: t('표시 중인 음성 자막 신고'), onclick: () => {
+    const cue = activeCuesAt(speechIndex, video.currentTime * 1000 - Number(offset.value || 0) * 1000)[0]; if (cue) { video.pause(); openReport(job, cue); }
+  } }, label);
+  const screen = node('div', { class: 'screen-preview' });
+  const speechToggle = node('input', { type: 'checkbox', checked: state.previewSpeech !== false, onchange: () => { state.previewSpeech = speechToggle.checked; update(); } });
+  const screenToggle = node('input', { type: 'checkbox', checked: state.previewScreen !== false, onchange: () => { state.previewScreen = screenToggle.checked; update(); } });
+  const speechIndex = buildCueIndex(job.cues.filter(cue => cue.kind !== 'screen'));
+  const screenIndex = buildCueIndex(job.cues.filter(cue => cue.kind === 'screen'));
+  const offset = node('input', { id: 'previewOffset', type: 'number', value: '0', step: '0.1', min: '-3600', max: '3600', 'aria-label': t('자막 지연 초') });
+  const update = () => {
+    const now = video.currentTime * 1000 - Number(offset.value || 0) * 1000;
+    const mode = $('downloadMode')?.value || 'translated';
+    const text = cue => mode === 'source' || job.options.transcribeOnly ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${cue.translatedText || cue.sourceText}` : cue.translatedText || cue.sourceText;
+    label.textContent = speechToggle.checked ? activeCuesAt(speechIndex, now).map(text).join('\n') : '';
+    caption.hidden = !label.textContent;
+    const outer = video.parentElement.getBoundingClientRect(), rect = videoContentRect(video.getBoundingClientRect(), video.videoWidth, video.videoHeight);
+    screen.replaceChildren(...(screenToggle.checked ? activeCuesAt(screenIndex, now) : []).map(cue => {
+      const region = cueRegionAt(cue, now), block = node('button', { type: 'button', class: 'screen-caption', text: text(cue), title: t('이 화면 글자 신고'), onclick: () => { video.pause(); openReport(job, cue); } });
+      Object.assign(block.style, { left: `${rect.left - outer.left + region.x * rect.width}px`, top: `${rect.top - outer.top + region.y * rect.height}px`, width: `${region.w * rect.width}px`, minHeight: `${region.h * rect.height}px`, fontSize: `${Math.max(10, Math.min(28, region.h * rect.height * 0.7))}px` });
+      return block;
+    }));
+  };
+  video.addEventListener('timeupdate', update); video.addEventListener('seeked', update); offset.addEventListener('input', update);
+  $('downloadMode').addEventListener('change', update);
+  video.addEventListener('loadedmetadata', update);
+  const resize = new ResizeObserver(update); resize.observe(video);
+  state.previewCleanup?.(); state.previewCleanup = () => resize.disconnect();
+  video.addEventListener('error', () => toast(t('이 파일 형식은 브라우저에서 재생하지 못할 수 있습니다. 자막 파일을 외부 플레이어에서 적용할 수 있습니다.'), true));
+  container.append(node('div', { class: 'video-preview' }, video, caption, screen), node('div', { class: 'preview-tools' }, node('label', {}, speechToggle, t('음성 자막 표시')), node('label', {}, screenToggle, t('화면 번역 표시')), node('label', { htmlFor: 'previewOffset', text: t('자막 지연 (초)') }), offset, node('span', { class: 'hint', text: t('양수는 자막을 늦게 표시합니다.') })));
+  state.previewVideo = video; return container;
+}
+function renderReview(job, element, drafts) {
+  state.reviewFilters ||= new Map();
+  if (!state.reviewFilters.has(job.id)) state.reviewFilters.set(job.id, { track: job.cues.some(c => c.kind !== 'screen') ? 'speech' : 'screen', search: '', time: '' });
+  const filter = state.reviewFilters.get(job.id), list = node('div', { class: 'review-list', id: 'reviewList' }), count = node('p', { class: 'hint', id: 'reviewCount' }), pager = node('div', { class: 'pager' });
+  const tabs = node('div', { class: 'review-tabs', role: 'tablist', 'aria-label': t('검토할 번역 종류') });
+  const render = () => {
+    for (const button of tabs.children) { const selected = button.dataset.track === filter.track; button.classList.toggle('active', selected); button.setAttribute('aria-selected', selected); }
+    const now = reviewTime(filter.time);
+    if (Number.isNaN(now)) { count.textContent = t('시간은 초 또는 시:분:초로 입력하세요.'); return; }
+    const filtered = reviewCues(job.cues, { track: filter.track, search: filter.search, timeMs: now });
+    const pages = Math.max(1, Math.ceil(filtered.length / 20)); state.page = Math.min(state.page, pages - 1);
+    count.textContent = t('검색 결과 {count}개 구간', { count: filtered.length });
+    list.replaceChildren(...filtered.slice(state.page * 20, (state.page + 1) * 20).map(cue => {
+      const input = node('textarea', { value: drafts.get(cue.id) ?? cue.translatedText ?? cue.sourceText, 'aria-label': t('{id}번 자막 수정', { id: cue.id }), oninput: event => drafts.set(cue.id, event.target.value) });
+      const seek = node('button', { class: 'text-button', type: 'button', text: time(cue.startMs) + ' – ' + time(cue.endMs) + ' · #' + cue.id, onclick: () => { if (state.previewVideo) state.previewVideo.currentTime = cue.startMs / 1000; } });
+      return node('article', { class: 'review-cue', 'data-cue-id': cue.id }, node('div', { class: 'review-cue-header' }, node('span', { class: 'track-badge', text: cue.kind === 'screen' ? t('화면 글자') : t('음성 자막') }), seek, node('button', { class: 'report-button', type: 'button', text: t('오역 신고'), onclick: () => openReport(job, cue) })), node('div', { class: 'review-columns' }, node('div', {}, node('small', { text: t('원문') }), node('p', { class: 'cue-source', text: cue.sourceText })), node('div', {}, node('small', { text: t('번역') }), input)), cue.warnings?.length ? node('p', { class: 'cue-warning', text: t('확인: {warnings}', { warnings: cue.warnings.map(warning => i18n.message(warning)).join(' · ') }) }) : null);
+    }));
+    if (!filtered.length) list.append(node('p', { class: 'description', text: t('이 조건에 맞는 구간이 없습니다. 검색어나 시간을 지우거나 다른 탭을 선택하세요.') }));
+    pager.replaceChildren(node('button', { class: 'secondary', type: 'button', text: t('이전'), disabled: state.page === 0, onclick: () => { state.page--; render(); } }), node('span', { text: (state.page + 1) + ' / ' + pages }), node('button', { class: 'secondary', type: 'button', text: t('다음'), disabled: state.page >= pages - 1, onclick: () => { state.page++; render(); } }));
+  };
+  for (const [track, label] of [['speech', t('음성 자막')], ['screen', t('화면 글자')], ['all', t('전체 보기')]]) {
+    const n = job.cues.filter(c => track === 'all' || (c.kind === 'screen' ? 'screen' : 'speech') === track).length;
+    const button = node('button', { type: 'button', role: 'tab', text: label + ' · ' + n, onclick: () => { filter.track = track; state.page = 0; render(); } }); button.dataset.track = track; tabs.append(button);
+  }
+  const search = node('input', { id: 'reviewSearch', type: 'search', value: filter.search, placeholder: t('원문·번역문·구간 번호 검색'), 'aria-label': t('원문·번역문·구간 번호 검색'), oninput: e => { filter.search = e.target.value; state.page = 0; render(); } });
+  const timeInput = node('input', { type: 'text', value: filter.time, placeholder: '00:12:30', 'aria-label': t('시간으로 찾기'), oninput: e => { filter.time = e.target.value; state.page = 0; render(); } });
+  element.append(tabs, node('div', { class: 'review-search' }, search, node('label', {}, t('시간으로 찾기'), timeInput), node('button', { class: 'secondary', type: 'button', text: t('현재 재생 위치'), disabled: !state.previewVideo, onclick: () => { filter.time = state.previewVideo.currentTime.toFixed(1); timeInput.value = filter.time; state.page = 0; render(); } }), node('button', { class: 'text-button', type: 'button', text: t('검색 초기화'), onclick: () => { filter.search = ''; filter.time = ''; search.value = ''; timeInput.value = ''; state.page = 0; render(); } })), count, list, pager);
+  render();
+}
+
+function renderDetail() {
+  const job = state.detail; if (!job) return;
+  const sameJob = state.renderedJob === job.id;
+  const preview = sameJob && state.previewVideo ? { time: state.previewVideo.currentTime, paused: state.previewVideo.paused, volume: state.previewVideo.volume } : null;
+  const savedMode = sameJob ? $('downloadMode')?.value : null;
+  const savedOffset = sameJob ? $('previewOffset')?.value : null;
+  state.renderedJob = job.id; state.previewVideo = null;
+  const element = $('jobDetail'); element.hidden = false;
+  const controls = node('div', { class: 'button-row' });
+  if (['queued', 'running'].includes(job.status)) controls.append(node('button', { class: 'secondary', text: t('작업 중단'), type: 'button', onclick: () => action('cancel') }));
+  if (['failed', 'cancelled', 'interrupted'].includes(job.status)) controls.append(node('button', { class: 'primary', text: t('이어하기'), type: 'button', onclick: () => action('resume') }));
+  element.replaceChildren(node('div', { class: 'detail-header' }, node('div', {}, node('div', { class: 'eyebrow', text: 'YOUR SUBTITLE PROJECT' }), node('h2', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {languages} · {count}개 구간', { status: statusLabel(job.status), languages: job.options.transcribeOnly ? t('원문 자막') : `${job.options.sourceLanguage} → ${job.options.targetLanguage}`, count: job.cues.length }) })), controls));
+  if (job.translationPlan) element.append(node('p', { class: 'hint', text: t('문장 {speech}개 · 화면 글자 {screen}개 · 용어 {terms}개 · 번역 요청 {requests}회', { speech: job.translationPlan.sentenceCount, screen: job.translationPlan.screenCount, terms: job.translationPlan.glossaryCount, requests: job.translationPlan.requests }) }));
+  if (job.status !== 'completed') {
+    const determinate = Number.isFinite(job.stageProgress);
+    const bar = node('div'); if (determinate) bar.style.width = `${Math.max(0, Math.min(100, job.stageProgress))}%`;
+    element.append(node('div', { class: `progress-track${determinate ? '' : ' indeterminate'}` }, bar), node('p', { class: 'progress-message', text: i18n.message(job.message) }), node('p', { class: 'hint', text: t('완료된 번역 {done} / {total}개 구간 · 모든 구간이 준비되면 자막을 저장하고 적용할 수 있습니다.', { done: job.completedCues || 0, total: job.cues.length || '—' }) }));
+    if (job.error) element.append(node('div', { class: 'error-box', text: i18n.message(job.error) }));
+    return;
+  }
+  const downloadMode = node('select', { id: 'downloadMode', 'aria-label': t('저장할 자막 내용') }, node('option', { value: 'translated', text: job.options.transcribeOnly ? t('원문 자막') : t('번역 자막') }), ...(!job.options.transcribeOnly ? [node('option', { value: 'bilingual', text: t('원문 + 번역 병기') }), node('option', { value: 'source', text: t('원문 자막') })] : []));
+  const buttons = node('div', { class: 'button-row' }, downloadMode, node('button', { class: 'primary', type: 'button', text: t('SRT 저장 ↓'), onclick: () => download('srt') }), node('button', { class: 'secondary', type: 'button', text: t('VTT 저장 ↓'), onclick: () => download('vtt') }), node('button', { class: 'secondary', type: 'button', text: t('위치 포함 VTT ↓'), onclick: () => download('vtt', true) }), node('button', { class: 'secondary', type: 'button', text: t('프로젝트 JSON ↓'), onclick: () => download('json') }));
+  if (job.videoId) buttons.append(node('a', { class: 'secondary', href: `https://www.youtube.com/watch?v=${job.videoId}`, target: '_blank', rel: 'noopener', text: t('유튜브에서 열기 ↗') }));
+  element.append(node('p', { class: 'progress-message', text: i18n.message(job.message) }), buttons);
+  element.append(node('p', { class: 'meta-line', text: `${job.origin?.includes('auto') ? t('유튜브 자동 자막 기반 · 원문 오류를 확인하세요.') : job.origin === 'whisper' ? t('음성 인식 기반 · {runtime}', { runtime: i18n.message(job.runtime) || t('로컬 처리') }) : t('기존 원어 자막 기반')}${job.translationConfig ? ` · ${job.translationConfig.provider} / ${job.translationConfig.model}` : ''} · ${t('확인 표시 {count}개 구간', { count: job.cues.filter(cue => cue.warnings?.length).length })}` }));
+  if (job.videoId) element.append(node('p', { class: 'hint', text: t('유튜브 영상에서 확장 프로그램을 열고 이 작업의 자막을 적용하세요.') }));
+  element.append(node('p', { class: 'hint', text: t('화면 위치는 프로젝트 JSON 또는 위치 포함 VTT로 저장하세요. YouTube CC의 모양은 시청자 설정에 따라 달라집니다.') }));
+  element.append(renderPreview(job));
+  const drafts = state.drafts.get(job.id) || new Map(); state.drafts.set(job.id, drafts);
+  const save = node('button', { class: 'secondary', type: 'button', text: t('수정 내용 저장'), onclick: async () => {
+    if (!drafts.size) return toast(t('수정된 내용이 없습니다.'));
+    try { state.detail = await apiJson(`/api/jobs/${job.id}`, { method: 'PATCH', body: { changes: [...drafts].map(([id, translatedText]) => ({ id, translatedText })) } }); drafts.clear(); state.shownVersion = state.detail.updatedAt; renderDetail(); toast(t('수정한 자막 파일을 저장했습니다.')); }
+    catch (error) { toast(error.message, true); }
+  } });
+  element.append(node('div', { class: 'editor-toolbar' }, node('strong', { text: t('자막 확인 및 수정') }), save));
+  renderReview(job, element, drafts);
+  if (savedMode && $('downloadMode')) $('downloadMode').value = savedMode;
+  if (savedOffset != null && $('previewOffset')) $('previewOffset').value = savedOffset;
+  if (preview && state.previewVideo) {
+    const video = state.previewVideo;
+    video.addEventListener('loadedmetadata', () => { video.currentTime = preview.time; video.volume = preview.volume; if (!preview.paused) video.play().catch(() => {}); }, { once: true });
+  }
+}
+
+$('uiLanguage').value = i18n.locale;
+$('uiLanguage').addEventListener('change', () => {
+  i18n.setLocale($('uiLanguage').value);
+  try { localStorage.setItem(UI_LANGUAGE_STORAGE_KEY, i18n.locale); } catch {}
+  applyStaticLanguage(); selectedFile(state.file);
+  renderSettingsLabels(); renderTools(); renderJobLists(); renderDetail(); renderGlossary(); renderProgram();
+  if ($('reportDialog').open) $('reportDialog').close();
+  $('toast').hidden = true;
+});
+
+for (const button of document.querySelectorAll('[data-view]')) button.addEventListener('click', () => view(button.dataset.view));
+$('urlTab').addEventListener('click', () => mode('url')); $('fileTab').addEventListener('click', () => mode('file'));
+$('sourceFile').addEventListener('change', event => selectedFile(event.target.files[0]));
+$('goSettings').addEventListener('click', () => view('settings'));
+$('provider').addEventListener('change', () => bindModelOptions(true));
+$('transcribeOnly').addEventListener('change', () => { $('apiNotice').hidden = state.settings?.configured || $('transcribeOnly').checked; });
+$('screenText').addEventListener('change', () => { $('screenOptions').hidden = !$('screenText').checked; });
+$('refreshTools').addEventListener('click', () => loadTools().catch(error => toast(error.message, true)));
+$('copyToken').addEventListener('click', async () => { try { await navigator.clipboard.writeText(state.token); toast(t('PC 연결 코드를 복사했습니다. 확장 프로그램에 붙여 넣으세요.')); } catch { toast(t('클립보드 권한을 허용한 뒤 다시 눌러 주세요.'), true); } });
+$('settingsForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  try { await apiJson('/api/settings', { method: 'POST', body: { provider: $('provider').value, model: $('provider').value === 'deepl' ? $('deeplPlan').value : $('model').value, apiKey: $('apiKey').value, dailyLimit: Number($('dailyLimit').value), requestsPerMinute: Number($('requestsPerMinute').value) } }); $('apiKey').value = ''; await loadSettings(); toast(t('번역 설정을 저장했습니다.')); }
+  catch (error) { toast(error.message, true); }
+});
+$('speechForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  try { state.settings = await apiJson('/api/settings/speech', { method: 'POST', body: { speechDevice: $('speechDevice').value, speechThreads: Number($('speechThreads').value) } }); toast(t('새 작업에 사용할 음성 인식 장치를 저장했습니다.')); }
+  catch (error) { toast(error.message, true); }
+});
+$('deleteKey').addEventListener('click', async () => { try { await apiJson('/api/settings/key', { method: 'DELETE' }); await loadSettings(); toast(t('영상 번역용 API 키를 삭제했습니다.')); } catch (error) { toast(error.message, true); } });
+$('cancelUpload').addEventListener('click', () => state.uploadController?.abort());
+$('jobForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!$('transcribeOnly').checked && !state.settings?.configured) { view('settings'); return toast(t('번역 API를 먼저 설정하세요.'), true); }
+  $('startButton').disabled = true;
+  try {
+    let fileId, title;
+    const youtubeUrl = state.mode === 'url' ? $('youtubeUrl').value.trim() : $('associateUrl').value.trim();
+    if (state.mode === 'file') {
+      if (!state.file) throw new Error(t('먼저 파일을 선택하세요.'));
+      state.uploadController = new AbortController(); $('cancelUpload').hidden = false; $('startHint').textContent = t('선택한 파일을 PC 처리 프로그램에 준비하고 있습니다.');
+      const upload = await apiJson(`/api/uploads?name=${encodeURIComponent(state.file.name)}`, { method: 'POST', raw: state.file, signal: state.uploadController.signal });
+      fileId = upload.id; title = upload.name;
+    }
+    const job = await apiJson('/api/jobs', { method: 'POST', body: { title, input: { fileId, youtubeUrl }, options: { sourceLanguage: $('sourceLanguage').value, targetLanguage: $('targetLanguage').value, style: $('style').value, translationMode: $('translationMode').value, speech: $('speech').checked, screenText: $('screenText').checked, screenLanguage: $('screenLanguage').value, screenIntervalMs: Number($('screenInterval').value), screenStartMs: Math.round(Number($('screenStart').value) * 1000), screenEndMs: $('screenEnd').value ? Math.round(Number($('screenEnd').value) * 1000) : null, forceAsr: $('forceAsr').checked, transcribeOnly: $('transcribeOnly').checked } } });
+    if (state.file && !/\.(srt|vtt)$/i.test(state.file.name)) state.previewUrls.set(job.id, URL.createObjectURL(state.file));
+    await selectJob(job.id); toast(t('작업을 시작했습니다. 전체 자막이 준비되면 저장할 수 있습니다.'));
+  } catch (error) { toast(error.name === 'AbortError' ? t('파일 준비를 중단했습니다.') : error.message, error.name !== 'AbortError'); }
+  finally { $('startButton').disabled = false; $('cancelUpload').hidden = true; state.uploadController = null; $('startHint').textContent = t('음성 인식 → 용어집 번역 → 자막 저장 → 감상'); }
+});
+$('loadExample').addEventListener('click', () => {
+  selectedFile(new File(['1\n00:00:00,000 --> 00:00:04,000\nUse Quick Assist after the EX Special Attack.\n\n2\n00:00:04,300 --> 00:00:08,500\nKeep the Chain Attack ready for the next enemy.\n\n3\n00:00:09,000 --> 00:00:13,000\nThis build uses a full M0W1 team.\n'], 'zenless-source-example.srt', { type: 'text/plain' }));
+  mode('file'); $('transcribeOnly').checked = true; $('apiNotice').hidden = true; toast(t('예제는 원문 자막만 만드는 모드입니다. API 비용 없이 흐름을 확인할 수 있습니다.'));
+});
+async function poll() { try { if (!state.restarting) await refreshJobs(); } catch (error) { if (document.visibilityState === 'visible') toast(t('PC 프로그램 연결을 확인하세요. {error}', { error: i18n.message(error.message) }), true); } finally { setTimeout(poll, state.jobs.some(job => ['queued', 'running'].includes(job.status)) ? 1800 : 7000); } }
+async function loadGlossary() {
+  state.glossary = await apiJson('/api/glossary');
+  $('glossaryRepository').value = state.glossary.repository;
+  $('glossaryAutoCheck').checked = state.glossary.autoCheck; renderGlossary();
+}
+function renderGlossary() {
+  const info = state.glossary; if (!info) return;
+  $('glossaryCount').textContent = info.current.count.toLocaleString(i18n.locale);
+  $('glossaryStatus').textContent = t('사용 중: {version} · {count}개 항목', { version: info.current.version, count: info.current.count.toLocaleString(i18n.locale) });
+  if (info.available) $('glossaryStatus').textContent += info.available.sha256 === info.current.sha256 ? ` · ${t('최신 용어집입니다.')}` : ` · ${t('새 용어집: {version}', { version: info.available.version })}`;
+  $('glossaryError').textContent = i18n.message(info.error);
+  $('updateGlossary').disabled = !info.available || info.available.sha256 === info.current.sha256;
+}
+async function glossaryAction(action) {
+  $('checkGlossary').disabled = true; $('updateGlossary').disabled = true;
+  try { state.glossary = await apiJson(`/api/glossary/${action}`, { method: 'POST' }); renderGlossary(); toast(t(action === 'update' ? '새 용어집을 적용했습니다. 새 번역부터 사용합니다.' : '용어집 버전을 확인했습니다.')); }
+  catch (error) { toast(error.message, true); }
+  finally { $('checkGlossary').disabled = false; renderGlossary(); }
+}
+$('glossaryForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  try { state.glossary = await apiJson('/api/glossary/config', { method: 'POST', body: { repository: $('glossaryRepository').value, autoCheck: $('glossaryAutoCheck').checked } }); renderGlossary(); toast(t('업데이트 설정을 저장했습니다.')); }
+  catch (error) { toast(error.message, true); }
+});
+$('checkGlossary').addEventListener('click', () => glossaryAction('check'));
+$('updateGlossary').addEventListener('click', () => glossaryAction('update'));
+function openReport(job, cue) {
+  state.reportDraft = null; state.reportFingerprint = null;
+  state.reportTarget = { jobId: job.id, cueId: cue.id };
+  $('reportCueInfo').textContent = `${cue.kind === 'screen' ? t('화면 글자') : t('음성 자막')} · ${time(cue.startMs)} – ${time(cue.endMs)} · #${cue.id}`;
+  $('reportSource').value = cue.sourceText; $('reportTranslation').value = cue.translatedText || cue.sourceText;
+  $('reportExplanation').value = ''; $('reportSuggestion').value = ''; $('reportVideoUrl').checked = false;
+  $('reportReady').hidden = true; $('saveReport').disabled = false; $('reportDialog').showModal();
+}
+$('closeReport').addEventListener('click', () => $('reportDialog').close());
+$('reportForm').addEventListener('submit', async event => {
+  event.preventDefault(); $('saveReport').disabled = true;
+  try {
+    const body = { ...state.reportTarget, type: $('reportType').value, explanation: $('reportExplanation').value, suggestion: $('reportSuggestion').value, includeVideoUrl: $('reportVideoUrl').checked }, fingerprint = JSON.stringify(body);
+    if (state.reportFingerprint !== fingerprint) { state.reportDraft = await apiJson('/api/reports', { method: 'POST', body }); state.reportFingerprint = fingerprint; }
+    $('reportReady').hidden = false; $('reportReceipt').textContent = t('PC에 저장했습니다. 운영자에게 전송하고 있습니다.');
+    const delivery = await apiJson(`/api/reports/${state.reportDraft.report.id}/send`, { method: 'POST', body: {} });
+    $('reportReceipt').textContent = t('비공개 신고를 접수했습니다. 접수 번호: {id}', { id: delivery.receiptId });
+    toast(t('신고를 보냈습니다. 운영자가 검토합니다.'));
+  } catch (error) { $('saveReport').disabled = false; if (state.reportDraft) $('reportReceipt').textContent = t('신고 전송을 완료하지 못했습니다. PC에 저장된 신고를 다시 보낼 수 있습니다.'); toast(error.message, true); }
+});
+$('exportReport').addEventListener('click', async () => {
+  try {
+    const id = state.reportDraft.report.id, response = await api(`/api/reports/${id}/export`), url = URL.createObjectURL(await response.blob());
+    const link = node('a', { href: url, download: `${id}.json` }); document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } catch (error) { toast(error.message, true); }
+});
+try {
+  const session = await fetch('/api/session', { headers: { 'X-ZZZ-Local': '1' } }); if (!session.ok) throw new Error(t('로컬 연결을 시작하지 못했습니다.'));
+  state.token = (await session.json()).token;
+  await Promise.all([loadSettings(), loadTools(), loadGlossary(), loadProgram()]);
+  const youtube = new URLSearchParams(location.search).get('youtube'); if (youtube) $('youtubeUrl').value = youtube;
+  const selectedJob = new URLSearchParams(location.search).get('job');
+  await refreshJobs(); if (selectedJob && state.jobs.some(job => job.id === selectedJob)) await selectJob(selectedJob); else if (state.jobs.length && !youtube) await selectJob(state.jobs[0].id);
+  setTimeout(poll, 1800);
+} catch (error) { toast(error.message, true); }
+
+async function loadProgram() { state.program = await apiJson('/api/program'); renderProgram(); }
+function renderProgram() {
+  const info = state.program; if (!info) return;
+  $('programStatus').textContent = t('현재 프로그램 {version}', { version: info.currentVersion }) + (info.available ? ' · ' + t('새 버전 {version}', { version: info.available.version }) : '');
+  $('programError').textContent = i18n.message(info.error) || (!info.installSupported ? t('자동 설치는 외부 배포본에서 사용할 수 있습니다.') : '');
+  $('updateProgram').disabled = !info.installSupported || !info.available || info.working;
+}
+$('checkProgram').addEventListener('click', async () => {
+  $('checkProgram').disabled = true;
+  try { state.program = await apiJson('/api/program/check', { method: 'POST', body: {} }); renderProgram(); toast(t('프로그램 버전을 확인했습니다.')); }
+  catch (error) { toast(error.message, true); }
+  finally { $('checkProgram').disabled = false; }
+});
+$('updateProgram').addEventListener('click', async () => {
+  $('updateProgram').disabled = true;
+  try {
+    toast(t('프로그램 업데이트를 준비하고 있습니다.'));
+    await apiJson('/api/program/update', { method: 'POST', body: {} }); state.restarting = true; toast(t('프로그램을 업데이트하고 다시 시작하는 중입니다.'));
+    let attempts = 0;
+    const waitForRestart = async () => {
+      try { const health = await (await fetch('/api/health')).json(); if (health.version === state.program.available.version) { location.reload(); return; } } catch {}
+      if (++attempts >= 90) { state.restarting = false; await loadProgram().catch(() => {}); toast(t('업데이트 결과를 확인하지 못했습니다. 시작 창의 안내를 확인하세요.'), true); return; }
+      setTimeout(waitForRestart, 2000);
+    }; setTimeout(waitForRestart, 2000);
+  } catch (error) { toast(error.message, true); renderProgram(); }
+});
