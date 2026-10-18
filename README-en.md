@@ -1,4 +1,4 @@
-# Zenless Subtitle Studio 0.5.0
+# Zenless Subtitle Studio 0.5.1
 
 [한국어](README-ko.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 

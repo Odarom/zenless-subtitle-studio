@@ -1,4 +1,4 @@
-# ゼンレス字幕スタジオ 0.5.0
+# ゼンレス字幕スタジオ 0.5.1
 
 [한국어](README-ko.md) · [English](README-en.md) · [简体中文](README-zh-CN.md)
 

@@ -265,10 +265,6 @@ $('jobForm').addEventListener('submit', async event => {
   } catch (error) { toast(error.name === 'AbortError' ? t('파일 준비를 중단했습니다.') : error.message, error.name !== 'AbortError'); }
   finally { $('startButton').disabled = false; $('cancelUpload').hidden = true; state.uploadController = null; $('startHint').textContent = t('음성 인식 → 용어집 번역 → 자막 저장 → 감상'); }
 });
-$('loadExample').addEventListener('click', () => {
-  selectedFile(new File(['1\n00:00:00,000 --> 00:00:04,000\nUse Quick Assist after the EX Special Attack.\n\n2\n00:00:04,300 --> 00:00:08,500\nKeep the Chain Attack ready for the next enemy.\n\n3\n00:00:09,000 --> 00:00:13,000\nThis build uses a full M0W1 team.\n'], 'zenless-source-example.srt', { type: 'text/plain' }));
-  mode('file'); $('transcribeOnly').checked = true; $('apiNotice').hidden = true; toast(t('예제는 원문 자막만 만드는 모드입니다. API 비용 없이 흐름을 확인할 수 있습니다.'));
-});
 async function poll() { try { if (!state.restarting) await refreshJobs(); } catch (error) { if (document.visibilityState === 'visible') toast(t('PC 프로그램 연결을 확인하세요. {error}', { error: i18n.message(error.message) }), true); } finally { setTimeout(poll, state.jobs.some(job => ['queued', 'running'].includes(job.status)) ? 1800 : 7000); } }
 async function loadGlossary() {
   state.glossary = await apiJson('/api/glossary');

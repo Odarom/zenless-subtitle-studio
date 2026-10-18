@@ -1,4 +1,4 @@
-# 绝区零字幕工作室 0.5.0
+# 绝区零字幕工作室 0.5.1
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md)
 
