@@ -7,6 +7,7 @@ import { deepLTranslation, ollamaTranslation } from './providers.mjs';
 import { TEXT_LANGUAGES, localizedNames, selectNames } from '../src/languages.js';
 import { compactVideoGlossary, GLOSSARY_FORMAT_INSTRUCTION } from './glossary-payload.mjs';
 import { geminiLimitError } from './gemini-limits.mjs';
+import { geminiRequestError } from './gemini-errors.mjs';
 
 export const PROMPT_VERSION = 6;
 export function translationKey(cues, options, glossaryPath, version = PROMPT_VERSION) {
@@ -93,15 +94,17 @@ ${GLOSSARY_FORMAT_INSTRUCTION}`;
   const requested = new Set(batch.map(cue => cue.id));
   const contextCues = contextBatch.filter(cue => !requested.has(cue.id)).map(cue => ({ id: cue.id, text: cue.sourceText, kind: cue.kind || 'speech', startMs: cue.startMs, endMs: cue.endMs }));
   const payload = { title: options.title, sourceLanguage: options.sourceLanguage, targetLanguage: options.targetLanguage, wholeDocument: config.provider === 'deepl', before, cues: batch.map(cue => ({ id: cue.id, text: cue.sourceText, kind: cue.kind || 'speech', startMs: cue.startMs, endMs: cue.endMs })), after, ...(contextCues.length && config.provider !== 'deepl' ? { contextCues } : {}), glossary: config.provider === 'deepl' ? glossary : compactVideoGlossary(glossary) };
-  const idSchema = { type: 'string', ...(config.provider !== 'openai' || batch.length <= 500 ? { enum: batch.map(cue => cue.id) } : {}) };
-  const schema = { type: 'object', properties: { cues: { type: 'array', minItems: batch.length, maxItems: batch.length, items: { type: 'object', properties: { id: idSchema, text: { type: 'string' } }, required: ['id', 'text'], additionalProperties: false } } }, required: ['cues'], additionalProperties: false };
+  // Keep decoder complexity constant for a full video. Large min/maxItems and
+  // per-ID enums can be rejected by Gemini before generation. Coverage and
+  // exact IDs are requested above, validated locally and checkpointed below.
+  const schema = { type: 'object', properties: { cues: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, text: { type: 'string' } }, required: ['id', 'text'], additionalProperties: false } } }, required: ['cues'], additionalProperties: false };
   await gate?.enter(config, { signal, update });
   signal?.throwIfAborted();
   const day = usage.reserve(config.dailyLimit);
   const cancelableFetch = (url, init) => fetcher(url, { ...init, signal: AbortSignal.any([signal || new AbortController().signal, init.signal || new AbortController().signal]) });
   let output, tokenUsage;
   if (config.provider === 'gemini') {
-    const result = await geminiTranslation(config, instructions, payload, schema, cancelableFetch, { maxAttempts: 1, rateLimitError: response => geminiLimitError(response, config.model) });
+    const result = await geminiTranslation(config, instructions, payload, schema, cancelableFetch, { maxAttempts: 1, rateLimitError: response => geminiLimitError(response, config.model), requestError: geminiRequestError });
     output = result.output; tokenUsage = result.usage;
   } else if (config.provider === 'deepl' || config.provider === 'ollama') {
     const result = config.provider === 'deepl' ? await deepLTranslation(config, payload, cancelableFetch) : await ollamaTranslation(config, instructions, payload, schema, cancelableFetch);

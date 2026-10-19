@@ -1,6 +1,6 @@
 import { randomUUID, createHash } from 'node:crypto';
-import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync, rmSync, realpathSync } from 'node:fs';
+import { join, resolve, relative, isAbsolute } from 'node:path';
 import { readJson, saveJson, VideoUsage } from './state.mjs';
 import { prepareVideoSource as prepareSource } from './screen-source.mjs';
 import { translateBatch, translationKey, videoGlossary, IncompleteTranslationError } from './translation.mjs';
@@ -22,13 +22,13 @@ export class Jobs {
       const path = join(this.path, entry, 'job.json');
       if (!existsSync(path)) continue;
       const job = readJson(path);
-      if (['queued', 'running'].includes(job.status)) { job.status = 'interrupted'; job.message = '프로그램이 종료되어 작업이 멈췄습니다. 이어하기를 누르세요.'; saveJson(path, job); }
+      if (['queued', 'running'].includes(job.status)) { job.status = 'interrupted'; job.cancelRequested = false; job.message = '프로그램이 종료되어 작업이 멈췄습니다. 이어하기를 누르세요.'; saveJson(path, job); }
       this.jobs.set(job.id, job);
     }
   }
   directory(id) { return join(this.path, id); }
   save(job, patch = {}) { Object.assign(job, patch, { updatedAt: new Date().toISOString() }); saveJson(join(this.directory(job.id), 'job.json'), job); }
-  summary(job) { const { cues, ...value } = job; return { ...value, cueCount: cues?.length || 0, warningCount: cues?.filter(cue => cue.warnings?.length).length || 0 }; }
+  summary(job) { const { cues, ...value } = job; return { ...value, canDelete: this.active?.id !== job.id && job.status !== 'running', cueCount: cues?.length || 0, warningCount: cues?.filter(cue => cue.warnings?.length).length || 0 }; }
   list() { return [...this.jobs.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(job => this.summary(job)); }
   get(id) { const job = this.jobs.get(id); if (!job) throw Object.assign(new Error('작업을 찾지 못했습니다.'), { statusCode: 404 }); return job; }
   create(input) {
@@ -52,9 +52,23 @@ export class Jobs {
   cancel(id) {
     const job = this.get(id);
     if (!['queued', 'running'].includes(job.status)) return this.summary(job);
-    if (this.active?.id === id) { this.active.controller.abort(); this.save(job, { message: '현재 처리를 중단하고 있습니다.' }); }
-    else this.save(job, { status: 'cancelled', message: '작업을 중단했습니다. 이어하기로 재개할 수 있습니다.' });
+    if (this.active?.id === id) {
+      if (!job.cancelRequested) { this.save(job, { cancelRequested: true, message: '현재 처리를 중단하고 있습니다.' }); this.active.controller.abort(); }
+    } else this.save(job, { status: 'cancelled', cancelRequested: false, error: null, stageProgress: null, message: '작업을 중단했습니다. 이어하기로 재개할 수 있습니다.' });
     return this.summary(job);
+  }
+  remove(id) {
+    if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error('작업 경로가 올바르지 않습니다.');
+    const job = this.get(id);
+    if (this.active?.id === id || job.status === 'running') throw Object.assign(new Error('실행 중인 작업은 먼저 중단한 뒤 삭제하세요.'), { statusCode: 409 });
+    const target = resolve(this.path, id), root = realpathSync(this.path);
+    const resolved = existsSync(target) ? realpathSync(target) : target, scope = relative(root, resolved);
+    if (!scope || scope.startsWith('..') || isAbsolute(scope) || relative(resolve(this.path), target) !== id) throw new Error('작업 경로가 올바르지 않습니다.');
+    // Only this job's outputs/checkpoints/temp media are removed. Uploads,
+    // original user files, other jobs, settings, keys and reports stay separate.
+    rmSync(target, { recursive: true, force: true });
+    this.jobs.delete(id);
+    return { deleted: id };
   }
   resume(id) {
     const job = this.get(id);
@@ -63,7 +77,8 @@ export class Jobs {
       const api = this.settings.private();
       if (api.provider !== job.translationConfig.provider || api.model !== job.translationConfig.model) throw new Error('이 작업의 API 제공자 또는 모델이 현재 설정과 다릅니다. 원래 설정으로 되돌린 후 이어하거나 새 작업을 시작하세요.');
     }
-    this.save(job, { status: 'queued', message: '완료된 구간부터 이어할 준비를 하고 있습니다.', error: null, apiLimit: null, translationIssue: null }); this.pump(); return this.summary(job);
+    if (this.active?.id === id) throw Object.assign(new Error('작업 중단이 끝난 뒤 이어하세요.'), { statusCode: 409 });
+    this.save(job, { status: 'queued', cancelRequested: false, message: '완료된 구간부터 이어할 준비를 하고 있습니다.', error: null, apiLimit: null, apiRequestError: null, translationIssue: null }); this.pump(); return this.summary(job);
   }
   pump() {
     if (this.active) return;
@@ -71,11 +86,11 @@ export class Jobs {
     if (!job) return;
     const controller = new AbortController(); this.active = { id: job.id, controller };
     this.run(job, controller.signal).catch(error => {
-      this.save(job, { status: controller.signal.aborted ? 'cancelled' : 'failed', error: controller.signal.aborted ? null : error.message, apiLimit: controller.signal.aborted ? null : error.apiLimit || null, translationIssue: error.translationIssue || null, message: controller.signal.aborted ? '작업을 중단했습니다. 완료된 결과는 보관했습니다.' : error.message });
+      this.save(job, { status: controller.signal.aborted ? 'cancelled' : 'failed', cancelRequested: false, stageProgress: null, error: controller.signal.aborted ? null : error.message, apiLimit: controller.signal.aborted ? null : error.apiLimit || null, apiRequestError: controller.signal.aborted ? null : error.apiRequestError || null, translationIssue: error.translationIssue || null, message: controller.signal.aborted ? '작업을 중단했습니다. 완료된 결과는 보관했습니다.' : error.message });
     }).finally(() => { this.active = null; this.pump(); });
   }
   async run(job, signal) {
-    this.save(job, { status: 'running', error: null, apiLimit: null, translationIssue: null, stageProgress: null });
+    this.save(job, { status: 'running', cancelRequested: false, error: null, apiLimit: null, apiRequestError: null, translationIssue: null, stageProgress: null });
     const directory = this.directory(job.id);
     const transcript = join(directory, 'transcript.json');
     if (!existsSync(transcript)) {

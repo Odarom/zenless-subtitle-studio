@@ -31,11 +31,16 @@ export function runTool(executable, args, { signal, onText = () => {}, maxOutput
     const child = spawn(executable, args, { shell: false, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
     let stdout = '', stderr = '', error;
     const kill = () => {
-      if (process.platform === 'win32' && child.pid) spawn('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore', shell: false });
+      if (process.platform === 'win32' && child.pid) {
+        const killer = spawn(join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'taskkill.exe'), ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore', shell: false });
+        killer.once('error', () => child.kill());
+        killer.once('close', code => { if (code !== 0) child.kill(); });
+      }
       else child.kill('SIGTERM');
     };
     const abort = () => { error = new Error('작업을 중단했습니다.'); kill(); };
     signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) abort();
     const take = (isError, chunk) => {
       const value = chunk.toString('utf8');
       if (isError) stderr = (stderr + value).slice(-10000); else stdout += value;

@@ -1,4 +1,6 @@
-# ZZZ Subtitle Studio 0.6.4
+# ZZZ Subtitle Studio 0.6.5
+
+Version 0.6.5 simplifies long-video response constraints that could trigger HTTP 400. The program validates IDs and counts, saves valid translations and manually requests unfinished cues only. History and detail views offer stop and delete controls; stop running jobs first. Deletion removes that job’s record, subtitles and temporary files while preserving original/uploaded files and API settings. Progress animation stops on failure or cancellation.
 
 Reduced glossary payload size by sharing repeated descriptions without removing entries, meanings or rules. Names, character names and related skills use only the chosen source and target languages. Auto-detected sources use target-language names and aliases actually matching the input. When Gemini provides HTTP 429 quota details, the app distinguishes input tokens/minute, requests/minute, requests/day and zero allocation; missing details stay unidentified. Whole-video single-request defaults and no automatic retries remain. Failed 0.6.1 jobs with no translated results can Resume without repeating transcription. Actual free-tier acceptance and translation quality still require separate verification.
 

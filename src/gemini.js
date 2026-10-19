@@ -12,7 +12,7 @@ function connectionFailure(error, config, startedAt, phase) {
   return failure;
 }
 
-export async function geminiTranslation(config, instructions, payload, schema, fetcher = fetch, { onRetry = () => {}, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), maxAttempts = 2, rateLimitError } = {}) {
+export async function geminiTranslation(config, instructions, payload, schema, fetcher = fetch, { onRetry = () => {}, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), maxAttempts = 2, rateLimitError, requestError } = {}) {
   let response;
   const startedAt = performance.now();
   const temporaryStatuses = new Set([500, 502, 503, 504]);
@@ -54,7 +54,10 @@ export async function geminiTranslation(config, instructions, payload, schema, f
     error.code = 'GEMINI_UNAVAILABLE';
     throw error;
   }
-  if (!response.ok) throw new UserError(`Gemini 요청 실패(HTTP ${response.status}). API 키·모델·프로젝트의 사용 가능 여부를 확인하세요.`);
+  if (!response.ok) {
+    if (requestError) throw await requestError(response);
+    throw new UserError(`Gemini 요청 실패(HTTP ${response.status}). API 키·모델·프로젝트의 사용 가능 여부를 확인하세요.`);
+  }
   let data;
   try { data = await response.json(); } catch (error) {
     if (['TimeoutError', 'AbortError', 'TypeError'].includes(error.name) || error.cause?.code) throw connectionFailure(error, config, startedAt, 'response');

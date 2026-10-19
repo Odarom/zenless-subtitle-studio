@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from 'node:fs';
 import { join, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { once } from 'node:events';
@@ -9,7 +9,7 @@ import { parseSubtitles, serializeSubtitles, youtubeVideoId } from '../video/sub
 import { checkBatch, translationKey, IncompleteTranslationError } from '../video/translation.mjs';
 import { Jobs } from '../video/jobs.mjs';
 import { createVideoServer } from '../video/server.mjs';
-import { transcribeWithRuntime, tools } from '../video/media.mjs';
+import { transcribeWithRuntime, tools, runTool } from '../video/media.mjs';
 import { moduleFiles } from '../scripts/video-package.mjs';
 import { translationPlan } from '../video/translation-plan.mjs';
 
@@ -103,8 +103,8 @@ test('648-cue incomplete response survives restart and resumes only missing scre
   const fetcher = async (_url, init) => {
     requests++; const body = JSON.parse(init.body), payload = JSON.parse(body.contents[0].parts[0].text); payloads.push(payload);
     const schema = body.generationConfig.responseJsonSchema.properties.cues;
-    assert.equal(schema.minItems, payload.cues.length); assert.equal(schema.maxItems, payload.cues.length);
-    assert.deepEqual(schema.items.properties.id.enum, payload.cues.map(c => c.id));
+    assert(!/"(?:minItems|maxItems|enum)"/.test(JSON.stringify(schema)));
+    assert(Buffer.byteLength(JSON.stringify(schema)) < 1000);
     assert(body.systemInstruction.parts[0].text.includes('never collapse repeated labels'));
     const output = (requests === 1 ? payload.cues.filter(c => c.kind === 'speech') : payload.cues).map(c => ({ id: c.id, text: `${requests === 1 ? '음성' : '화면'} ${c.id}` }));
     return new Response(JSON.stringify({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ cues: output }) }] } }], usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 50 } }));
@@ -166,6 +166,46 @@ test('OpenAI uses structured output and the stored key without changing subtitle
   app.settings.save({ ...config, provider: 'openai', model: 'gpt-4.1' });
   const job = app.jobs.create(jobInput); assert.equal((await waitJob(app.jobs, job.id)).status, 'completed');
 });
+
+test('HTTP 400 from a saved task resumes with a constant schema and reuses its transcript', async t => {
+  let prepared = 0, calls = 0;
+  const app = setup(t, { jobsOptions: {
+    prepare: async () => { prepared++; return { cues: parseSubtitles(fixture), title: 'Existing failed job', origin: 'test' }; },
+    fetcher: async (_url, init) => {
+      calls++; const body=JSON.parse(init.body),payload=JSON.parse(body.contents[0].parts[0].text);
+      if(calls===1 || /"(?:minItems|maxItems|enum)"/.test(JSON.stringify(body.generationConfig.responseJsonSchema)))return new Response(JSON.stringify({error:{message:'Your input schema produces a constraint that has too many states for serving. PRIVATE-DO-NOT-STORE'}}),{status:400});
+      return new Response(JSON.stringify({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({cues:payload.cues.map(c=>({id:c.id,text:'번역 '+c.id}))})}]}}]}));
+    }
+  }});
+  app.settings.save(config);const created=app.jobs.create(jobInput),failed=await waitJob(app.jobs,created.id);while(app.jobs.active)await tick();
+  assert.equal(failed.status,'failed');assert.equal(failed.apiRequestError.category,'schema');assert(!JSON.stringify(failed).includes('PRIVATE'));
+  app.jobs.resume(created.id);const done=await waitJob(app.jobs,created.id);
+  assert.equal(done.status,'completed');assert.equal(calls,2);assert.equal(prepared,1);assert.equal(done.apiRequestError,null);
+});
+
+test('cancel interrupts an active request and deleting its record preserves uploads, keys and other jobs', async t => {
+  let started;const ready=new Promise(done=>started=done);
+  const app=setup(t,{jobsOptions:{prepare:async()=>({cues:parseSubtitles(fixture),origin:'test'}),fetcher:async(_url,init)=>{started();return new Promise((_done,reject)=>{init.signal.addEventListener('abort',()=>reject(init.signal.reason),{once:true});if(init.signal.aborted)reject(init.signal.reason);});}}});
+  app.settings.save(config);const keyBytes=readFileSync(join(app.jobs.dataDir,'api-vault.json'));
+  const first=app.jobs.create(jobInput);await ready;
+  const second=app.jobs.create({...jobInput,title:'Queued other job'});
+  assert.throws(()=>app.jobs.remove(first.id),/먼저 중단/);
+  const stopping=app.jobs.cancel(first.id);assert.equal(stopping.cancelRequested,true);
+  const cancelled=await waitJob(app.jobs,first.id);assert.equal(cancelled.status,'cancelled');assert.equal(cancelled.error,null);
+  // Do not let the queued fixture reach its deliberately waiting API handler.
+  app.jobs.cancel(second.id);while(app.jobs.active)await tick();
+  const uploadDir=join(app.jobs.dataDir,'uploads');mkdirSync(uploadDir,{recursive:true});writeFileSync(join(uploadDir,'original.mp4'),'keep original');
+  app.jobs.remove(first.id);assert(!existsSync(app.jobs.directory(first.id)));assert(existsSync(app.jobs.directory(second.id)));
+  assert.equal(readFileSync(join(uploadDir,'original.mp4'),'utf8'),'keep original');assert.deepEqual(readFileSync(join(app.jobs.dataDir,'api-vault.json')),keyBytes);
+  const escaped='aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa',outside=join(app.root,'outside-jobs');mkdirSync(outside);writeFileSync(join(outside,'keep'),'safe');
+  symlinkSync(outside,app.jobs.directory(escaped),process.platform==='win32'?'junction':'dir');app.jobs.jobs.set(escaped,{id:escaped,status:'failed'});
+  assert.throws(()=>app.jobs.remove(escaped),/경로/);assert.equal(readFileSync(join(outside,'keep'),'utf8'),'safe');
+});
+
+test('media cancellation terminates its own process when PATH is empty', {timeout:15000}, async()=>{
+  const controller=new AbortController(),saved=process.env.PATH;process.env.PATH='';
+  try{await assert.rejects(runTool(process.execPath,['-e','console.log("ready"); setTimeout(()=>{},60000)'],{signal:controller.signal,onText:()=>controller.abort()}),/중단/);}finally{process.env.PATH=saved;}
+});
 test('HTTP API protects keys and jobs, accepts file input, and exports only finished subtitles', async t => {
   const app = setup(t); app.server.listen(0, '127.0.0.1'); await once(app.server, 'listening');
   const base = `http://127.0.0.1:${app.server.address().port}`;
@@ -181,6 +221,11 @@ test('HTTP API protects keys and jobs, accepts file input, and exports only fini
   const exported = await fetch(`${base}/api/jobs/${job.id}/export?format=srt&mode=source`, { headers }); assert.equal(exported.status, 200); assert.equal(parseSubtitles(await exported.text()).length, 1);
   const evil = await fetch(`${base}/api/jobs`, { method: 'POST', headers: { ...headers, Origin: 'https://evil.example', 'Content-Type': 'application/json' }, body: '{}' }); assert.equal(evil.status, 403);
   assert.equal((await fetch(`${base}/api/uploads?name=run.exe`, { method: 'POST', headers, body: 'x' })).status, 400);
+  assert.equal((await fetch(`${base}/api/jobs/${job.id}`,{method:'DELETE'})).status,401);
+  assert.equal((await fetch(`${base}/api/jobs/${job.id}`,{method:'DELETE',headers})).status,200);
+  assert.equal((await fetch(`${base}/api/jobs/${job.id}`,{headers})).status,404);
+  assert.equal((await fetch(`${base}/api/jobs`,{headers}).then(r=>r.json())).length,0);
+  assert(existsSync(join(app.jobs.dataDir,'uploads',file.id+'.vtt')));
 });
 test('YouTube overlay follows seeking, offset, ads and video navigation with text-only rendering', () => {
   let listener, frame;

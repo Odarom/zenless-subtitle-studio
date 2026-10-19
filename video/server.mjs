@@ -121,6 +121,7 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
       if (match) {
         const [, id, action] = match;
         if (!action && req.method === 'GET') return send(res, 200, jobs.get(id));
+        if (!action && req.method === 'DELETE') return send(res, 200, jobs.remove(id));
         if (!action && req.method === 'PATCH') return send(res, 200, jobs.edit(id, (await bodyJson(req)).changes));
         if (action === 'cancel' && req.method === 'POST') return send(res, 200, jobs.cancel(id));
         if (action === 'resume' && req.method === 'POST') return send(res, 202, jobs.resume(id));

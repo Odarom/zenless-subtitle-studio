@@ -7,8 +7,8 @@ const t = (...args) => i18n.t(...args);
 const applyStaticLanguage = bindDocument(document, i18n);
 applyStaticLanguage();
 const $ = id => document.getElementById(id);
-const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), uploadController: null };
-const statusLabel = status => ({ queued: t('대기 중'), running: t('처리 중'), completed: t('완료'), failed: t('확인 필요'), cancelled: t('중단됨'), interrupted: t('이어하기 가능') })[status] || status;
+const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), uploadController: null, actions: new Set(), refreshSerial: 0 };
+const statusLabel = (status, cancelling = false) => cancelling ? t('중단 중') : ({ queued: t('대기 중'), running: t('처리 중'), completed: t('완료'), failed: t('실패'), cancelled: t('중단됨'), interrupted: t('이어하기 가능') })[status] || status;
 function node(tag, attrs = {}, ...children) {
   const element = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs)) {
@@ -75,22 +75,62 @@ function renderTools() {
 }
 function renderJobLists() {
   $('jobCount').textContent = state.jobs.length;
-  $('historyList').replaceChildren(...(state.jobs.length ? state.jobs.map(job => node('button', { class: 'card history-item', type: 'button', onclick: () => selectJob(job.id) }, node('strong', { text: job.title || t('영상 준비 중') }), node('span', { text: t('{status} · {count}개 구간', { status: statusLabel(job.status), count: job.cueCount }) }), node('small', { text: new Date(job.createdAt).toLocaleString(i18n.locale, { timeZone: 'Asia/Seoul' }) }))) : [node('p', { class: 'description', text: t('아직 작업 기록이 없습니다. 영상이나 자막 파일을 선택해 첫 작업을 시작하세요.') })]));
-  $('jobList').replaceChildren(...(state.jobs.length ? state.jobs.map(job => node('button', { class: state.selected === job.id ? 'active' : '', type: 'button', onclick: () => selectJob(job.id) }, node('strong', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {count}개 구간', { status: statusLabel(job.status), count: job.cueCount }) }))) : [node('p', { class: 'empty-jobs', text: t('새 작업을 시작하면 여기에 차곡차곡 보관됩니다.') })]));
+  $('historyList').replaceChildren(...(state.jobs.length ? state.jobs.map(job => node('article', { class: 'card history-item' }, node('button', { class: 'history-open', type: 'button', onclick: () => selectJob(job.id) }, node('strong', { text: job.title || t('영상 준비 중') }), node('span', { text: t('{status} · {count}개 구간', { status: statusLabel(job.status, job.cancelRequested), count: job.cueCount }) }), node('small', { text: new Date(job.createdAt).toLocaleString(i18n.locale, { timeZone: 'Asia/Seoul' }) })), jobButtons(job))) : [node('p', { class: 'description', text: t('아직 작업 기록이 없습니다. 영상이나 자막 파일을 선택해 첫 작업을 시작하세요.') })]));
+  $('jobList').replaceChildren(...(state.jobs.length ? state.jobs.map(job => node('button', { class: state.selected === job.id ? 'active' : '', type: 'button', onclick: () => selectJob(job.id) }, node('strong', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {count}개 구간', { status: statusLabel(job.status, job.cancelRequested), count: job.cueCount }) }))) : [node('p', { class: 'empty-jobs', text: t('새 작업을 시작하면 여기에 차곡차곡 보관됩니다.') })]));
 }
 async function refreshJobs() {
-  state.jobs = await apiJson('/api/jobs'); renderJobLists();
+  if (state.actions.size) return;
+  const serial = ++state.refreshSerial, jobs = await apiJson('/api/jobs');
+  if (serial !== state.refreshSerial) return;
+  state.jobs = jobs; renderJobLists();
   if (state.selected) {
     const summary = state.jobs.find(job => job.id === state.selected);
+    if (!summary) { clearSelectedJob(); return; }
     if (summary && (summary.updatedAt !== state.shownVersion || !state.detail)) {
-      state.detail = await apiJson(`/api/jobs/${state.selected}`); state.shownVersion = state.detail.updatedAt; renderDetail();
+      const id = state.selected; let detail;
+      try { detail = await apiJson(`/api/jobs/${id}`); }
+      catch (error) { if (serial !== state.refreshSerial || state.selected !== id) return; throw error; }
+      if (serial !== state.refreshSerial || state.selected !== id) return;
+      state.detail = detail; state.shownVersion = state.detail.updatedAt; renderDetail();
     }
   }
 }
 async function selectJob(id) { state.selected = id; state.shownVersion = null; state.page = 0; view('studio'); await refreshJobs(); $('jobDetail').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-async function action(name) {
-  try { await apiJson(`/api/jobs/${state.selected}/${name}`, { method: 'POST' }); await refreshJobs(); }
-  catch (error) { toast(error.message, true); }
+function clearSelectedJob() {
+  state.previewVideo?.pause(); state.selected = null; state.detail = null; state.renderedJob = null; state.shownVersion = null; state.previewVideo = null;
+  $('jobDetail').replaceChildren(); $('jobDetail').hidden = true;
+  const url = new URL(location.href); url.searchParams.delete('job'); history.replaceState(null, '', url);
+}
+function jobButtons(job) {
+  const busy = ['queued', 'running'].includes(job.status), pending = state.actions.has(job.id), controls = node('div', { class: 'button-row' });
+  if (busy) controls.append(node('button', { class: 'secondary', type: 'button', text: t(job.cancelRequested ? '중단 중' : '작업 중단'), disabled: pending || job.cancelRequested, onclick: () => action('cancel', job.id) }));
+  if (['failed', 'cancelled', 'interrupted'].includes(job.status)) controls.append(node('button', { class: 'primary', type: 'button', text: t('이어하기'), disabled: pending, onclick: () => action('resume', job.id) }));
+  controls.append(node('button', { class: 'secondary', type: 'button', text: t('기록 삭제'), disabled: pending || job.status === 'running' || job.cancelRequested, title: job.status === 'running' ? t('실행 중인 작업은 먼저 중단한 뒤 삭제하세요.') : '', onclick: () => action('delete', job.id) }));
+  return controls;
+}
+function confirmJobDeletion() {
+  if ($('deleteJobDialog')) return Promise.resolve(false);
+  return new Promise(resolve => {
+    const dialog = node('dialog', { id: 'deleteJobDialog', 'aria-labelledby': 'deleteJobTitle' });
+    const finish = accepted => { dialog.close(); dialog.remove(); resolve(accepted); };
+    dialog.append(node('h2', { id: 'deleteJobTitle', text: t('기록 삭제') }),
+      node('p', { text: t('이 작업의 기록·자막·임시 파일을 삭제할까요? 원본 파일과 API 설정은 삭제하지 않습니다.') }),
+      node('div', { class: 'button-row' },
+        node('button', { class: 'secondary', type: 'button', text: t('닫기'), onclick: () => finish(false) }),
+        node('button', { class: 'primary', type: 'button', text: t('기록 삭제'), onclick: () => finish(true) })));
+    dialog.addEventListener('cancel', event => { event.preventDefault(); finish(false); }, { once: true });
+    document.body.append(dialog); dialog.showModal();
+  });
+}
+async function action(name, id = state.selected) {
+  if (!id || state.actions.has(id)) return;
+  if (name === 'delete' && !await confirmJobDeletion()) return;
+  state.actions.add(id); state.refreshSerial++; renderJobLists(); if (state.detail) renderDetail();
+  try {
+    await apiJson(name === 'delete' ? `/api/jobs/${id}` : `/api/jobs/${id}/${name}`, { method: name === 'delete' ? 'DELETE' : 'POST' });
+    if (name === 'delete') { if (state.selected === id) clearSelectedJob(); toast(t('작업 기록을 삭제했습니다.')); }
+  } catch (error) { toast(error.message, true); }
+  finally { state.actions.delete(id); try { await refreshJobs(); } catch (error) { toast(error.message, true); } if (state.detail) renderDetail(); }
 }
 async function download(format, positioned = false) {
   try {
@@ -179,16 +219,16 @@ function renderDetail() {
   const savedOffset = sameJob ? $('previewOffset')?.value : null;
   state.renderedJob = job.id; state.previewVideo = null;
   const element = $('jobDetail'); element.hidden = false;
-  const controls = node('div', { class: 'button-row' });
-  if (['queued', 'running'].includes(job.status)) controls.append(node('button', { class: 'secondary', text: t('작업 중단'), type: 'button', onclick: () => action('cancel') }));
-  if (['failed', 'cancelled', 'interrupted'].includes(job.status)) controls.append(node('button', { class: 'primary', text: t('이어하기'), type: 'button', onclick: () => action('resume') }));
-  element.replaceChildren(node('div', { class: 'detail-header' }, node('div', {}, node('div', { class: 'eyebrow', text: 'YOUR SUBTITLE PROJECT' }), node('h2', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {languages} · {count}개 구간', { status: statusLabel(job.status), languages: job.options.transcribeOnly ? t('원문 자막') : `${job.options.sourceLanguage} → ${job.options.targetLanguage}`, count: job.cues.length }) })), controls));
+  const controls = jobButtons(job);
+  element.replaceChildren(node('div', { class: 'detail-header' }, node('div', {}, node('div', { class: 'eyebrow', text: 'YOUR SUBTITLE PROJECT' }), node('h2', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {languages} · {count}개 구간', { status: statusLabel(job.status, job.cancelRequested), languages: job.options.transcribeOnly ? t('원문 자막') : `${job.options.sourceLanguage} → ${job.options.targetLanguage}`, count: job.cues.length }) })), controls));
   if (job.translationPlan) element.append(node('p', { class: 'hint', text: t('문장 {speech}개 · 화면 글자 {screen}개 · 용어 {terms}개 · 번역 요청 {requests}회', { speech: job.translationPlan.sentenceCount, screen: job.translationPlan.screenCount, terms: job.translationPlan.glossaryCount, requests: job.translationPlan.requests }) }));
   if (Number.isFinite(job.translationPlan?.glossaryInputBytes)) element.append(node('p', { class: 'hint', text: t('용어집 전송량 약 {size}KB · 분당 입력량 한도는 요청 횟수와 별도로 적용됩니다.', { size: Math.ceil(job.translationPlan.glossaryInputBytes / 1024).toLocaleString(i18n.locale) }) }));
   if (job.status !== 'completed') {
-    const determinate = Number.isFinite(job.stageProgress);
-    const bar = node('div'); if (determinate) bar.style.width = `${Math.max(0, Math.min(100, job.stageProgress))}%`;
-    element.append(node('div', { class: `progress-track${determinate ? '' : ' indeterminate'}` }, bar), node('p', { class: 'progress-message', text: i18n.message(job.message) }), node('p', { class: 'hint', text: t('완료된 번역 {done} / {total}개 구간 · 모든 구간이 준비되면 자막을 저장하고 적용할 수 있습니다.', { done: job.completedCues || 0, total: job.cues.length || '—' }) }));
+    const running = job.status === 'running' && !job.cancelRequested, determinate = Number.isFinite(job.stageProgress);
+    const progress = determinate && running ? job.stageProgress : (job.completedCues || 0) / Math.max(1, job.cues.length) * 100;
+    const bar = node('div'); bar.style.width = `${Math.max(0, Math.min(100, progress))}%`;
+    const animate = running && !determinate; if (animate) bar.style.width = '';
+    element.append(node('div', { class: `progress-track${animate ? ' indeterminate' : ''}`, 'aria-busy': String(running) }, bar), node('p', { class: 'progress-message', text: i18n.message(job.message) }), node('p', { class: 'hint', text: t('완료된 번역 {done} / {total}개 구간 · 모든 구간이 준비되면 자막을 저장하고 적용할 수 있습니다.', { done: job.completedCues || 0, total: job.cues.length || '—' }) }));
     if (job.error) element.append(node('div', { class: 'error-box', text: i18n.message(job.error) }));
     if (job.apiLimit?.limits?.length) {
       const labels = { 'input-tokens-minute': '분당 입력 토큰', 'requests-minute': '분당 요청 수', 'requests-day': '하루 요청 수', other: '기타 할당량' };
