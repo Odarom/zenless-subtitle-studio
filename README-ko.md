@@ -1,4 +1,4 @@
-# ZZZ 자막 작업실 0.6.2
+# ZZZ 자막 작업실 0.6.3
 
 전체 용어집의 항목·의미·적용 규칙을 유지하면서 반복 설명을 공유해 전송량을 줄였습니다. 명칭·캐릭터명·관련 스킬명은 선택한 원어와 번역어만 보냅니다. 원어 자동 감지는 번역어 명칭과 실제 원문에 일치한 별칭을 사용합니다. Gemini 429 응답에 한도 정보가 있으면 분당 입력 토큰·분당 요청·하루 요청·할당량 0을 구분해 표시하며, 정보가 없으면 원인 미확인으로 안내합니다. 기본 영상 전체 1회 요청과 자동 재요청 없음은 유지합니다. 번역 결과가 없던 0.6.1 실패 작업은 원문을 다시 인식하지 않고 ‘이어하기’로 진행할 수 있습니다. 무료 한도의 실제 통과 여부와 번역 품질은 별도로 확인해야 합니다.
 
@@ -66,5 +66,6 @@ API 키는 이 PC의 별도 암호화 저장소에 저장합니다. `app/data`, 
 | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | 유튜브 영상·자막 처리 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
 | [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 오디오 변환·영상 프레임 추출 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
 | [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 선택형 화면 글자 인식 | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+| [7-Zip 7zr](https://github.com/ip7z/7zip/releases/tag/26.04) | OCR 도구 압축 해제 | [LGPL-2.1-or-later](https://www.7-zip.org/license.txt) · [source](https://github.com/ip7z/7zip/tree/26.04) |
 
 Node.js는 배포 ZIP에 포함되며, 라이선스 원문은 `runtime/LICENSE-Node.txt`에 들어 있습니다. 나머지 도구·모델은 처음 사용할 때 배포처에서 직접 내려받습니다. yt-dlp 소스의 Unlicense와 Windows 실행 파일의 GPLv3+를 구분하며, 설치하는 FFmpeg는 GPL 빌드입니다. 빌드에 포함된 추가 라이브러리와 OCR 모델에는 각각의 라이선스가 적용됩니다. 자세한 출처·배포·고지는 [구성 요소 안내](THIRD-PARTY-NOTICES.md)를 확인하세요. 구성 요소를 재배포할 때는 해당 배포물의 고지·라이선스 원문과 필요한 소스 제공 조건도 확인해야 합니다.

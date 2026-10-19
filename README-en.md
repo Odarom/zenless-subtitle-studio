@@ -1,4 +1,4 @@
-# ZZZ Subtitle Studio 0.6.2
+# ZZZ Subtitle Studio 0.6.3
 
 Reduced glossary payload size by sharing repeated descriptions without removing entries, meanings or rules. Names, character names and related skills use only the chosen source and target languages. Auto-detected sources use target-language names and aliases actually matching the input. When Gemini provides HTTP 429 quota details, the app distinguishes input tokens/minute, requests/minute, requests/day and zero allocation; missing details stay unidentified. Whole-video single-request defaults and no automatic retries remain. Failed 0.6.1 jobs with no translated results can Resume without repeating transcription. Actual free-tier acceptance and translation quality still require separate verification.
 
@@ -64,5 +64,6 @@ The bracket-path installation problem in 0.2.0 was fixed in 0.2.1. Brackets, Kor
 | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube media and captions | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
 | [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | Audio conversion and frame extraction | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
 | [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | Optional screen OCR | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+| [7-Zip 7zr](https://github.com/ip7z/7zip/releases/tag/26.04) | OCR archive extraction | [LGPL-2.1-or-later](https://www.7-zip.org/license.txt) · [source](https://github.com/ip7z/7zip/tree/26.04) |
 
 Node.js is bundled in the ZIP with original notices in `runtime/LICENSE-Node.txt`. Other tools/models download directly from their distributors on first use. Distinguish the yt-dlp source Unlicense from its GPLv3+ Windows executable; the downloaded FFmpeg is a GPL build. Additional build libraries and OCR models retain their respective licenses. See [third-party notices](THIRD-PARTY-NOTICES.md) for sources and distribution details. Redistributing components also requires checking their notices, original licenses and any corresponding-source obligations.

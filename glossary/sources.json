@@ -5,8 +5,11 @@
   "manifest": {
     "url": "https://static.nanoka.cc/manifest.json",
     "observedLive": "3.2",
-    "observedLatest": "3.3.12+19629936",
-    "checkedAt": "2026-10-18T17:28:02.248Z"
+    "observedLatest": "3.3.12+19634983",
+    "checkedAt": "2026-10-19T09:47:47.954Z",
+    "selection": "existing-versions",
+    "selectedLive": "3.2",
+    "selectedBeta": "3.3.12+19629936"
   },
   "sources": [
     {

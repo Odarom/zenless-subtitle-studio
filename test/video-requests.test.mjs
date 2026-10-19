@@ -46,7 +46,7 @@ test('full glossary transport preserves every entry and rule while deduplicating
   assert(Buffer.byteLength(JSON.stringify(compact)) < Buffer.byteLength(JSON.stringify(original)) * .6);
   const checkNames = names => { for (const lang of Object.keys(names || {})) assert(['ja', 'ko'].includes(lang)); };
   for (const entry of glossary) { checkNames(entry.preferred); checkNames(entry.characterName); checkNames(entry.relatedSkills); }
-  assert.equal(compact.entries.length, 2313);
+  assert.equal(compact.entries.length, 2314);
   assert(original.some(entry => entry.autoUse === false));
   assert(original.some(entry => entry.releaseStatus === 'prerelease'));
 });

@@ -8,6 +8,19 @@ const entries = loadGlossary('glossary/zzz.json');
 const catalogVersion = JSON.parse(readFileSync('glossary/zzz.json', 'utf8')).sourceVersion;
 const find = (text, category) => entries.find(e => e.preferred.en === text && (!category || e.category === category));
 
+test('reviewed resource and anomaly terms retain scoped names and qualifiers', () => {
+  const corruption = relevantTerms(entries, 'guaranteed corruption proc even from zero Anomaly').find(e => e.id === 'combat:corruption');
+  assert.equal(corruption.preferred.ko, '침식');
+  assert.equal(corruption.preferred.ja, '侵蝕');
+  assert.match(corruption.rule, /이상 축적치/);
+  assert.match(corruption.rule, /원문의 발동 조건/);
+  const adrenaline = relevantTerms(entries, 'Yixuan adrenaline management').find(e => e.id === 'noun:3000036');
+  assert.equal(adrenaline.preferred.ko.replace(/[\[\]]/g, ''), '기운');
+  assert.match(adrenaline.rule, /일반 감정·호르몬/);
+  assert.match(entries.find(e => e.id === 'noun:3000005').rule, /변칙 수치로 번역/);
+  assert.equal(find('Anomaly Mastery').communityPreferred.ko, '장악');
+});
+
 test('source-matched glossary has four complete languages and traceable source IDs', () => {
   assert(entries.length >= 400);
   for (const e of entries.filter(e => e.status === 'source-matched')) {

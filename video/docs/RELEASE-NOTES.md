@@ -1,19 +1,19 @@
-# ZZZ Subtitle Studio 0.6.2
+# ZZZ Subtitle Studio 0.6.3
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 ## 한국어
 
-전체 용어집의 항목·의미·적용 규칙을 유지하면서 반복 설명을 공유해 전송량을 줄였습니다. 명칭·캐릭터명·관련 스킬명은 선택한 원어와 번역어만 보냅니다. 원어 자동 감지는 번역어 명칭과 실제 원문에 일치한 별칭을 사용합니다. Gemini 429 응답에 한도 정보가 있으면 분당 입력 토큰·분당 요청·하루 요청·할당량 0을 구분해 표시하며, 정보가 없으면 원인 미확인으로 안내합니다. 기본 영상 전체 1회 요청과 자동 재요청 없음은 유지합니다. 번역 결과가 없던 0.6.1 실패 작업은 원문을 다시 인식하지 않고 ‘이어하기’로 진행할 수 있습니다. 무료 한도의 실제 통과 여부와 번역 품질은 별도로 확인해야 합니다.
+일부 Windows에서 OCR 설치 중 LZMA 오류가 발생하던 문제를 수정했습니다. 검증한 공식 7-Zip 7zr를 필요할 때 자동으로 받아 압축을 해제하며 별도 설치가 필요 없습니다. 기존 OCR 설치는 계속 사용하고, 실패한 설치는 새 폴더에서 다시 준비합니다. 깡공·깡관, 의현의 기운, 침식·이상 축적 관련 검토 수정을 공용 DB에 반영했습니다. 기존 실패 작업은 업데이트 후 이어하기로 다시 진행할 수 있습니다.
 
 ## English
 
-Reduced glossary payload size by sharing repeated descriptions without removing entries, meanings or rules. Names, character names and related skills use only the chosen source and target languages. Auto-detected sources use target-language names and aliases actually matching the input. When Gemini provides HTTP 429 quota details, the app distinguishes input tokens/minute, requests/minute, requests/day and zero allocation; missing details stay unidentified. Whole-video single-request defaults and no automatic retries remain. Failed 0.6.1 jobs with no translated results can Resume without repeating transcription. Actual free-tier acceptance and translation quality still require separate verification.
+Fixed OCR setup failing with unsupported LZMA on some Windows versions. The app downloads and verifies the official portable 7-Zip 7zr extractor on demand, without a separate installation. Existing complete OCR installations remain usable; failed installations retry in a fresh folder. The shared glossary includes reviewed flat-stat, Yixuan resource and Corruption/Anomaly Buildup corrections. Resume failed jobs after updating.
 
 ## 日本語
 
-用語集の全項目・意味・適用規則を維持し、重複説明を共有して送信量を削減しました。名称・キャラクター名・関連スキル名は選択した原語と翻訳先だけを送ります。原語の自動検出時は翻訳先の名称と実際の原文に一致した別名を使います。Geminiの429応答に情報があれば分間入力トークン・分間リクエスト・1日のリクエスト・割り当て0を区別し、なければ原因未確認と表示します。動画全体1回の要求と自動再試行なしは維持します。翻訳結果がない0.6.1の失敗作業は、再認識せず「再開」できます。無料上限内での成功と翻訳品質は別途確認が必要です。
+一部のWindowsでOCR準備がLZMA未対応エラーになる問題を修正しました。公式のポータブル7-Zip 7zrを必要時に取得・検証し、別途インストールは不要です。完了済みのOCRは引き続き利用し、失敗時は新しいフォルダで再準備します。固定攻撃力・貫通値、儀玄のリソース、侵蝕・状態異常蓄積値に関する確認済みの修正を共有DBへ反映しました。更新後に失敗した作業を再開できます。
 
 ## 简体中文
 
-保留术语表的全部条目、含义和规则，通过共享重复说明减少发送量。名称、角色名及相关技能名仅发送所选原文和目标语言。原文自动检测时使用目标语言名称及实际匹配原文的别名。Gemini的429响应若提供配额详情，将区分每分钟输入token、每分钟请求、每日请求及配额为0；无详情则提示原因未确认。仍默认整段视频单次请求，不自动重试。0.6.1中未生成翻译的失败任务可直接继续，无需重新识别。实际是否满足免费配额及翻译质量仍需单独验证。
+修复部分Windows版本准备OCR时出现LZMA不受支持的问题。按需下载并校验官方便携式7-Zip 7zr，无须单独安装。已完整安装的OCR继续使用，失败安装在新文件夹中重试。共享DB包含固定攻击力、穿透值、仪玄资源及侵蚀、异常积蓄值的审核修正。更新后可继续失败的任务。

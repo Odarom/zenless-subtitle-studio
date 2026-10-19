@@ -25,12 +25,12 @@
 | Astral · 고요 | 고요 속의 별 | Astral Voice | 静寂のアストラ | 静听嘉音 |
 | EBA · Enhanced Basic Attack · 강화 평타 · 강화평타 · 강화된 일반 공격 · 강화 일반 공격 · 평꾹 | 강화 평타 | Enhanced Basic Attack | — | — |
 | 공퍼 · 공퍼센트 · 공% · 공격력% · 공격력 % · ATK% · ATK % · ATK percent · 攻撃力% · 攻撃力％ · 大攻击 · 攻击力百分比 | 공격력% | ATK% | 攻撃力% | 攻击力百分比 |
-| 깡공 · 깡공격력 · 공격력 고정 · flat ATK · ATK flat · 攻撃力実数 · 攻撃力実数値 · 小攻击 · 固定攻击力 | 고정 공격력 | flat ATK | 攻撃力実数値 | 固定攻击力 |
+| 깡공 · 깡공격력 · 공격력 고정 · flat ATK · ATK flat · 攻撃力実数 · 攻撃力実数値 · 小攻击 · 固定攻击力 · fatk | 고정 공격력 | flat ATK | 攻撃力実数値 | 固定攻击力 |
 | 방퍼 · 방퍼센트 · 방% · 방어력% · 방어력 % · DEF% · DEF % · DEF percent · 防御力% · 防御力％ · 大防御 · 防御力百分比 | 방어력% | DEF% | 防御力% | 防御力百分比 |
 | 깡방 · 깡방어력 · 방어력 고정 · flat DEF · DEF flat · 防御力実数 · 防御力実数値 · 小防御 · 固定防御力 | 고정 방어력 | flat DEF | 防御力実数値 | 固定防御力 |
 | 체퍼 · 체퍼센트 · 체% · HP% · HP % · HP percent · HP％ · 大生命 · 生命值百分比 | HP% | HP% | HP% | 生命值百分比 |
 | 깡체 · 깡HP · HP 고정 · flat HP · HP flat · HP実数 · HP実数値 · 小生命 · 固定生命值 | 고정 HP | flat HP | HP実数値 | 固定生命值 |
-| 깡관 · 깡관통 · 고정 관통 · flat PEN · PEN flat · flat penetration · 穿透值 · 貫通値 · 고정관통 | 고정 관통 수치 | flat PEN | 貫通値 | 穿透值 |
+| 깡관 · 깡관통 · 고정 관통 · flat PEN · PEN flat · flat penetration · 穿透值 · 貫通値 · 고정관통 · fpen | 고정 관통 수치 | flat PEN | 貫通値 | 穿透值 |
 | 기초공 · 기초 공격력 · 기초공격력 · base ATK · base attack · 基礎攻撃力 · 基础攻击力 | 기초 공격력 | base ATK | 基礎攻撃力 | 基础攻击力 |
 | 치확 · 치명확률 · 크확 · CR · crit rate · 暴率 | 치명타 확률 | CRIT Rate | 会心率 | 暴击率 |
 | 치피 · 치뎀 · 크뎀 · CD · CDMG · crit dmg · crit damage · 会心ダメ · 暴伤 · 爆伤 | 치명타 피해 | CRIT DMG | 会心ダメージ | 暴击伤害 |

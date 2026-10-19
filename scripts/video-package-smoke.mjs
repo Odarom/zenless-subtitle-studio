@@ -33,7 +33,7 @@ const toolManifest = JSON.parse(readFileSync(join(root, '.tools', 'video', 'tool
 for (const key of ['ytdlp', 'whisperCpu', 'whisperVulkan', 'model', 'ffmpeg']) if (!toolManifest[key] || isAbsolute(toolManifest[key]) || relative(root, resolve(root, toolManifest[key])).startsWith('..')) throw new Error('도구 준비 결과가 이동 가능한 상대 경로가 아닙니다.');
 // Reuse only public downloads; the packaged installer must verify and extract
 // the real archives itself, using Windows' built-in PowerShell and no PATH.
-for (const name of ['whisper-vulkan-x64.zip', 'whisper-blas-bin-x64.zip', 'ffmpeg-master-latest-win64-gpl-shared.zip']) {
+for (const name of ['7zr-26.04.exe', 'whisper-vulkan-x64.zip', 'whisper-blas-bin-x64.zip', 'ffmpeg-master-latest-win64-gpl-shared.zip']) {
   mirror(join(root, '.tools', 'video', name), join(app, '.tools', 'video', name));
 }
 for (const file of [toolManifest.ytdlp, toolManifest.model]) mirror(join(root, file), join(app, file));

@@ -1,4 +1,4 @@
-# ZZZ字幕工作室 0.6.2
+# ZZZ字幕工作室 0.6.3
 
 保留术语表的全部条目、含义和规则，通过共享重复说明减少发送量。名称、角色名及相关技能名仅发送所选原文和目标语言。原文自动检测时使用目标语言名称及实际匹配原文的别名。Gemini的429响应若提供配额详情，将区分每分钟输入token、每分钟请求、每日请求及配额为0；无详情则提示原因未确认。仍默认整段视频单次请求，不自动重试。0.6.1中未生成翻译的失败任务可直接继续，无需重新识别。实际是否满足免费配额及翻译质量仍需单独验证。
 
@@ -66,5 +66,6 @@
 | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube视频与字幕处理 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
 | [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 音频转换与视频帧提取 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
 | [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 可选屏幕文字识别 | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+| [7-Zip 7zr](https://github.com/ip7z/7zip/releases/tag/26.04) | OCR工具解压 | [LGPL-2.1-or-later](https://www.7-zip.org/license.txt) · [source](https://github.com/ip7z/7zip/tree/26.04) |
 
 ZIP包含Node.js，许可证原文位于`runtime/LICENSE-Node.txt`。其他工具和模型在首次使用时直接从发布方下载。yt-dlp源码的Unlicense与其Windows可执行文件的GPLv3+不同；下载的FFmpeg为GPL构建。额外库和OCR模型分别适用各自许可证。来源及分发说明见[第三方组件声明](THIRD-PARTY-NOTICES.md)。重新分发组件时，还需确认声明、许可证原文及相应源码提供要求。

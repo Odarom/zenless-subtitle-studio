@@ -30,7 +30,13 @@ async function stage() {
     return;
   }
   console.log('공개 자료의 정식·미출시 버전 목록을 확인하고 있습니다.');
-  const manifest = JSON.parse(await sourceText('https://static.nanoka.cc/manifest.json')); const versions = checkManifest(manifest);
+  const manifest = JSON.parse(await sourceText('https://static.nanoka.cc/manifest.json')); const observedVersions = checkManifest(manifest);
+  // A reviewed report correction need not import a newly published beta build.
+  // Still observe the public manifest, and keep source selection explicit in
+  // the review/metadata rather than pretending the previous beta is latest.
+  const existingVersions = process.argv.includes('--existing-versions');
+  const versions = existingVersions ? { ...observedVersions, live: previous.sourceVersion, beta: previous.betaVersion } : observedVersions;
+  if (existingVersions && !/^\d+\.\d+(?:\.\d+)?(?:\+\d+)?$/.test(versions.live || '')) throw new Error('기존 자료 버전이 올바르지 않습니다.');
   function build(version, prerelease) {
     const output = resolve(root, prerelease ? 'beta.json' : 'live.json');
     const sources = resolve(root, prerelease ? 'beta-sources.json' : 'live-sources.json');
@@ -49,10 +55,10 @@ async function stage() {
   const catalog = localized.catalog, changes = { ...composed.changes, localizations: localized.report.applied, localizationHeld: localized.report.held };
   write(candidatePath, catalog); loadGlossary(candidatePath);
   const sources = { version: versions.live, betaVersion: versions.beta, retrievedAt: live.sources.retrievedAt,
-    manifest: { url: 'https://static.nanoka.cc/manifest.json', observedLive: versions.live, observedLatest: versions.latest, checkedAt },
+    manifest: { url: 'https://static.nanoka.cc/manifest.json', observedLive: observedVersions.live, observedLatest: observedVersions.latest, checkedAt, ...(existingVersions ? { selection: 'existing-versions', selectedLive: versions.live, selectedBeta: versions.beta } : {}) },
     sources: [...live.sources.sources, ...(beta?.sources.sources ?? [])], excluded: [...live.sources.excluded, ...(beta?.sources.excluded ?? [])] };
   const sourceBytes = JSON.stringify(sources, null, 2) + '\n'; writeFileSync(resolve(root, 'candidate-sources.json'), sourceBytes);
-  const review = { version: 1, checkedAt, liveVersionChanged: previous.sourceVersion !== versions.live,
+  const review = { version: 1, checkedAt, existingVersions, observedVersions, liveVersionChanged: previous.sourceVersion !== versions.live,
     previousLive: previous.sourceVersion, versions, inputHashes, baselineHash: glossaryDigest(previousBytes),
     candidateHash: glossaryDigest(readFileSync(candidatePath, 'utf8')), sourcesHash: glossaryDigest(sourceBytes), changes };
   write(reviewPath, review);

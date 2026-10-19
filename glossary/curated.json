@@ -405,6 +405,35 @@
       "status": "source-supported-curated",
       "retrievedAt": "2026-10-13",
       "sourceNotes": "팬 데이터 자료에서 동일 키의 영어·한국어·일본어·중국어 이름을 대조했다. 효과 이름만 등록하며 버프 수치는 저장하지 않는다."
+    },
+    {
+      "id": "combat:corruption",
+      "category": "combat-effect",
+      "aliases": [
+        "Corruption",
+        "침식",
+        "侵蝕",
+        "侵蚀"
+      ],
+      "preferred": {
+        "ko": "침식",
+        "en": "Corruption",
+        "ja": "侵蝕",
+        "zh-CN": "侵蚀"
+      },
+      "meaning": "젠레스의 에테르 속성 이상 효과 Corruption. 월드의 침식·적 이름·침식 장벽과 구분한다.",
+      "rule": "전투에서 에테르 속성 이상이 발동하거나 그 상태·피해·혼돈 결산을 뜻하는 Corruption은 언어별 preferred 명칭을 쓴다. 한국어 변이로 바꾸지 않는다. 일반적인 부패·타락, 침식 장벽, 침식체 이름과는 별개다. 원문의 발동 조건·확정 여부·수치를 유지하고 원문에 없는 피해 수치나 발동 원리를 보충하지 않는다. 같은 발동 문장의 zero Anomaly는 축적 게이지가 0인 상태를 뜻하며 한국어 이상 축적치(이상 수치)로 옮긴다. 캐릭터 특성 이상이나 변칙 수치로 바꾸지 않는다.",
+      "status": "source-supported-curated",
+      "sourceVersion": "3.2",
+      "retrievedAt": "2026-10-19",
+      "sourceKey": "/passive/level/1331501/desc/1",
+      "sources": [
+        "https://static.nanoka.cc/zzz/3.2/ko/character/1331.json",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1331.json",
+        "https://static.nanoka.cc/zzz/3.2/ja/character/1331.json",
+        "https://static.nanoka.cc/zzz/3.2/zh/character/1331.json"
+      ],
+      "sourceNotes": "공개 Nanoka 3.2 비비안 추가 능력의 동일 ID·문단에서 네 언어 효과 명칭을 대조했다. 팬 데이터베이스 출처이며 제작사 직접 검수를 뜻하지 않는다. 특정 캐릭터의 궁극기 발동 조건 전체를 검증한 항목은 아니다."
     }
   ]
 }

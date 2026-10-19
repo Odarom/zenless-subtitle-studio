@@ -17,7 +17,7 @@ test('additional language names preserve the legacy four-language shape and cove
   const localized=catalog.entries.filter(entry=>entry.localizedNames);
   assert.equal(localized.length,1868);
   for(const entry of localized){assert.equal(entry.releaseStatus,'live');assert.equal(Object.keys(entry.preferred).length,4);assert.equal(Object.keys(localizedNames(entry)).length,4+Object.keys(entry.localizedNames).length);}
-  assert.equal(validateCatalog(catalog).entries.length,2313);
+  assert.equal(validateCatalog(catalog).entries.length,2314);
   assert.equal(localizedNames(catalog.entries.find(entry=>entry.id==='combat:ultimate')).fr,'Ultime');
   const community=JSON.parse(readFileSync('glossary/community.json'));
   assert.equal(community.entries.length,73);

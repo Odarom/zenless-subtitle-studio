@@ -1,4 +1,4 @@
-# ZZZ字幕スタジオ 0.6.2
+# ZZZ字幕スタジオ 0.6.3
 
 用語集の全項目・意味・適用規則を維持し、重複説明を共有して送信量を削減しました。名称・キャラクター名・関連スキル名は選択した原語と翻訳先だけを送ります。原語の自動検出時は翻訳先の名称と実際の原文に一致した別名を使います。Geminiの429応答に情報があれば分間入力トークン・分間リクエスト・1日のリクエスト・割り当て0を区別し、なければ原因未確認と表示します。動画全体1回の要求と自動再試行なしは維持します。翻訳結果がない0.6.1の失敗作業は、再認識せず「再開」できます。無料上限内での成功と翻訳品質は別途確認が必要です。
 
@@ -64,5 +64,6 @@ Intel/AMD CPUに対応します。音声GPU処理にはNVIDIA/AMDのVulkan対応
 | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube動画・字幕処理 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
 | [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 音声変換・動画フレーム抽出 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
 | [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 任意の画面OCR | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+| [7-Zip 7zr](https://github.com/ip7z/7zip/releases/tag/26.04) | OCRツールの展開 | [LGPL-2.1-or-later](https://www.7-zip.org/license.txt) · [source](https://github.com/ip7z/7zip/tree/26.04) |
 
 Node.jsはZIPに同梱し、ライセンス原文は`runtime/LICENSE-Node.txt`に収録しています。他のツール・モデルは初回利用時に配布元から直接取得します。yt-dlpのソースのUnlicenseとWindows実行ファイルのGPLv3+を区別し、取得するFFmpegはGPLビルドです。追加ライブラリやOCRモデルには各自のライセンスが適用されます。出典・配布の詳細は[構成要素の告知](THIRD-PARTY-NOTICES.md)を確認してください。構成要素を再配布する際は、告知・ライセンス原文・必要な対応ソースの提供条件も確認してください。

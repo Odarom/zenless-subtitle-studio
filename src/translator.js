@@ -30,7 +30,11 @@ export function relevantTerms(entries, text, limit = 30) {
     // accidentally match CATK%, and flat ATK must not match flat ATKfoo.
     const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const bounded = /^[\x20-\x7e]+$/.test(alias) && /[a-z0-9]/i.test(alias);
-    const pattern = new RegExp(bounded ? `(?<![a-z0-9])${escaped}(?![a-z0-9])` : escaped, 'giu');
+    // Build notation commonly attaches a roll count to these flat-stat names
+    // (3fpen, 4fatk). Keep ordinary aliases' word boundaries intact.
+    const compactStat = ['stat-flat-atk', 'stat-flat-pen'].includes(entry.id) && /^(?:fatk|fpen)$/i.test(alias);
+    const prefix = compactStat ? '(?:\\d+(?:\\.\\d+)?\\s*)?' : '';
+    const pattern = new RegExp(bounded ? `(?<![a-z0-9])${prefix}${escaped}(?![a-z0-9])` : escaped, 'giu');
     return [...text.matchAll(pattern)].map(match => ({ start: match.index, end: match.index + match[0].length, length: match[0].length }));
   }) })).filter(match => match.spans.length);
   const spans = matches.filter(match => match.entry.category !== 'community').flatMap(match => match.spans);

@@ -61,6 +61,19 @@ test('glossary matches abbreviations as words, including next to Korean', () => 
   assert(relevantTerms(entries, 'EBA 이후 평꾹').some(e => e.id === 'enhanced-basic-attack'));
 });
 
+test('flat stat shorthand is found with attached counts without weakening other word boundaries', () => {
+  const entries = loadGlossary(glossaryPath);
+  for (const text of ['3fpen 4fatk', '6FPEN 10FATK', '3 fpen 4 fatk']) {
+    const found = relevantTerms(entries, text);
+    assert(found.some(e => e.id === 'stat-flat-atk' && e.communityPreferred.ko === '깡공'));
+    assert(found.some(e => e.id === 'stat-flat-pen' && e.communityPreferred.ko === '깡관'));
+  }
+  for (const text of ['my3fpen', '4fpenalty', 'af atk', 'x4fatk', '14AM', '2Qatar']) {
+    assert(!relevantTerms(entries, text).some(e => ['stat-flat-atk', 'stat-flat-pen'].includes(e.id)), text);
+  }
+  assert(!relevantTerms(entries, '14AM').some(e => e.id === 'stat:33000'));
+});
+
 test('translator batches targets, sends only relevant terms, disables storage and records usage', async () => {
   const store = makeStore(); let body; let calls = 0;
   const translator = new Translator(config, store, glossaryPath, async (url, init) => {
