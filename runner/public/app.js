@@ -4,7 +4,12 @@ const words = {
   intro:['API 키는 이 기기에 보관하고, 공용 봇에는 번역 결과만 돌려줍니다.','Your API key stays on this device. Only translation results return to the shared bot.','APIキーはこの端末に保存し、共有ボットには翻訳結果だけを返します。','API密钥保存在此设备中，仅向共享机器人返回翻译结果。'],
   start:['번역 연결 시작','Start translation','翻訳接続を開始','启动翻译连接'],stop:['중지','Stop','停止','停止'],settings:['1. 번역 설정','1. Translation settings','1. 翻訳設定','1. 翻译设置'],
   provider:['번역 서비스','Translation provider','翻訳サービス','翻译服务'],model:['모델 이름','Model name','モデル名','模型名称'],key:['API 키 · 이 기기에만 저장','API key · stored on this device only','APIキー・この端末のみに保存','API密钥 · 仅存于此设备'],
-  limit:['하루 최대 요청 횟수','Maximum requests per day','1日の最大リクエスト数','每日最多请求次数'],style:['번역 표현','Translation style','翻訳スタイル','翻译风格'],community:['커뮤니티 약어','Community shorthand','コミュニティ略語','社区缩写'],official:['정식 명칭','Official names','正式名称','正式名称'],save:['이 기기에 저장','Save on this device','この端末に保存','保存在此设备'],
+  limit:['하루 최대 요청 횟수','Maximum requests per day','1日の最大リクエスト数','每日最多请求次数'],style:['번역 표현','Translation style','翻訳スタイル','翻译风格'],community:['커뮤니티 약어','Community shorthand','コミュニティ略語','社区缩写'],official:['정식 명칭','Official names','正式名称','正式名称'],save:['API 키·설정 저장','Save API key and settings','APIキー・設定を保存','保存API密钥及设置'],
+  stopForSettings:['설정 변경을 위해 중지','Stop to change settings','設定変更のため停止','停止以修改设置'],
+  saveHelpRunning:['키를 바꾸려면 [설정 변경을 위해 중지] → 키 입력 → [API 키·설정 저장] → [번역 연결 시작] 순서로 진행하세요. 다른 서버는 계속 실행됩니다.','To change your key: Stop to change settings → enter the key → Save API key and settings → Start translation. Other servers keep running.','キー変更：［設定変更のため停止］→キー入力→［APIキー・設定を保存］→［翻訳接続を開始］。他のサーバーは動き続けます。','更改密钥：停止以修改设置 → 输入密钥 → 保存API密钥及设置 → 启动翻译连接。其他服务器继续运行。'],
+  saveHelpStopped:['입력 후 [API 키·설정 저장]을 누르세요. 저장한 뒤 [번역 연결 시작]을 누르면 적용됩니다.','After entering your settings, select Save API key and settings, then Start translation to apply them.','入力後［APIキー・設定を保存］を押し、［翻訳接続を開始］で適用してください。','输入后点击“保存API密钥及设置”，再点击“启动翻译连接”以应用。'],
+  saving:['설정을 저장하고 있습니다…','Saving settings…','設定を保存中…','正在保存设置…'],saved:['저장했습니다. [번역 연결 시작]을 누르면 적용됩니다.','Saved. Select Start translation to apply.','保存しました。［翻訳接続を開始］で適用してください。','已保存，点击“启动翻译连接”以应用。'],
+  checking:['DB 갱신을 확인하고 있습니다…','Checking for DB updates…','DBの更新を確認中…','正在检查数据库更新…'],dbCurrent:['확인 완료: 이미 최신 DB입니다.','Checked: your DB is already up to date.','確認完了：DBは最新です。','检查完成：数据库已是最新。'],dbUpdated:['최신 DB로 갱신했습니다. 다음 번역부터 사용합니다.','DB updated. It will be used for subsequent translations.','DBを更新しました。次の翻訳から使用します。','已更新数据库，将用于之后的翻译。'],dbFailed:['DB 갱신 확인에 실패했습니다. 인터넷 연결을 확인하고 다시 누르세요. 기존 DB는 유지됩니다.','Could not check for DB updates. Check your connection and try again. Your existing DB is kept.','DB更新を確認できませんでした。接続を確認して再試行してください。既存のDBは保持されます。','无法检查数据库更新，请检查网络后重试。原数据库已保留。'],
   localKey:['키는 이 기기에서 암호화해 저장합니다. 이 기기의 관리자는 키에 접근할 수 있습니다.','Keys are encrypted on this device. Its administrator can access them.','キーはこの端末で暗号化して保存します。この端末の管理者はキーにアクセスできます。','密钥在此设备上加密保存，此设备的管理员可以访问密钥。'],
   pairing:['2. 디스코드 서버 연결','2. Connect your Discord server','2. Discordサーバーの接続','2. 连接Discord服务器'],pairHelp:['서버 관리자가 디스코드에서 /zzz connect를 실행하고, 받은 일회용 코드를 아래에 입력하세요.','A server administrator runs /zzz connect in Discord. Enter the one-time code below.','サーバー管理者がDiscordで/zzz connectを実行し、発行された使い捨てコードを入力してください。','由服务器管理员在Discord运行/zzz connect，然后在下方输入一次性连接码。'],
   code:['일회용 연결 코드','One-time pairing code','使い捨て接続コード','一次性连接码'],pair:['봇과 연결','Pair with bot','ボットと接続','连接机器人'],advanced:['다른 중계 봇을 사용하는 경우','Using a different broker bot','別の中継ボットを使う場合','使用其他中转机器人'],origin:['봇 연결 주소','Bot address','ボットの接続先','机器人连接地址'],originHelp:['주소를 바꾼 뒤 번역 설정을 저장하고 다시 연결하세요.','After changing the address, save settings and pair again.','接続先を変更したら設定を保存し、再度接続してください。','更改地址后，请保存设置并重新连接。'],
@@ -15,23 +20,112 @@ const words = {
   connected:['봇과 통신 중','Connected to bot','ボットと通信中','正在与机器人通信'],connecting:['봇 연결 확인 중','Checking bot connection','ボット接続を確認中','正在确认机器人连接'],
   baseline:['포함된 용어집 사용 · 실행하면 자동 갱신','Bundled glossary · updates when started','同梱の用語集・起動時に自動更新','使用内置术语表 · 启动后自动更新'],updated:['마지막 갱신','Last update','最終更新','上次更新'],requests:['요청','Requests','リクエスト','请求'],tokens:['입력 / 출력 토큰','Input / output tokens','入力 / 出力トークン','输入 / 输出Token'],done:['완료했습니다.','Done.','完了しました。','已完成。'],failed:['설정과 연결 코드를 확인하세요. 설정 변경 전에는 실행을 중지하세요.','Check your settings and pairing code. Stop the runner before changing settings.','設定と接続コードを確認してください。設定変更前に停止してください。','请检查设置和连接码，更改设置前请先停止运行。']
 };
-const $ = id => document.getElementById(id); let locale = localStorage.getItem('runner-locale') || (navigator.language.startsWith('ko') ? 'ko' : navigator.language.startsWith('ja') ? 'ja' : navigator.language.startsWith('zh') ? 'zh-CN' : 'en');
-const ix = () => ['ko','en','ja','zh-CN'].indexOf(locale), t = key => words[key][ix()];
+const $ = id => document.getElementById(id);
+const locales = ['ko','en','ja','zh-CN'];
+let locale = localStorage.getItem('runner-locale') || (navigator.language.startsWith('ko') ? 'ko' : navigator.language.startsWith('ja') ? 'ja' : navigator.language.startsWith('zh') ? 'zh-CN' : 'en');
+if (!locales.includes(locale)) locale = 'en';
+const t = key => words[key][locales.indexOf(locale)];
 const secret = new URLSearchParams(location.hash.slice(1)).get('token') || sessionStorage.getItem('runner-session');
-if (secret) sessionStorage.setItem('runner-session', secret); history.replaceState(null, '', '/');
-let state = null, profileId = localStorage.getItem('runner-profile') || '';
-function localize() { document.documentElement.lang = locale; $('locale').value = locale; document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n)); if (state) show(state); }
-async function api(path, body) { const r = await fetch('/api/' + path, { method: body ? 'POST' : 'GET', headers: { 'X-Runner-Session': secret || '', ...(profileId ? { 'X-Runner-Profile': profileId } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) }); if (!r.ok) throw new Error('request'); return r.json(); }
-function show(value) { state = value; if(value.profiles){profileId=value.profileId;localStorage.setItem('runner-profile',profileId);const options=value.profiles.map(p=>{const item=document.createElement('option');item.value=p.id;item.textContent=p.name+(p.running?' · '+t(p.connected?'connected':'running'):'');return item;});$('profile').replaceChildren(...options);$('profile').value=profileId;} $('running').textContent = t(value.running ? 'running' : 'stopped'); $('connectionState').textContent = t(value.running ? value.connected ? 'connected' : 'connecting' : value.paired ? 'paired' : 'unpaired'); $('start').disabled = value.running || !value.configured || !value.paired; $('stop').disabled = !value.running; $('keyHint').textContent = t($('provider').value === 'ollama' ? 'local' : value.settings?.provider === $('provider').value && value.settings?.keySaved ? 'savedKey' : 'newKey'); $('apiKey').disabled = $('provider').value === 'ollama'; $('dbState').textContent = value.glossaryUpdatedAt ? t('updated') + ': ' + new Date(value.glossaryUpdatedAt).toLocaleString(locale) : t('baseline'); $('usageState').textContent = `${t('requests')}: ${value.usage.requests} · ${t('tokens')}: ${value.usage.inputTokens} / ${value.usage.outputTokens}`; $('log').textContent = value.log.join('\n'); }
-async function act(path, body = {}) { $('notice').textContent = ''; try { show(await api(path, body)); $('notice').textContent = t('done'); return true; } catch { $('notice').textContent = t('failed'); return false; } }
-function fill(value) { if(value.settings) for(const key of ['provider','model','dailyLimit','style','origin']) $(key).value = value.settings[key]; else { $('provider').value='gemini';$('model').value='gemini-3.1-flash-lite';$('dailyLimit').value=200;$('style').value='community';$('origin').value='https://reports.140-238-54-74.sslip.io'; } $('apiKey').value='';$('pairCode').value='';show(value); }
-$('profile').addEventListener('change', async () => { profileId=$('profile').value;localStorage.setItem('runner-profile',profileId);try{fill(await api('state'));}catch{$('notice').textContent=t('failed');} });
-for(const [id,action] of [['addProfile','create'],['renameProfile','rename']]) $(id).addEventListener('click', async () => {try{fill(await api('profiles',{action,name:$('profileName').value}));$('profileName').value='';$('notice').textContent=t('done');}catch{$('notice').textContent=t('failed');} });
-$('locale').addEventListener('change', () => { locale = $('locale').value; localStorage.setItem('runner-locale', locale); localize(); });
-$('provider').addEventListener('change', () => { $('model').value = { gemini:'gemini-3.1-flash-lite',openai:'gpt-4.1-mini',ollama:'qwen3:8b' }[$('provider').value]; if (state) show(state); });
-$('settingsForm').addEventListener('submit', async event => { event.preventDefault(); if (await act('settings', { provider:$('provider').value,model:$('model').value,apiKey:$('apiKey').value,dailyLimit:Number($('dailyLimit').value),style:$('style').value,locale,origin:$('origin').value })) $('apiKey').value = ''; });
-$('pairForm').addEventListener('submit', async event => { event.preventDefault(); if (await act('pair', { code:$('pairCode').value.trim() })) $('pairCode').value = ''; });
+if (secret) sessionStorage.setItem('runner-session', secret);
+history.replaceState(null, '', '/');
+let state = null, profileId = localStorage.getItem('runner-profile') || '', busy = '', revision = 0;
+let noticeKey = '', saveKey = '', dbKey = '';
+function controls() {
+  for (const id of ['profile','addProfile','renameProfile','update']) $(id).disabled = !!busy;
+  $('save').disabled = !!busy || !state || state.running;
+  $('start').disabled = !!busy || !state || state.running || !state.configured || !state.paired;
+  for (const id of ['stop','stopForSettings']) $(id).disabled = !!busy || !state?.running;
+  $('stopForSettings').hidden = !state?.running;
+  $('update').textContent = t(busy === 'update' ? 'checking' : 'update');
+  $('saveHelp').textContent = state ? t(state.running ? 'saveHelpRunning' : 'saveHelpStopped') : '';
+  for (const [id,key] of [['notice',noticeKey],['saveState',saveKey],['dbResult',dbKey]]) $(id).textContent = key ? t(key) : '';
+}
+function localize() {
+  document.documentElement.lang = locale; $('locale').value = locale;
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  if (state) show(state); else controls();
+}
+async function api(path, body, id = profileId) {
+  const r = await fetch('/api/' + path, { method: body ? 'POST' : 'GET', signal: AbortSignal.timeout(55000),
+    headers: { 'X-Runner-Session': secret || '', ...(id ? { 'X-Runner-Profile': id } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    ...(body ? { body: JSON.stringify(body) } : {}) });
+  if (!r.ok) throw new Error('request');
+  return r.json();
+}
+function show(value) {
+  state = value;
+  if (value.profiles) {
+    profileId = value.profileId; localStorage.setItem('runner-profile',profileId);
+    $('profile').replaceChildren(...value.profiles.map(p => {
+      const item = document.createElement('option'); item.value = p.id;
+      item.textContent = p.name + (p.running ? ' · ' + t(p.connected ? 'connected' : 'running') : ''); return item;
+    }));
+    $('profile').value = profileId;
+  }
+  $('running').textContent = t(value.running ? 'running' : 'stopped');
+  $('connectionState').textContent = t(value.running ? value.connected ? 'connected' : 'connecting' : value.paired ? 'paired' : 'unpaired');
+  $('keyHint').textContent = t($('provider').value === 'ollama' ? 'local' : value.settings?.provider === $('provider').value && value.settings?.keySaved ? 'savedKey' : 'newKey');
+  $('apiKey').disabled = $('provider').value === 'ollama';
+  $('dbState').textContent = value.glossaryUpdatedAt ? t('updated') + ': ' + new Date(value.glossaryUpdatedAt).toLocaleString(locale) : t('baseline');
+  $('usageState').textContent = t('requests') + ': ' + value.usage.requests + ' · ' + t('tokens') + ': ' + value.usage.inputTokens + ' / ' + value.usage.outputTokens;
+  $('log').textContent = value.log.join('\n'); controls();
+}
+async function act(path, body = {}) {
+  if (busy) return false;
+  if (path === 'settings' && state?.running) { saveKey = 'saveHelpRunning'; controls(); return false; }
+  busy = path; revision++; noticeKey = '';
+  if (path === 'update') dbKey = 'checking';
+  if (path === 'settings') saveKey = 'saving';
+  controls();
+  try {
+    const value = await api(path, body); show(value);
+    if (path === 'update') dbKey = value.glossaryUpdate?.status === 'updated' ? 'dbUpdated' : value.glossaryUpdate?.status === 'current' ? 'dbCurrent' : 'done';
+    else if (path === 'settings') saveKey = 'saved';
+    else noticeKey = 'done';
+    return true;
+  } catch {
+    if (path === 'update') dbKey = 'dbFailed';
+    else if (path === 'settings') saveKey = 'failed';
+    else noticeKey = 'failed';
+    return false;
+  } finally { busy = ''; controls(); }
+}
+function fill(value) {
+  if (value.settings) for (const key of ['provider','model','dailyLimit','style','origin']) $(key).value = value.settings[key];
+  else { $('provider').value='gemini';$('model').value='gemini-3.1-flash-lite';$('dailyLimit').value=200;$('style').value='community';$('origin').value='https://reports.140-238-54-74.sslip.io'; }
+  $('apiKey').value='';$('pairCode').value='';show(value);
+}
+$('profile').addEventListener('change', async () => {
+  if (busy) return;
+  const oldId = profileId; profileId = $('profile').value; const requested = ++revision;
+  busy = 'profile'; noticeKey = saveKey = dbKey = ''; controls();
+  try { const value = await api('state'); if (requested === revision) fill(value); }
+  catch { profileId = oldId; $('profile').value = oldId; noticeKey = 'failed'; }
+  finally { busy = ''; controls(); }
+});
+for (const [id,action] of [['addProfile','create'],['renameProfile','rename']]) $(id).addEventListener('click', async () => {
+  if (busy) return; busy = 'profiles'; revision++; controls();
+  try { fill(await api('profiles',{action,name:$('profileName').value}));$('profileName').value='';noticeKey='done';saveKey=dbKey=''; }
+  catch { noticeKey='failed'; } finally { busy='';controls(); }
+});
+$('locale').addEventListener('change', () => { locale=$('locale').value;localStorage.setItem('runner-locale',locale);localize(); });
+$('provider').addEventListener('change', () => { $('model').value={gemini:'gemini-3.1-flash-lite',openai:'gpt-4.1-mini',ollama:'qwen3:8b'}[$('provider').value];if(state)show(state); });
+$('settingsForm').addEventListener('submit', async event => {
+  event.preventDefault(); const key = $('apiKey').value;
+  if (await act('settings',{provider:$('provider').value,model:$('model').value,apiKey:key,dailyLimit:Number($('dailyLimit').value),style:$('style').value,locale,origin:$('origin').value})) {
+    if ($('apiKey').value === key) $('apiKey').value = '';
+  }
+});
+$('pairForm').addEventListener('submit', async event => { event.preventDefault();const code=$('pairCode').value;if(await act('pair',{code:code.trim()}) && $('pairCode').value===code)$('pairCode').value=''; });
 for (const name of ['start','stop','update']) $(name).addEventListener('click', () => act(name));
+$('stopForSettings').addEventListener('click', () => act('stop'));
 localize();
-api('state').then(fill).catch(async () => { profileId=''; try{fill(await api('state'));}catch{$('notice').textContent=t('failed');} });
-setInterval(() => api('state').then(show).catch(() => {}), 3000);
+const initialRevision = revision;
+api('state').then(value => { if (revision===initialRevision) fill(value); }).catch(async () => {
+  if (revision!==initialRevision) return;
+  profileId='';try{const value=await api('state');if(revision===initialRevision)fill(value);}catch{noticeKey='failed';controls();}
+});
+setInterval(async () => {
+  if (busy) return; const requested=revision,id=profileId;
+  try { const value=await api('state',undefined,id);if(!busy && revision===requested && profileId===id)show(value); } catch {}
+},3000);

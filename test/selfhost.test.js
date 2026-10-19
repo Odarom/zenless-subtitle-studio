@@ -14,6 +14,7 @@ import { RunnerUi, RunnerProfiles, runnerUiServer } from '../src/runner-ui-serve
 import { EventEmitter } from 'node:events';
 import { mkdirSync } from 'node:fs';
 import { runnerText } from '../src/runner-i18n.js';
+import { runInNewContext } from 'node:vm';
 
 const input = () => ({ id: 'R-20261019-123456abcdef', platform: 'discord', guildId: 'PRIVATE-GUILD', reporterId: 'PRIVATE-USER',
   source: { text: 'Perfect Dodge', language: 'en', channelId: 'PRIVATE-CHANNEL', provenance: 'discord-verified', matchesTranslationSource: true },
@@ -128,4 +129,54 @@ test('PC settings stay encrypted locally; UI state never returns an API key and 
   for (const locale of ['ko', 'en', 'ja', 'zh-CN']) {
     assert(runnerText(locale, 'api').length); assert(runnerText(locale, 'connect', { code: 'test', url: 'https://example.test', guide: 'guide' }).includes('test'));
   }
+});
+
+test('manual DB checks distinguish an update from an already current DB, coalesce clicks, and keep the last DB on failure', async () => {
+  const root=mkdtempSync(join(tmpdir(),'zzz-runner-check-'));
+  const bytes=Buffer.from(JSON.stringify({version:1,entries:[{id:'one',aliases:['one'],meaning:'one',rule:'one'}]}));
+  const sha=createHash('sha256').update(bytes).digest('hex'); let calls=0,fail=false;
+  const manager=new RunnerProfiles(root,{fetcher:async url=>{calls++;if(fail)throw new Error('private provider response');return url.endsWith('latest.json')?Response.json({schema:1,count:1,bytes:bytes.length,sha256:sha,file:`releases/${sha}.json`}):new Response(bytes);}});
+  const id=manager.state().profileId;
+  const [first,duplicate]=await Promise.all([manager.update(id),manager.update(id)]);
+  assert.equal(calls,2);assert.equal(first.glossaryUpdate.status,'updated');assert.equal(duplicate.glossaryUpdate.hash,sha);
+  assert.equal((await manager.update(id)).glossaryUpdate.status,'current');assert.equal(calls,3);
+  const path=join(manager.profile(id).folder,'glossary.json');fail=true;await assert.rejects(manager.update(id));assert.deepEqual(readFileSync(path),bytes);
+});
+
+function runnerPage() {
+  const ids=[...readFileSync('runner/public/index.html','utf8').matchAll(/id="([^"]+)"/g)].map(m=>m[1]);
+  const elements=Object.fromEntries(ids.map(id=>[id,{value:'',textContent:'',disabled:false,hidden:false,listeners:{},addEventListener(name,fn){this.listeners[name]=fn;},replaceChildren(...children){this.children=children;}}]));
+  const requests=[],intervals=[],storage=new Map([['runner-locale','ko']]);
+  runInNewContext(readFileSync('runner/public/app.js','utf8'),{
+    document:{getElementById:id=>elements[id],documentElement:{},querySelectorAll:()=>[],createElement:()=>({})},
+    localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},sessionStorage:{getItem:()=>null,setItem(){}},
+    navigator:{language:'ko'},location:{hash:''},history:{replaceState(){}},URLSearchParams,AbortSignal,
+    fetch:(url,options)=>new Promise(resolve=>requests.push({url,options,respond:body=>resolve({ok:true,json:async()=>body}),fail:()=>resolve({ok:false})})),
+    setInterval:fn=>intervals.push(fn)
+  });
+  const value=(running=true)=>({profileId:'one',profiles:[{id:'one',name:'Server',running}],running,connected:running,configured:true,paired:true,settings:{provider:'gemini',model:'model',keySaved:true,dailyLimit:200,style:'community',origin:'https://example.test'},glossaryUpdatedAt:1,usage:{requests:0,inputTokens:0,outputTokens:0},log:[]});
+  return {elements,requests,intervals,value,click:id=>elements[id].listeners.click(),submit:()=>elements.settingsForm.listeners.submit({preventDefault(){}})};
+}
+const settle=()=>new Promise(resolve=>setImmediate(resolve));
+test('runner page shows DB progress/result inline and preserves a key draft while checking or polling', async () => {
+  const p=runnerPage();p.requests[0].respond(p.value());await settle();
+  p.elements.apiKey.value='test-draft';assert.equal(p.elements.save.disabled,true);assert(p.elements.saveHelp.textContent.includes('중지'));
+  const check=p.click('update');assert.equal(p.elements.update.disabled,true);assert(p.elements.dbResult.textContent.includes('확인하고'));
+  await p.click('update');assert.equal(p.requests.length,2); // repeated clicks cannot create another request
+  p.requests[1].respond({...p.value(),glossaryUpdate:{status:'current'}});await check;
+  assert(p.elements.dbResult.textContent.includes('이미 최신'));assert.equal(p.elements.update.disabled,false);assert.equal(p.elements.apiKey.value,'test-draft');
+  const poll=p.intervals[0]();p.requests[2].respond(p.value());await poll;assert(p.elements.dbResult.textContent.includes('이미 최신'));assert.equal(p.elements.apiKey.value,'test-draft');
+  const failed=p.click('update');p.requests[3].fail();await failed;assert(p.elements.dbResult.textContent.includes('기존 DB는 유지'));
+  assert.equal(p.elements.apiKey.value,'test-draft');
+});
+test('runner page prevents save while running and stale polls cannot re-enable stopped settings; saving clears only the submitted draft', async () => {
+  const p=runnerPage();p.requests[0].respond(p.value());await settle();p.elements.apiKey.value='example-key';
+  await p.submit();assert.equal(p.requests.length,1);
+  const stalePoll=p.intervals[0](),stop=p.click('stopForSettings');
+  p.requests[2].respond(p.value(false));await stop;assert.equal(p.elements.save.disabled,false);
+  p.requests[1].respond(p.value(true));await stalePoll;assert.equal(p.elements.save.disabled,false);
+  const save=p.submit();assert(p.elements.saveState.textContent.includes('저장하고'));assert.equal(p.requests[3].options.method,'POST');
+  assert.equal(JSON.parse(p.requests[3].options.body).apiKey,'example-key');
+  p.elements.apiKey.value='newer-unsaved-draft';p.requests[3].respond(p.value(false));await save;
+  assert(p.elements.saveState.textContent.includes('저장했습니다'));assert.equal(p.elements.apiKey.value,'newer-unsaved-draft');
 });

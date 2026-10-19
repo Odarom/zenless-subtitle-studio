@@ -19,7 +19,7 @@ export function botSource(root) {
   for(const directory of ['src','test'])for(const entry of readdirSync(join(root,directory),{withFileTypes:true}))if(entry.isFile()&&entry.name.endsWith('.js'))add(`${directory}/${entry.name}`);
   for(const file of ['check.js','reports-cli.mjs','local-ai.js','download-ollama.js','set-provider.js','build-glossary.js','fetch-source.js','source-fetch.mjs','sync-glossary.mjs','glossary-abbreviations.mjs','discord-runner.mjs','runner-ui.mjs','runner-build.mjs'])add(`scripts/${file}`);
   for(const file of ['index.html','app.js','style.css'])add(`runner/public/${file}`);
-  for(const file of ['zzz.json','sources.json','community.json','curated.json','reviewed-mechanics.json', 'localizations.json','README.md','ABBREVIATIONS.md','LIFECYCLE.md'])add(`glossary/${file}`);
+  for(const file of ['zzz.json','sources.json','community.json','curated.json','reviewed-mechanics.json', 'localizations.json','README.md','ABBREVIATIONS.md','LIFECYCLE.md','classification.json','TAGS.md'])add(`glossary/${file}`);
   for(const file of ['package.json','package-lock.json','.env.example','.env.runner.example','run.cmd','runner.cmd','local-ai.cmd','choose-ai.cmd','glossary-sync.cmd','SERVER-API.md'])add(file);
   add('HOSTING.md','docs/discord/HOSTING.md');
   add('ARCHITECTURE.md','docs/discord/ARCHITECTURE.md');

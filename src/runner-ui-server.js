@@ -33,6 +33,7 @@ export class RunnerUi {
     return { configured: !!saved, settings: saved ? { ...saved, apiKey: undefined, keySaved: !!saved.apiKey } : null,
       paired: existsSync(resolve(this.folder, 'connection.json')), running: !!this.child, connected,
       glossaryUpdatedAt: existsSync(path) ? statSync(path).mtimeMs : null,
+      glossaryUpdate: this.glossaryUpdate || null,
       usage: new Store(resolve(this.folder, 'usage.json')).scoped('personal-runner').usage(), log: this.log.slice(-6) };
   }
   save(input) {
@@ -65,7 +66,13 @@ export class RunnerUi {
     child.on('exit', () => { if (this.child === child) this.child = null; }); return this.state();
   }
   stop() { this.child?.kill('SIGTERM'); return this.state(); }
-  async update() { await updateSharedGlossary(resolve(this.folder, 'glossary.json'), { fetcher: this.fetcher }); return this.state(); }
+  async update() {
+    if (!this.updating) this.updating = updateSharedGlossary(resolve(this.folder, 'glossary.json'), { fetcher: this.fetcher })
+      .then(result => { this.glossaryUpdate = { status: result.updated ? 'updated' : 'current', hash: result.hash, checkedAt: Date.now() }; })
+      .finally(() => { this.updating = null; });
+    await this.updating;
+    return this.state();
+  }
 }
 
 export class RunnerProfiles {

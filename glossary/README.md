@@ -8,6 +8,8 @@
 
 ## 한국어
 
+공식 명칭·비공식 표현·확인 필요 태그는 [TAGS.md](TAGS.md)에 설명합니다. 분류만 갱신하려면 `node scripts/sync-glossary.mjs sync --classifications-only`로 후보를 생성하고 차이를 검토한 뒤 기존 백업·적용 절차를 따릅니다. 새 용어·자료를 가져오지 않으며 대표 번역과 여러 별칭을 유지합니다.
+
 2026-10-19 기준 **2,314개 개념 항목**을 저장했습니다. 정식 자료와 보완 항목 2,187개, 미출시 자료에만 있는 항목 127개입니다. 같은 표기가 여러 개념에 쓰이면 ID를 분리하므로 서로 다른 단어 2,314개라는 뜻은 아닙니다.
 
 한국어·영어·일본어·중국어 간체의 같은 ID와 원본 위치를 연결합니다. 캐릭터·장비·보스 이름뿐 아니라 **62명 전체의 스킬·패시브 명칭 1,047개와 형상 시네마 이름 372개**를 포함합니다. 출처가 정식으로 표시한 캐릭터 60명과 미출시 2명이며, 스킬 수치표와 설명 본문은 공유 사전에 넣지 않습니다.
@@ -100,6 +102,8 @@ npm run glossary:apply
 
 ## English
 
+Official, unofficial and needs-review tags are documented in [TAGS.md](TAGS.md). For classification only, run `node scripts/sync-glossary.mjs sync --classifications-only`, review the candidate, then use the usual backup/apply workflow. It imports no new terms or sources and preserves selected translations and aliases.
+
 As of 2026-10-19, the catalog contains 2,314 concepts: 2,187 released/supplemental and 127 prerelease-only entries. IDs distinguish concepts sharing a spelling, so this is not 2,314 unique strings. Names align Korean, English, Japanese and Simplified Chinese by source ID/location. Includes all 62 listed characters (60 source-marked released, 2 prerelease), 1,047 skill/passive names and 372 Mindscape names. Complete skill prose/stat tables are excluded. See the multilingual count/field tables below.
 
 Of 95 context-sensitive references, 25 reviewed combat terms are enabled and 70 potentially confusing content/minigame terms are excluded. This prevents an effect named Chain Attack from replacing the combat action Chain Attack. The catalog does not cover every story name, effect or regional abbreviation and does not guarantee sentence quality.
@@ -122,6 +126,8 @@ Prerelease names may change. Exclude placeholder languages; preserve the source 
 
 ## 日本語
 
+正式・非公式・要確認タグは[TAGS.md](TAGS.md)で説明します。分類だけを更新するには`node scripts/sync-glossary.mjs sync --classifications-only`で候補を作り、差分確認後に通常のバックアップ・適用を行います。新規用語・資料を取り込まず、代表訳と複数の別名を保持します。
+
 2026-10-19時点で2,314概念を収録し、正式・補完2,187件と未公開のみ127件に分かれます。同じ表記の別概念はIDを分けるため、単語数とは異なります。韓国語・英語・日本語・簡体字中国語を原IDと位置で対応付けます。掲載全62キャラ（資料上正式60・未公開2）、スキル/パッシブ名1,047件、心象映画名372件を含み、説明全文と数値表は含めません。下の共通表で件数とフィールドを確認できます。
 
 文脈要確認95件のうち戦闘確認済み25件を自動参照し、別コンテンツやミニゲームと混同する70件を除きます。効果名Chain Attackが同名の戦闘動作を上書きしないためです。全ストーリー名・効果・地域略語を網羅せず、文章品質も保証しません。
@@ -143,6 +149,8 @@ Prerelease names may change. Exclude placeholder languages; preserve the source 
 ---
 
 ## 简体中文
+
+官方、非官方及待确认标签见[TAGS.md](TAGS.md)。仅更新分类时运行`node scripts/sync-glossary.mjs sync --classifications-only`生成候选，核对差异后按现有流程备份并应用。不导入新词或新资料，保留代表译法及多个别名。
 
 截至2026-10-19，收录2,314个概念，其中正式/补充2,187条、仅未发布127条。同一拼写可能对应不同ID，所以不是2,314个唯一字符串。按原ID和位置连接韩语、英语、日语及简体中文。含全部62位已列角色（来源标为正式60、未发布2）、1,047个技能/被动名称与372个影画名称，不包含完整说明或技能数值表。数量和字段见下方四语言表。
 

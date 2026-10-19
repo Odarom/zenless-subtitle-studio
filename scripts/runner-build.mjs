@@ -27,7 +27,7 @@ export async function buildRunner(root = resolve(import.meta.dirname, '..')) {
   const copy = (source, target) => { mkdirSync(dirname(target), { recursive: true }); copyFileSync(source, target); };
   for (const file of runnerModules(root)) copy(join(root, file), join(app, file));
   for (const file of ['index.html', 'app.js', 'style.css']) copy(join(root, 'runner/public', file), join(app, 'runner/public', file));
-  for (const file of ['zzz.json', 'sources.json', 'README.md']) copy(join(root, 'glossary', file), join(app, 'glossary', file));
+  for (const file of ['zzz.json', 'sources.json', 'README.md', 'TAGS.md']) copy(join(root, 'glossary', file), join(app, 'glossary', file));
   writeFileSync(join(app, 'package.json'), JSON.stringify({ name: 'zenless-discord-runner', version: RUNNER_VERSION, private: true, type: 'module', engines: { node: '>=24.17.0' } }, null, 2));
   const version = 'v24.22.0', archiveName = `node-${version}-win-x64.zip`, base = `https://nodejs.org/dist/${version}`;
   const sums = await fetch(`${base}/SHASUMS256.txt`, { signal: AbortSignal.timeout(30000) }); if (!sums.ok) throw new Error('Node checksum unavailable');

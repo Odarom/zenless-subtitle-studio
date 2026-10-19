@@ -12,7 +12,7 @@ Translate linked channels using the shared Zenless database. The bot relays sour
 
 1. Install the bot in your Discord server with Manage Server permission.
 2. Extract the entire Windows x64 ZIP and run **Start.cmd**. Node.js is included. A local settings page opens in your browser.
-3. Select your provider, model and daily request limit, enter your own API key, and **Save on this device**. UI languages: Korean, English, Japanese and Simplified Chinese.
+3. Select your provider, model and daily request limit, enter your own API key, and **Save API key and settings**. UI languages: Korean, English, Japanese and Simplified Chinese.
 4. Run **/zzz connect** in Discord. Enter the one-use, 10-minute code in the PC app, choose **Pair with bot**, then **Start translation**. Never send the API key to Discord.
 5. Link two or more language channels to the same group using **/zzz link**. Use one channel per language. New messages are translated; old history is not backfilled. Edits/deletions update tracked copies. Image/GIF/emoji-only posts are shared without AI. This bot does not perform OCR or voice translation.
 
@@ -51,3 +51,11 @@ Use /zzz api-status to check pairing, /zzz disconnect to revoke it, and /zzz pau
 PC UI keys are encrypted locally; the device administrator can decrypt them. Headless installations use a private .env.runner file. Never publish .env files, data/ or .secrets/. Stop before changing settings or replacing program files; preserve private data when updating. To operate your own Discord bot, see [HOSTING.md](HOSTING.md). Legacy API_MODE=server lets the operator decrypt submitted keys: restrict it to personal installations using only your own key. Public brokers use API_MODE=runner.
 
 [Subtitle Studio](https://github.com/Odarom/zenless-subtitle-studio) is separate. This is a fan tool, not an official game service.
+
+## Reopen settings and change your key
+
+On PC, run **Start.cmd** again from the extracted folder. If the program is already running, it reopens that instance’s settings. Keep its process window running to translate, even after closing the browser.
+
+For a personal server, use the [private SSH management UI](HOSTING.md#several-servers-and-private-management-ui) instead of starting a second PC runner. Each time you manage it, establish the SSH tunnel and open the server’s current private management link. 127.0.0.1 refers to the PC you are using; bookmarking that address alone does not provide access from another PC.
+
+To change a key: **select the server profile → Stop to change settings beside the key field → enter the key → Save API key and settings → Start translation**. Leave the key blank to keep it. Other profiles keep running. **Check for updates** checks only the DB, makes no translation API call, and shows progress, current/update status or failure directly below the button.

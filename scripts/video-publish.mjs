@@ -21,7 +21,7 @@ export function publicSource(root) {
   };
   for (const dir of ['video', 'src', 'scripts', 'services', 'test', 'runner']) walk(dir);
   if (existsSync(join(root, 'docs/discord'))) walk('docs/discord');
-  for (const name of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md']) add(`glossary/${name}`);
+  for (const name of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md', 'classification.json', 'TAGS.md']) add(`glossary/${name}`);
   for (const name of ['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml']) add(`glossary/issue-templates/${name}`);
   for (const name of ['package.json', 'package-lock.json', 'video-run.cmd', 'video-setup.cmd', 'run.cmd', 'runner.cmd', 'local-ai.cmd', 'choose-ai.cmd', 'glossary-sync.cmd', 'reports.cmd', 'REPORTS.md', 'SERVER-API.md', 'VIDEO-SUBTITLES.md', '.env.example', '.env.runner.example']) if (existsSync(join(root, name))) add(name);
   for (const locale of ['ko', 'en', 'ja', 'zh-CN']) add(`README-${locale}.md`, `video/docs/README-${locale}.md`);

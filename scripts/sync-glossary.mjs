@@ -5,26 +5,39 @@ import { checkManifest, composeCatalog, glossaryDigest } from '../src/glossary-l
 import { loadGlossary } from '../src/translator.js';
 import { sourceText } from './source-fetch.mjs';
 import { applyLocalizations, applyCommunityDrafts } from '../src/glossary-localizations.js';
+import { applyTermTags } from '../src/glossary-tags.js';
 
 const root = resolve('glossary/updates');
 const read = path => JSON.parse(readFileSync(path, 'utf8'));
 const write = (path, data) => writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
 const candidatePath = resolve(root, 'candidate.json');
 const reviewPath = resolve(root, 'review.json');
+const inputFiles = ['community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'classification.json'];
+const classify = catalog => applyTermTags(catalog, read('glossary/community.json'), read('glossary/classification.json'));
 async function stage() {
   mkdirSync(root, { recursive: true });
   const checkedAt = new Date().toISOString(); const previousBytes = readFileSync('glossary/zzz.json', 'utf8');
   const previous = JSON.parse(previousBytes);
-  const inputHashes = Object.fromEntries(['community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json'].map(file => [file, glossaryDigest(readFileSync(`glossary/${file}`, 'utf8'))]));
+  const inputHashes = Object.fromEntries(inputFiles.map(file => [file, glossaryDigest(readFileSync(`glossary/${file}`, 'utf8'))]));
+  const classificationEngineHash = glossaryDigest(readFileSync('src/glossary-tags.js', 'utf8'));
   const localizations = read('glossary/localizations.json');
+  if (process.argv.includes('--classifications-only')) {
+    const catalog = classify(previous), sources = readFileSync('glossary/sources.json', 'utf8');
+    write(candidatePath, catalog); loadGlossary(candidatePath); writeFileSync(resolve(root, 'candidate-sources.json'), sources);
+    const changed = catalog.entries.filter((entry, index) => JSON.stringify([entry.tags, entry.classification]) !== JSON.stringify([previous.entries[index].tags, previous.entries[index].classification])).map(entry => entry.id);
+    const changes = { added: [], changed: [], promoted: [], removed: [], betaDifferences: [], classifications: changed };
+    write(reviewPath, { version: 1, mode: 'classifications-only', checkedAt, inputHashes, classificationEngineHash, baselineHash: glossaryDigest(previousBytes), candidateHash: glossaryDigest(readFileSync(candidatePath, 'utf8')), sourcesHash: glossaryDigest(sources), changes });
+    writeFileSync(resolve(root, 'review.md'), '# 용어 태그 분류 후보\n\n기존 명칭·입력 별칭·대표 출력·의미·규칙·출시 상태·추가 언어는 변경하지 않습니다. 원본 자료의 추가 수집 없이 현재 스냅샷에 분류만 덧붙입니다.\n\n' + JSON.stringify(catalog.classificationCounts, null, 2) + '\n\n분류 변경 ' + changed.length + '개\n' + changed.join('\n') + '\n');
+    console.log(JSON.stringify({ mode: 'classifications-only', changed: changed.length, counts: catalog.classificationCounts })); return;
+  }
   if (process.argv.includes('--localizations-only')) {
     const merged = applyLocalizations(applyCommunityDrafts(previous, read('glossary/community.json')), localizations);
-    const catalog = { ...merged.catalog, checkedAt };
+    const catalog = classify({ ...merged.catalog, checkedAt });
     write(candidatePath, catalog); loadGlossary(candidatePath);
     const sources = readFileSync('glossary/sources.json', 'utf8');
     writeFileSync(resolve(root, 'candidate-sources.json'), sources);
     const changes = { added: [], changed: [], promoted: [], removed: [], betaDifferences: [], localizations: merged.report.applied, localizationHeld: merged.report.held };
-    write(reviewPath, { version: 1, mode: 'localizations-only', checkedAt, inputHashes, baselineHash: glossaryDigest(previousBytes), candidateHash: glossaryDigest(readFileSync(candidatePath, 'utf8')), sourcesHash: glossaryDigest(sources), changes });
+    write(reviewPath, { version: 1, mode: 'localizations-only', checkedAt, inputHashes, classificationEngineHash, baselineHash: glossaryDigest(previousBytes), candidateHash: glossaryDigest(readFileSync(candidatePath, 'utf8')), sourcesHash: glossaryDigest(sources), changes });
     writeFileSync(resolve(root, 'review.md'), `# 기존 항목의 언어 추가 후보\n\n기존 네 언어 일치 및 live 항목에만 추가합니다. 기존 명칭·규칙·신규 ID는 변경하지 않습니다.\n\n적용 후보 ${merged.report.applied.length}개, 보류 ${merged.report.held.length}개.\n\n` + merged.report.applied.map(row => `${row.id}: ${row.languages.join(', ')}`).join('\n') + '\n');
     console.log(JSON.stringify({ mode: 'localizations-only', applied: merged.report.applied.length, held: merged.report.held.length, coverage: catalog.localizationCoverage }));
     return;
@@ -52,13 +65,13 @@ async function stage() {
   const live = build(versions.live, false), beta = versions.beta ? build(versions.beta, true) : null;
   const composed = composeCatalog(live.catalog, beta?.catalog, previous, checkedAt);
   const localized = applyLocalizations(applyCommunityDrafts(composed.catalog, read('glossary/community.json')), localizations);
-  const catalog = localized.catalog, changes = { ...composed.changes, localizations: localized.report.applied, localizationHeld: localized.report.held };
+  const catalog = classify(localized.catalog), changes = { ...composed.changes, localizations: localized.report.applied, localizationHeld: localized.report.held };
   write(candidatePath, catalog); loadGlossary(candidatePath);
   const sources = { version: versions.live, betaVersion: versions.beta, retrievedAt: live.sources.retrievedAt,
     manifest: { url: 'https://static.nanoka.cc/manifest.json', observedLive: observedVersions.live, observedLatest: observedVersions.latest, checkedAt, ...(existingVersions ? { selection: 'existing-versions', selectedLive: versions.live, selectedBeta: versions.beta } : {}) },
     sources: [...live.sources.sources, ...(beta?.sources.sources ?? [])], excluded: [...live.sources.excluded, ...(beta?.sources.excluded ?? [])] };
   const sourceBytes = JSON.stringify(sources, null, 2) + '\n'; writeFileSync(resolve(root, 'candidate-sources.json'), sourceBytes);
-  const review = { version: 1, checkedAt, existingVersions, observedVersions, liveVersionChanged: previous.sourceVersion !== versions.live,
+  const review = { version: 1, checkedAt, existingVersions, observedVersions, classificationEngineHash, liveVersionChanged: previous.sourceVersion !== versions.live,
     previousLive: previous.sourceVersion, versions, inputHashes, baselineHash: glossaryDigest(previousBytes),
     candidateHash: glossaryDigest(readFileSync(candidatePath, 'utf8')), sourcesHash: glossaryDigest(sourceBytes), changes };
   write(reviewPath, review);
@@ -79,9 +92,10 @@ function apply() {
   const baseline = readFileSync('glossary/zzz.json', 'utf8');
   if (review.version !== 1 || glossaryDigest(baseline) !== review.baselineHash || glossaryDigest(candidate) !== review.candidateHash
     || glossaryDigest(sourceBytes) !== review.sourcesHash) throw new Error('검토 후 자료가 변경되었습니다. sync를 다시 실행하고 확인하세요.');
-  for (const file of ['community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json']) if (review.inputHashes?.[file] !== glossaryDigest(readFileSync(`glossary/${file}`, 'utf8'))) {
+  for (const file of inputFiles) if (review.inputHashes?.[file] !== glossaryDigest(readFileSync(`glossary/${file}`, 'utf8'))) {
     throw new Error('검토 후 커뮤니티·보완 용어가 변경되었습니다. sync를 다시 실행하세요.');
   }
+  if (review.classificationEngineHash !== glossaryDigest(readFileSync('src/glossary-tags.js', 'utf8'))) throw new Error('검토 후 용어 분류 코드가 변경되었습니다. sync를 다시 실행하세요.');
   loadGlossary(candidatePath);
   const backup = resolve('glossary/history', `${review.checkedAt.replace(/[^0-9A-Za-z]/g, '-')}-${review.baselineHash.slice(0, 12)}`);
   mkdirSync(backup, { recursive: true });

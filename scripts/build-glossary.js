@@ -3,6 +3,7 @@ import { dirname } from 'node:path';
 import { sourceText } from './source-fetch.mjs';
 import { createHash } from 'node:crypto';
 import { nameAliases } from '../src/glossary-names.js';
+import { applyTermTags } from '../src/glossary-tags.js';
 
 const option = name => {
   const index = process.argv.indexOf(name);
@@ -192,8 +193,8 @@ for (const entry of JSON.parse(readFileSync('glossary/community.json', 'utf8')).
 const counts = Object.fromEntries([...new Set(entries.map(e => e.category))].map(c => [c, entries.filter(e => e.category === c).length]));
 mkdirSync('glossary', { recursive: true });
 mkdirSync(dirname(outputPath), { recursive: true }); mkdirSync(dirname(sourcesPath), { recursive: true });
-writeFileSync(outputPath, JSON.stringify({ version: 1, sourceVersion: version, retrievedAt,
-  description: `Nanoka ${version}의 동일 ID를 대조한 명칭. ${prerelease ? '미출시 자료로서 이름·효과는 변경될 수 있음.' : '출처의 정식 버전 표시를 따름.'} 팬 데이터베이스 출처이며 제작사 공식 검수를 의미하지 않음.`, counts, entries }, null, 2) + '\n');
+writeFileSync(outputPath, JSON.stringify(applyTermTags({ version: 1, sourceVersion: version, retrievedAt,
+  description: `Nanoka ${version}의 동일 ID를 대조한 명칭. ${prerelease ? '미출시 자료로서 이름·효과는 변경될 수 있음.' : '출처의 정식 버전 표시를 따름.'} 팬 데이터베이스 출처이며 제작사 공식 검수를 의미하지 않음.`, counts, entries }, JSON.parse(readFileSync('glossary/community.json', 'utf8')), JSON.parse(readFileSync('glossary/classification.json', 'utf8'))), null, 2) + '\n');
 writeFileSync(sourcesPath, JSON.stringify({ version, retrievedAt, prerelease,
   manifest: { url: 'https://static.nanoka.cc/manifest.json', selectedVersion: version, selection: prerelease ? 'prerelease' : 'live' },
   sources: [...snapshots].map(([url, content]) => ({ url, sha256: createHash('sha256').update(content).digest('hex'), bytes: Buffer.byteLength(content) })),

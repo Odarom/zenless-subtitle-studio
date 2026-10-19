@@ -13,7 +13,7 @@ export function buildGlossaryRelease(root = resolve(import.meta.dirname, '..'), 
   mkdirSync(join(output, '.github', 'ISSUE_TEMPLATE'), { recursive: true });
   for (const file of ['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml']) copyFileSync(join(root, 'glossary', 'issue-templates', file), join(output, '.github', 'ISSUE_TEMPLATE', file));
   writeFileSync(join(output, 'releases', `${sha256}.json`), bytes);
-  for (const file of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md']) copyFileSync(join(root, 'glossary', file), join(output, 'catalog', file));
+  for (const file of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md', 'classification.json', 'TAGS.md']) copyFileSync(join(root, 'glossary', file), join(output, 'catalog', file));
   const manifest = { schema: 1, version, sha256, bytes: bytes.length, count: catalog.entries.length, file: `releases/${sha256}.json`, sourceVersion: catalog.sourceVersion || null, languages: catalog.textLanguages || ['ko', 'en', 'ja', 'zh-CN'], coverage: catalog.localizationCoverage || null };
   writeFileSync(join(output, 'latest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   const browseFiles = buildCatalogBrowser(catalog, output);
