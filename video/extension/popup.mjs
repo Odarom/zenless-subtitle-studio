@@ -22,7 +22,7 @@ async function send(message) {
   try { result = await chrome.tabs.sendMessage(tab.id, message); } catch { throw new Error(t('유튜브 페이지를 새로고침한 뒤 다시 적용하세요.')); }
   if (result?.error) throw new Error(result.error); return result;
 }
-const display = () => ({ mode: $('mode').value, offsetMs: Math.round(Number($('offset').value || 0) * 1000), fontSize: Number($('fontSize').value), showSpeech: $('showSpeech').checked, showScreen: $('showScreen').checked, maskScreen: $('maskScreen').checked });
+const display = () => ({ mode: $('mode').value, offsetMs: Math.round(Number($('offset').value || 0) * 1000), fontSize: Number($('fontSize').value), showSpeech: $('showSpeech').checked, showScreen: $('showScreen').checked, maskScreen: $('maskScreen').checked, uiLanguage:i18n.locale });
 async function refresh() {
   loadedJobs = await api('/api/jobs'); renderJobs();
 }
@@ -44,7 +44,7 @@ handle('apply', async () => {
   const id = $('job').value; if (!id) throw new Error(t('완료된 자막을 선택하세요.'));
   const job = await api(`/api/jobs/${id}`);
   if (job.status !== 'completed') throw new Error(t('자막 처리가 완료되지 않았습니다.'));
-  await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId: job.videoId || videoId, cues: job.cues, settings: display() });
+  await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId: job.videoId || videoId, jobId:job.id, cues: job.cues, settings: display() });
   say(t('완성된 자막을 적용했습니다. 영상을 재생하세요.'));
 });
 handle('displaySettings', async () => { await send({ type: 'ZZZ_SUBTITLES_SETTINGS', settings: display() }); await chrome.storage.local.set({ displaySettings: display() }); say(t('표시 설정을 적용했습니다.')); });

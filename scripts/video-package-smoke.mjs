@@ -18,6 +18,9 @@ for (const file of manifest.files) {
 }
 for (const locale of ['ko', 'en', 'ja', 'zh-CN']) if (!existsSync(join(folder, `README-${locale}.md`))) throw new Error('4개 언어 설명서가 없습니다.');
 for (const file of ['geometry.js', 'geometry.mjs', 'i18n.mjs', 'locales.mjs', '_locales/ja/messages.json']) if (!existsSync(join(folder, 'video-extension', file))) throw new Error('확장 프로그램 언어·위치 모듈이 없습니다.');
+const extensionManifest = JSON.parse(readFileSync(join(folder, 'video-extension/manifest.json'), 'utf8'));
+for (const file of [...extensionManifest.content_scripts.flatMap(item => item.js), extensionManifest.background.service_worker]) if (!existsSync(join(folder, 'video-extension', file))) throw new Error('자막 클릭 메뉴의 확장 파일이 없습니다.');
+if (!readFileSync(join(folder, 'video-extension/content.js'), 'utf8').includes("attachShadow({ mode: 'closed' })")) throw new Error('배포 확장의 화면 영역 설정이 변경되었습니다.');
 function mirror(source, target) {
   mkdirSync(dirname(target), { recursive: true });
   if (readdirIfDirectory(source)) {
@@ -122,10 +125,17 @@ try {
   if (ocrJob.status !== 'completed' || !ocrJob.cues.some(cue => cue.kind === 'screen' && cue.positions?.length >= 2)) throw new Error('배포본 화면 OCR을 완료하지 못했습니다.');
   const project = await api(`/api/jobs/${ocrJob.id}/export?format=json`);
   if (project.app !== 'zenless-subtitle-studio' || !project.cues[0].region) throw new Error('화면 프로젝트 저장을 확인하지 못했습니다.');
+  const screenOnly = await api(`/api/jobs/${ocrJob.id}/export?format=json&track=screen`), speechOnly = await api(`/api/jobs/${ocrJob.id}/export?format=json&track=speech`);
+  if (screenOnly.cues.length !== project.cues.length || screenOnly.cues.some(cue => cue.kind !== 'screen') || speechOnly.cues.length) throw new Error('자막 저장 종류를 확인하지 못했습니다.');
+  const selectedCue = project.cues[0].id;
+  await api(`/api/jobs/${ocrJob.id}`, 'PATCH', { changes: [{ id: selectedCue, excluded: true }] });
+  if ((await api(`/api/jobs/${ocrJob.id}/export?format=json`)).cues.some(cue => cue.id === selectedCue)) throw new Error('삭제한 자막이 저장 파일에 포함되었습니다.');
+  await api(`/api/jobs/${ocrJob.id}`, 'PATCH', { changes: [{ id: selectedCue, excluded: false }] });
+  if (JSON.stringify(await api(`/api/jobs/${ocrJob.id}/export?format=json`)) !== JSON.stringify(project)) throw new Error('삭제 취소 후 자막 시간·위치가 변경되었습니다.');
   const glossaryCheck = await api('/api/glossary/check', 'POST', {});
   const updatedGlossary = await api('/api/glossary/update', 'POST', {});
   const expectedGlossary = glossaryCheck.available || glossaryCheck.current;
   if (updatedGlossary.current.count !== expectedGlossary.count || updatedGlossary.current.sha256 !== expectedGlossary.sha256) throw new Error('공개 GitHub 용어집 연결을 확인하지 못했습니다.');
-  report = { version: release.version, archiveSha256: release.sha256, bundledNode: release.nodeVersion, archiveVerified: true, cleanKeys: !initialSettings.hasKey, initialJobs: initialJobs.length, globalPathDisabled: true, nonAsciiAndSpacePath: true, bracketPath: true, firstTimeSetup: 'completed (verified cached downloads)', archiveExtractor: 'Windows PowerShell 5.1 + .NET', cpuTranscription: 'completed', optionalCpuOcr: 'completed', projectExport: true, githubGlossaryUpdate: true, fourLanguageReadmes: true, elapsedMs: Date.now() - started, cueCount: cues.length, translationApiCalls: 0 };
+  report = { version: release.version, archiveSha256: release.sha256, bundledNode: release.nodeVersion, archiveVerified: true, cleanKeys: !initialSettings.hasKey, initialJobs: initialJobs.length, globalPathDisabled: true, nonAsciiAndSpacePath: true, bracketPath: true, firstTimeSetup: 'completed (verified cached downloads)', archiveExtractor: 'Windows PowerShell 5.1 + .NET', cpuTranscription: 'completed', optionalCpuOcr: 'completed', projectExport: true, speechScreenExports: true, reversibleCueDeletion: true, extensionCueActionFiles: true, productionShadowClosed: true, githubGlossaryUpdate: true, fourLanguageReadmes: true, elapsedMs: Date.now() - started, cueCount: cues.length, translationApiCalls: 0 };
   writeFileSync(join(root, 'dist', 'video-package-qa.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report));
 } finally { child.kill(); await new Promise(resolveExit => { if (child.exitCode !== null) resolveExit(); else child.once('close', resolveExit); }); }

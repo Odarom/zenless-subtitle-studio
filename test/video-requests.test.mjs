@@ -34,6 +34,12 @@ test('normal video sends all speech, screen text and glossary in one API request
     assert.equal(data.glossary.length, JSON.parse(readFileSync('glossary/zzz.json')).entries.length);
     assert(data.glossary.every(term => Array.isArray(term.aliases))); assert(!Object.hasOwn(data.glossary[0], 'sources'));
     assert(body.systemInstruction.parts[0].text.includes('generates SRT/VTT/project files in code'));
+    assert(body.systemInstruction.parts[0].text.includes('한국어 (ko)'));
+    assert(body.systemInstruction.parts[0].text.includes('screen items are NOT reference-only context'));
+    assert(body.systemInstruction.parts[0].text.includes('Do not translate the speech while copying the screen prose unchanged'));
+    assert.equal(data.translationTask.requiredSpeechTranslations, 50);
+    assert.equal(data.translationTask.requiredScreenTranslations, 50);
+    assert.equal(data.translationTask.targetLanguage, '한국어 (ko)');
     return { ok: true, status: 200, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ cues: data.cues.map(c => ({ id: c.id, text: '빠른 지원' })) }) }] } }] }) };
   } });
   assert.equal(calls, 1); assert.equal(result.length, 100); assert.equal(result[99].endMs, cues[99].endMs);

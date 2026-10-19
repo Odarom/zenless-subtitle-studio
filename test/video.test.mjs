@@ -122,10 +122,12 @@ test('648-cue incomplete response survives restart and resumes only missing scre
   const restarted = new Jobs({ root: app.root, dataDir: app.jobs.dataDir, settings: app.settings, gate: { enter: async () => {} }, prepare: () => assert.fail('source must be reused'), fetcher });
   restarted.resume(created.id); const completed = await waitJob(restarted, created.id); while (restarted.active) await tick();
   assert.equal(completed.status, 'completed'); assert.equal(completed.completedCues, 648); assert.equal(requests, 2); assert.equal(prepared, 1);
-  assert.equal(payloads[0].cues.length, 648); assert.equal(payloads[1].cues.length, 601); assert.equal(payloads[1].contextCues.length, 47);
+  assert.equal(payloads[0].cues.length, 112); assert.equal(payloads[1].cues.length, 65); assert.equal(payloads[1].contextCues.length, 47);
   assert(payloads[1].cues.every(c => c.kind === 'screen')); assert(payloads[1].contextCues.every(c => c.kind === 'speech'));
   assert.equal(payloads[1].glossary.entries.length, payloads[0].glossary.entries.length);
-  assert.equal(completed.cues[0].translatedText, '음성 1'); assert.equal(completed.cues[647].translatedText, '화면 648');
+  const representative = payloads[1].cues.find(cue => cue.text === cues[647].sourceText);
+  assert.equal(completed.cues[0].translatedText, '음성 1'); assert.equal(completed.cues[647].translatedText, `화면 ${representative.id}`);
+  assert.equal(completed.translationPlan.reusedScreenCueCount, 536);
   assert.deepEqual(completed.cues.map(c => [c.id, c.startMs, c.endMs, c.region]), cues.map(c => [c.id, c.startMs, c.endMs, c.region]));
   assert.equal(parseSubtitles(readFileSync(join(folder, 'translated.srt'), 'utf8')).length, 648);
   assert.equal(completed.translationIssue, null);

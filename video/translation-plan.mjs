@@ -2,8 +2,9 @@ import { Buffer } from 'node:buffer';
 import { validateCues } from './subtitles.mjs';
 import { deepLRequestBody } from './providers.mjs';
 import { compactVideoGlossary } from './glossary-payload.mjs';
+import { groupScreenTranslations, screenTranslationItems } from './screen-reuse.mjs';
 
-export const PLAN_VERSION = 3;
+export const PLAN_VERSION = 4;
 const terminal = /[.!?。！？]["'”’」』）)]*$/u;
 const abbreviation = /\b(?:Mr|Mrs|Ms|Dr|Prof|vs|etc|e\.g|i\.e)\.$/iu;
 const joinText = (a, b) => a.trimEnd() + (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]$/u.test(a) && /^[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(b) ? '' : ' ') + b.trimStart();
@@ -37,9 +38,10 @@ export function translationPlan(cues, config, { targetLanguage = 'ko', translati
   const glossaryTokens = Math.ceil(glossaryInputBytes / 2);
   if (config.provider !== 'deepl' && glossaryTokens + maxOutputTokens + 6000 > limits.context) throw new Error('용어집이 선택한 모델의 입력 범위를 넘을 수 있어 API를 호출하지 않았습니다. 입력 범위가 큰 모델을 선택하거나 용어집 전송 범위를 관련 용어만으로 바꾸세요.');
   const fits = batch => {
-    const output = estimatedOutputTokens(batch, targetLanguage);
-    const input = Math.ceil(Buffer.byteLength(JSON.stringify(batch.map(c => ({ id: c.id, text: c.sourceText }))), 'utf8') / 2) + glossaryTokens + 6000;
-    if (config.provider === 'deepl') return Buffer.byteLength(JSON.stringify(deepLRequestBody({ cues: batch.map(c => ({ id: c.id, text: c.sourceText })), wholeDocument: true, sourceLanguage: config.sourceLanguage || 'auto', targetLanguage, glossary, before: [], after: [] })), 'utf8') + 24000 < 128 * 1024;
+    const grouped = groupScreenTranslations(batch), items = screenTranslationItems(grouped);
+    const output = estimatedOutputTokens(grouped.cues, targetLanguage);
+    const input = Math.ceil(Buffer.byteLength(JSON.stringify(items), 'utf8') / 2) + glossaryTokens + 6000;
+    if (config.provider === 'deepl') return Buffer.byteLength(JSON.stringify(deepLRequestBody({ cues: items, wholeDocument: true, sourceLanguage: config.sourceLanguage || 'auto', targetLanguage, glossary, before: [], after: [] })), 'utf8') + 24000 < 128 * 1024;
     return output <= maxOutputTokens * .82 && input + maxOutputTokens <= limits.context;
   };
   if (!['single', 'large-batches'].includes(translationMode)) throw new Error('번역 요청 방식을 확인하세요.');
@@ -53,5 +55,7 @@ export function translationPlan(cues, config, { targetLanguage = 'ko', translati
     while (low < high) { const end = Math.ceil((low + high) / 2); if (fits(cues.slice(start, end))) low = end; else high = end - 1; }
     batches.push(cues.slice(start, low)); start = low;
   }
-  return { version: PLAN_VERSION, mode: translationMode, requests: batches.length, sentenceCount: cues.filter(c => c.kind !== 'screen').length, screenCount: cues.filter(c => c.kind === 'screen').length, glossaryCount: glossary.length, glossaryInputBytes, estimatedOutputTokens: estimatedOutputTokens(cues, targetLanguage), maxOutputTokens, batches };
+  const groupedBatches = batches.map(batch => groupScreenTranslations(batch).cues), screenCount = cues.filter(c => c.kind === 'screen').length;
+  const screenTranslationCount = groupedBatches.reduce((total, batch) => total + batch.filter(c => c.kind === 'screen').length, 0);
+  return { version: PLAN_VERSION, mode: translationMode, requests: batches.length, sentenceCount: cues.filter(c => c.kind !== 'screen').length, screenCount, screenTranslationCount, reusedScreenCueCount: screenCount - screenTranslationCount, glossaryCount: glossary.length, glossaryInputBytes, estimatedOutputTokens: groupedBatches.reduce((total, batch) => total + estimatedOutputTokens(batch, targetLanguage), 0), maxOutputTokens, batches };
 }

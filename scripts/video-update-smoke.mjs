@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, mkdtempSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
@@ -56,12 +56,15 @@ try {
   const job = await api('/api/jobs', 'POST', { input: { fileId: uploaded.id }, options: { transcribeOnly: true } });
   for (let i = 0; i < 100 && (await api('/api/jobs/' + job.id)).status !== 'completed'; i++) await delay();
   if ((await api('/api/jobs/' + job.id)).status !== 'completed') throw new Error('검사용 원문 작업 실패');
-  const keep = ['data/video/api-vault.json', '.secrets/video-api.key', '.secrets/video-connection.key', '.models/qa-marker', '.tools/video/qa-marker'];
+  await api('/api/jobs/' + job.id, 'PATCH', { changes: [{ id: '1', excluded: true }] });
+  const keep = ['data/video/api-vault.json', '.secrets/video-api.key', '.secrets/video-connection.key', '.models/qa-marker', '.tools/video/qa-marker', `data/video/jobs/${job.id}/job.json`];
   const before = new Map(keep.map(path => [path, digest(readFileSync(join(app, path)))]));
   const checked = await api('/api/program/check', 'POST', {});
   if (checked.available?.version !== release.version) throw new Error('업데이트 확인 실패');
   await api('/api/program/update', 'POST', {}); await health(release.version);
   if (!(await api('/api/settings')).hasKey || (await api('/api/jobs/' + job.id)).status !== 'completed') throw new Error('설정 또는 기록 유지 실패');
+  if (!(await api('/api/jobs/' + job.id)).cues[0].excluded) throw new Error('자막 삭제 상태 유지 실패');
+  if (!existsSync(join(folder, 'video-extension/background.mjs')) || JSON.parse(readFileSync(join(folder, 'video-extension/manifest.json'))).version !== release.version) throw new Error('확장 업데이트 확인 실패');
   for (const [path, hash] of before) if (digest(readFileSync(join(app, path))) !== hash) throw new Error('사용자 자료 변경: ' + path);
   const manifest = JSON.parse(readFileSync(join(folder, 'release-manifest.json'), 'utf8'));
   if (manifest.version !== release.version || !manifest.installedRuntimePreserved || !JSON.parse(readFileSync(join(app, 'data/video/program-update-receipt.json'))).installedAt) throw new Error('설치 결과 확인 실패');

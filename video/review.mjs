@@ -7,7 +7,8 @@ export function reviewTime(value) {
 }
 export function reviewCues(cues, { track = 'speech', search = '', timeMs = null } = {}) {
   const normalize = value => String(value).normalize('NFKC').toLowerCase(), query = normalize(search).trim();
-  return cues.filter(cue => (track === 'all' || (cue.kind === 'screen' ? 'screen' : 'speech') === track)
+  return cues.filter(cue => (track === 'deleted' ? cue.excluded === true : !cue.excluded)
+    && (track === 'all' || track === 'deleted' || (cue.kind === 'screen' ? 'screen' : 'speech') === track)
     && (!query || (/^#\d+$/.test(query) ? query === `#${cue.id}` : normalize(`${cue.sourceText}\n${cue.translatedText || ''}\n#${cue.id}`).includes(query)))
     && (timeMs === null || cue.startMs <= timeMs && cue.endMs > timeMs));
 }

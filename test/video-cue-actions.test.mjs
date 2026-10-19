@@ -1,0 +1,99 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {join,resolve,relative} from 'node:path';
+import {once} from 'node:events';
+import vm from 'node:vm';
+import {createVideoServer} from '../video/server.mjs';
+import {cueAction} from '../video/extension/background.mjs';
+import {reviewCues} from '../video/review.mjs';
+import {translations} from '../video/public/locales.mjs';
+import * as geometry from '../video/geometry.mjs';
+
+const videoId='dQw4w9WgXcQ',extensionId='test-extension',token='a'.repeat(64);
+const sender={id:extensionId,frameId:0,tab:{id:12,url:`https://www.youtube.com/watch?v=${videoId}`}};
+const region={x:.2,y:.2,w:.3,h:.05};
+const input=[{id:'1',startMs:0,endMs:3000,sourceText:'Speech line.'},{id:'2',startMs:0,endMs:3000,sourceText:'First screen.',kind:'screen',region},{id:'3',startMs:4000,endMs:5000,sourceText:'Second screen.',kind:'screen',region}];
+const tick=()=>new Promise(done=>setTimeout(done,5));
+async function fixture(t){
+ const parent=resolve('.tools/cue-action-tests');fs.mkdirSync(parent,{recursive:true});const root=fs.mkdtempSync(join(parent,'case-'));
+ fs.mkdirSync(join(root,'glossary'));fs.copyFileSync('glossary/zzz.json',join(root,'glossary/zzz.json'));
+ const app=createVideoServer({root,token,jobsOptions:{prepare:async()=>({cues:input,origin:'test'})}});app.glossary.configure({enabled:false,autoCheck:false});
+ t.after(async()=>{if(app.server.listening){app.server.closeAllConnections();await new Promise(done=>app.server.close(done));}const scope=relative(parent,resolve(root));assert(scope&&!scope.startsWith('..'));fs.rmSync(root,{recursive:true,force:true});});
+ const job=app.jobs.create({input:{youtubeUrl:`https://www.youtube.com/watch?v=${videoId}`},options:{transcribeOnly:true,screenText:true}});
+ for(let i=0;i<100&&app.jobs.get(job.id).status!=='completed';i++)await tick();assert.equal(app.jobs.get(job.id).status,'completed');
+ app.server.listen(0,'127.0.0.1');await once(app.server,'listening');
+ const base=`http://127.0.0.1:${app.server.address().port}`;
+ const api=(path,options={})=>fetch(base+path,{...options,headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json',...options.headers}});
+ return{app,job,api,base};
+}
+
+test('individual deletion is reversible, persists, filters all export formats and leaves other cues untouched',async t=>{
+ const{app,job,api}=await fixture(t),before=await(await api(`/api/jobs/${job.id}/export?format=srt`)).text();
+ const change=excluded=>api(`/api/jobs/${job.id}`,{method:'PATCH',body:JSON.stringify({changes:[{id:'2',excluded}]})});
+ assert.equal((await change(true)).status,200);
+ const saved=JSON.parse(fs.readFileSync(join(app.jobs.directory(job.id),'job.json')));assert.equal(saved.cues[1].excluded,true);assert.equal(saved.cues[0].sourceText,input[0].sourceText);
+ assert.deepEqual(reviewCues(saved.cues,{track:'deleted'}).map(c=>c.id),['2']);assert.equal(reviewCues(saved.cues,{track:'all'}).length,2);
+ for(const format of ['srt','vtt','json'])for(const track of ['all','speech','screen']){
+   const response=await api(`/api/jobs/${job.id}/export?format=${format}&track=${track}`);assert.equal(response.status,200);const text=await response.text();assert(!text.includes('First screen.'));
+   assert.equal(text.includes('Speech line.'),track!=='screen');assert.equal(text.includes('Second screen.'),track!=='speech');
+ }
+ const positioned=await(await api(`/api/jobs/${job.id}/export?format=vtt&track=screen&positioned=1`)).text();assert(positioned.includes('position:20.00%'));
+ assert.equal((await api(`/api/jobs/${job.id}/export?track=wrong`)).status,400);
+ assert.equal((await api(`/api/jobs/${job.id}`,{method:'PATCH',body:JSON.stringify({changes:[{id:'2',excluded:'yes'}]})})).status,400);
+ await change(false);assert.equal(await(await api(`/api/jobs/${job.id}/export?format=srt`)).text(),before);
+});
+
+test('YouTube action relay validates origin, video and cue before using the local connection token',async()=>{
+ const message={action:'exclude',jobId:'a'.repeat(36),cueId:'2',videoId,excluded:true};let tokenReads=0,calls=0;
+ const deps={extensionId,getToken:async()=>{tokenReads++;return token;},fetcher:async()=>{calls++;throw new Error('must not fetch');}};
+ for(const [request,origin]of [[message,{...sender,id:'other'}],[message,{...sender,frameId:3}],[message,{...sender,tab:{id:12,url:'https://evil.example/watch?v='+videoId}}],[message,{...sender,tab:{id:12,url:'https://www.youtube.com:444/watch?v='+videoId}}],[{...message,videoId:'abcdefghijk'},sender],[{...message,cueId:'../settings'},sender],[{...message,jobId:'../settings'},sender]])await assert.rejects(cueAction(request,origin,deps));
+ assert.equal(tokenReads,0);assert.equal(calls,0);
+});
+
+test('relay edits only the selected job and retries a saved report without creating it twice or exposing keys',async t=>{
+ const{app,job,base}=await fixture(t);let creates=0,sends=0;const paths=[];
+ const deps={extensionId,getToken:async()=>token,fetcher:async(url,init)=>{
+   assert(url.startsWith('http://127.0.0.1:4318/'));paths.push(new URL(url).pathname);
+   if(url.endsWith('/send')){sends++;return new Response(JSON.stringify(sends===1?{error:'Test send unavailable'}:{receiptId:'A-20261019-123456abcdef'}),{status:sends===1?503:200});}
+   if(url.endsWith('/api/reports')&&init.method==='POST')creates++;
+   return fetch(url.replace('http://127.0.0.1:4318',base),init);
+ }};
+ const bound={jobId:job.id,cueId:'2',videoId};
+ assert.deepEqual(await cueAction({...bound,action:'exclude',excluded:true},sender,deps),{ok:true,excluded:true});assert.equal(app.jobs.get(job.id).cues[1].excluded,true);
+ const issue={type:'meaning',explanation:'Test report',suggestion:'',includeVideoUrl:false};
+ const failed=await cueAction({...bound,action:'report',issue},sender,deps);assert(failed.error);assert(failed.reportId);
+ const done=await cueAction({...bound,action:'report',issue,reportId:failed.reportId},sender,deps);assert.equal(done.receiptId,'A-20261019-123456abcdef');assert.equal(creates,1);assert.equal(sends,2);
+ assert(!JSON.stringify(done).includes(token));assert(paths.every(path=>/^\/api\/(?:jobs|reports)\//.test(path)||path==='/api/reports'));
+ await cueAction({...bound,action:'exclude',excluded:false},{...sender,tab:{id:12},url:sender.tab.url},deps);assert.equal(app.jobs.get(job.id).cues[1].excluded,false);
+});
+
+test('clicking YouTube screen subtitles opens a localized menu, stops player click propagation, reports and restores deletion',async()=>{
+ class Element{
+  constructor(tag='div'){this.tagName=tag.toUpperCase();this.children=[];this.style={};this.attributes={};this.hidden=false;this.textContent='';this.value='';}
+  append(...items){for(const item of items){item.parentNode=this;this.children.push(item);if(this.tagName==='SELECT'&&this.children.length===1)this.value=item.value;}}
+  prepend(item){item.parentNode=this;this.children.unshift(item);}
+  remove(){if(this.parentNode)this.parentNode.children=this.parentNode.children.filter(item=>item!==this);}
+  setAttribute(key,value){this.attributes[key]=value;}
+  attachShadow(){this.shadow=new Element('shadow');return this.shadow;}
+  getBoundingClientRect(){return{left:0,top:0,width:1280,height:720};}
+  showModal(){this.open=true;}close(){this.open=false;}focus(){}
+ }
+ let listener,frame;const messages=[];
+ const video={currentTime:1,videoWidth:1280,videoHeight:720,paused:false,pause(){this.paused=true;},play(){this.paused=false;return Promise.resolve();},getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})};
+ const player=new Element();player.querySelector=()=>video;player.classList={contains:()=>false};
+ const context={URL,location:{href:`https://www.youtube.com/watch?v=${videoId}`},document:{querySelector:()=>player,createElement:tag=>new Element(tag)},requestAnimationFrame:fn=>{frame=fn;},__zzzGeometry:geometry,__zzzOverlayI18n:translations,
+  chrome:{runtime:{id:extensionId,onMessage:{addListener:fn=>{listener=fn;}},sendMessage:async message=>{messages.push(message);return message.action==='exclude'?{ok:true,excluded:message.excluded}:{ok:true,reportId:'V-20261019-123456abcdef',receiptId:'A-20261019-123456abcdef'};}}}};
+ vm.runInNewContext(fs.readFileSync('video/extension/content.js','utf8'),context);
+ let response;listener({type:'ZZZ_SUBTITLES_LOAD',jobId:'a'.repeat(36),videoId,cues:[{...input[1],id:'53',translatedText:'<img src=x onerror=alert(1)>'}],settings:{uiLanguage:'en'}},{id:extensionId},value=>{response=value;});assert(response.ok);frame(0);
+ const host=player.children[0],screen=host.shadow.children[2],caption=screen.children[0];let prevented=0,stopped=0;const event={preventDefault:()=>{prevented++;},stopPropagation:()=>{stopped++;}};
+ caption.onclick(event);assert.equal(prevented,1);assert.equal(stopped,1);assert.equal(video.paused,true);
+ const dialog=host.shadow.children.at(-1),buttons=dialog.children.find(el=>el.tagName==='DIV'),form=dialog.children.find(el=>el.tagName==='FORM');
+ assert.equal(buttons.children[1].textContent,'Delete subtitle');assert.equal(dialog.children[2].textContent,'<img src=x onerror=alert(1)>');
+ await buttons.children[1].onclick();frame(10);assert.equal(screen.children.length,0);assert.equal(messages[0].cueId,'53');assert.equal(buttons.children[1].textContent,'Restore subtitle');
+ await buttons.children[1].onclick();frame(20);assert.equal(screen.children.length,1);
+ buttons.children[2].onclick();assert.equal(form.hidden,false);
+ form.children[1].children[0].value='Test report';await form.onsubmit(event);assert.equal(messages.at(-1).issue.explanation,'Test report');assert.equal(messages.at(-1).issue.includeVideoUrl,false);
+ assert(dialog.children.at(-1).textContent.includes('A-20261019-123456abcdef'));
+ buttons.children[0].onclick();assert.equal(video.paused,false);assert.equal(dialog.open,false);assert(!JSON.stringify(messages).includes(token));
+});

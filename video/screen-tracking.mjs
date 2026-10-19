@@ -1,3 +1,5 @@
+import { mergeContinuousScreenCues, stabilizeOcrCues } from './screen-reuse.mjs';
+
 export function regionOf(box, width, height) {
   if (!Array.isArray(box) || box.length !== 4 || !box.every(point => Array.isArray(point) && point.length === 2 && point.every(Number.isFinite))) return null;
   const xs = box.map(point => point[0] / width), ys = box.map(point => point[1] / height);
@@ -34,6 +36,7 @@ export class ScreenTracker {
     if (this.finished.length + this.active.length > 50000) throw new Error('화면 글자가 너무 많습니다. 분석 구간을 줄이세요.');
   }
   finish(durationMs) {
-    return [...this.finished, ...this.active].map(({ key, ...cue }) => ({ ...cue, endMs: Math.min(cue.endMs, durationMs) })).filter(cue => cue.endMs > cue.startMs).sort((a, b) => a.startMs - b.startMs || a.region.y - b.region.y || a.region.x - b.region.x);
+    const cues = [...this.finished, ...this.active].map(({ key, ...cue }) => ({ ...cue, endMs: Math.min(cue.endMs, durationMs) })).filter(cue => cue.endMs > cue.startMs).sort((a, b) => a.startMs - b.startMs || a.region.y - b.region.y || a.region.x - b.region.x);
+    return mergeContinuousScreenCues(stabilizeOcrCues(cues, this.intervalMs));
   }
 }

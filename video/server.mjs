@@ -10,7 +10,7 @@ import { cpus, totalmem } from 'node:os';
 import { VideoSettings, readJson, saveJson } from './state.mjs';
 import { Jobs } from './jobs.mjs';
 import { tools } from './media.mjs';
-import { serializeSubtitles } from './subtitles.mjs';
+import { serializeSubtitles, subtitleTrack } from './subtitles.mjs';
 import { VIDEO_VERSION } from './version.mjs';
 import { GlossaryUpdates } from './glossary-updates.mjs';
 import { VideoReports } from './reports.mjs';
@@ -127,12 +127,13 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
         if (action === 'resume' && req.method === 'POST') return send(res, 202, jobs.resume(id));
         if (action === 'export' && req.method === 'GET') {
           const job = jobs.get(id); if (job.status !== 'completed') throw new Error('전체 자막 처리가 완료된 후 저장할 수 있습니다.');
-          const format = url.searchParams.get('format') || 'srt', mode = url.searchParams.get('mode') || 'translated';
+          const format = url.searchParams.get('format') || 'srt', mode = url.searchParams.get('mode') || 'translated', track = url.searchParams.get('track') || 'all';
+          const cues = subtitleTrack(job.cues, track);
           if (format === 'json') {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="${id}.zzzsub.json"` });
-            return res.end(JSON.stringify({ app: 'zenless-subtitle-studio', version: 1, videoId: job.videoId || null, cues: job.cues.map(({ id, startMs, endMs, sourceText, translatedText, kind, region, positions }) => ({ id, startMs, endMs, sourceText, translatedText, ...(kind === 'screen' ? { kind, region, positions } : {}) })) }));
+            return res.end(JSON.stringify({ app: 'zenless-subtitle-studio', version: 1, videoId: job.videoId || null, cues: cues.map(({ id, startMs, endMs, sourceText, translatedText, kind, region, positions }) => ({ id, startMs, endMs, sourceText, translatedText, ...(kind === 'screen' ? { kind, region, positions } : {}) })) }));
           }
-          const output = serializeSubtitles(job.cues, { format, mode, positioned: url.searchParams.get('positioned') === '1' });
+          const output = serializeSubtitles(cues, { format, mode, positioned: url.searchParams.get('positioned') === '1' });
           res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Disposition': `attachment; filename="${id}.${format}"` }); return res.end(output);
         }
       }

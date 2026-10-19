@@ -29,7 +29,7 @@ export function validateCues(cues) {
       if (!validRegion(cue.region) || cue.positions && (!Array.isArray(cue.positions) || cue.positions.length > 30000 || cue.positions.some((position, i) => !validRegion(position) || !Number.isSafeInteger(position.timeMs) || position.timeMs < cue.startMs || position.timeMs >= cue.endMs || i > 0 && position.timeMs <= cue.positions[i - 1].timeMs))) throw new Error('화면 글자의 위치와 시간 정보를 확인하세요.');
       screen = { kind: 'screen', region: regionOnly(cue.region), ...(cue.positions ? { positions: cue.positions.map(position => ({ timeMs: position.timeMs, ...regionOnly(position) })) } : {}), ...(Number.isFinite(cue.confidence) ? { confidence: Math.max(0, Math.min(1, cue.confidence)) } : {}) };
     }
-    return { id: String(index + 1), startMs: cue.startMs, endMs: cue.endMs, sourceText: cue.sourceText.trim(), ...(typeof cue.translatedText === 'string' ? { translatedText: cue.translatedText } : {}), ...screen };
+    return { id: String(index + 1), startMs: cue.startMs, endMs: cue.endMs, sourceText: cue.sourceText.trim(), ...(typeof cue.translatedText === 'string' ? { translatedText: cue.translatedText } : {}), ...(cue.excluded === true ? { excluded: true } : {}), ...screen };
   });
 }
 
@@ -69,9 +69,13 @@ export function formatTime(ms, separator = ',') {
   return `${String(Math.floor(n / 3600000)).padStart(2, '0')}:${String(Math.floor(n / 60000) % 60).padStart(2, '0')}:${String(Math.floor(n / 1000) % 60).padStart(2, '0')}${separator}${String(n % 1000).padStart(3, '0')}`;
 }
 
-export function serializeSubtitles(cues, { format = 'srt', mode = 'translated', offsetMs = 0, positioned = false } = {}) {
+export function subtitleTrack(cues, track = 'all') {
+  if (!['all', 'speech', 'screen'].includes(track)) throw new Error('저장할 자막 종류를 확인하세요.');
+  return cues.filter(cue => !cue.excluded && (track === 'all' || (cue.kind === 'screen' ? 'screen' : 'speech') === track));
+}
+export function serializeSubtitles(cues, { format = 'srt', mode = 'translated', offsetMs = 0, positioned = false, track = 'all' } = {}) {
   if (!['srt', 'vtt'].includes(format) || !['source', 'translated', 'bilingual'].includes(mode)) throw new Error('지원하지 않는 자막 형식입니다.');
-  const expanded = cues.flatMap(cue => positioned && format === 'vtt' && cue.kind === 'screen' && cue.positions?.length ? cue.positions.map((position, index) => ({ ...cue, startMs: Math.max(cue.startMs, position.timeMs), endMs: Math.min(cue.endMs, cue.positions[index + 1]?.timeMs ?? cue.endMs), region: position })).filter(cue => cue.endMs > cue.startMs) : [cue]);
+  const expanded = subtitleTrack(cues, track).flatMap(cue => positioned && format === 'vtt' && cue.kind === 'screen' && cue.positions?.length ? cue.positions.map((position, index) => ({ ...cue, startMs: Math.max(cue.startMs, position.timeMs), endMs: Math.min(cue.endMs, cue.positions[index + 1]?.timeMs ?? cue.endMs), region: position })).filter(cue => cue.endMs > cue.startMs) : [cue]);
   if (positioned && format === 'vtt') expanded.sort((a, b) => a.startMs - b.startMs);
   return (format === 'vtt' ? 'WEBVTT\n\n' : '') + expanded.map((cue, index) => {
     const raw = mode === 'source' ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${cue.translatedText || cue.sourceText}` : cue.translatedText || cue.sourceText;

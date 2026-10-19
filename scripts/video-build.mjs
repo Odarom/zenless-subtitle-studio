@@ -2,6 +2,7 @@ import { mkdirSync, readdirSync, copyFileSync, readFileSync, writeFileSync } fro
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { translations } from '../video/public/locales.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = join(root, 'video', 'extension'), output = join(root, 'dist', 'video-extension');
 mkdirSync(output, { recursive: true });
@@ -22,4 +23,5 @@ for (const file of ['i18n.mjs', 'locales.mjs']) copyFileSync(join(root, 'video',
 const geometry = readFileSync(join(root, 'video', 'geometry.mjs'), 'utf8');
 copyFileSync(join(root, 'video', 'geometry.mjs'), join(output, 'geometry.mjs'));
 writeFileSync(join(output, 'geometry.js'), `(() => { ${geometry.replace(/^export /gm, '')}\nglobalThis.__zzzGeometry = { validRegion, videoContentRect, cueRegionAt, buildCueIndex, activeCuesAt }; })();\n`);
+writeFileSync(join(output, 'overlay-i18n.js'), `globalThis.__zzzOverlayI18n = ${JSON.stringify(translations)};\n`);
 console.log(`확장 프로그램 빌드 완료: ${output}`);

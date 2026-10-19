@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage",
@@ -14,6 +14,7 @@
     "default_title": "__MSG_extensionName__",
     "default_popup": "popup.html"
   },
+  "background": { "service_worker": "background.mjs", "type": "module" },
   "content_scripts": [
     {
       "matches": [
@@ -22,6 +23,7 @@
       ],
       "js": [
         "geometry.js",
+        "overlay-i18n.js",
         "content.js"
       ],
       "run_at": "document_idle"

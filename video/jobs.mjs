@@ -28,7 +28,7 @@ export class Jobs {
   }
   directory(id) { return join(this.path, id); }
   save(job, patch = {}) { Object.assign(job, patch, { updatedAt: new Date().toISOString() }); saveJson(join(this.directory(job.id), 'job.json'), job); }
-  summary(job) { const { cues, ...value } = job; return { ...value, canDelete: this.active?.id !== job.id && job.status !== 'running', cueCount: cues?.length || 0, warningCount: cues?.filter(cue => cue.warnings?.length).length || 0 }; }
+  summary(job) { const { cues, ...value } = job; return { ...value, canDelete: this.active?.id !== job.id && job.status !== 'running', cueCount: cues?.filter(cue => !cue.excluded).length || 0, excludedCueCount: cues?.filter(cue => cue.excluded).length || 0, warningCount: cues?.filter(cue => !cue.excluded && cue.warnings?.length).length || 0 }; }
   list() { return [...this.jobs.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(job => this.summary(job)); }
   get(id) { const job = this.jobs.get(id); if (!job) throw Object.assign(new Error('작업을 찾지 못했습니다.'), { statusCode: 404 }); return job; }
   create(input) {
@@ -160,8 +160,14 @@ export class Jobs {
     const job = this.get(id); if (job.status !== 'completed') throw new Error('완료된 자막만 수정할 수 있습니다.');
     if (!Array.isArray(changes) || changes.length > 50000) throw new Error('수정 내용을 확인하세요.');
     const patches = new Map(changes.map(change => [change.id, change]));
-    for (const [id, change] of patches) if (!job.cues.some(cue => cue.id === id) || typeof change.translatedText !== 'string' || !change.translatedText.trim() || change.translatedText.length > 12000) throw new Error('수정할 자막 내용이 올바르지 않습니다.');
-    const cues = job.cues.map(cue => patches.has(cue.id) ? { ...cue, translatedText: patches.get(cue.id).translatedText.trim(), manuallyEdited: true, warnings: [] } : cue);
+    for (const [id, change] of patches) if (!job.cues.some(cue => cue.id === id)
+      || change.excluded !== undefined && typeof change.excluded !== 'boolean'
+      || change.translatedText !== undefined && (typeof change.translatedText !== 'string' || !change.translatedText.trim() || change.translatedText.length > 12000)
+      || change.excluded === undefined && change.translatedText === undefined) throw new Error('수정할 자막 내용이 올바르지 않습니다.');
+    const cues = job.cues.map(cue => {
+      const change = patches.get(cue.id); if (!change) return cue;
+      return { ...cue, ...(change.translatedText !== undefined ? { translatedText: change.translatedText.trim(), manuallyEdited: true, warnings: [] } : {}), ...(change.excluded !== undefined ? { excluded: change.excluded } : {}) };
+    });
     this.save(job, { cues }); this.exportFiles(job); return job;
   }
 }
