@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { once } from 'node:events';
 import vm from 'node:vm';
 import { parseSubtitles, serializeSubtitles, youtubeVideoId } from '../video/subtitles.mjs';
-import { checkBatch, translationKey } from '../video/translation.mjs';
+import { checkBatch, translationKey, IncompleteTranslationError } from '../video/translation.mjs';
+import { Jobs } from '../video/jobs.mjs';
 import { createVideoServer } from '../video/server.mjs';
 import { transcribeWithRuntime, tools } from '../video/media.mjs';
 import { moduleFiles } from '../scripts/video-package.mjs';
@@ -81,6 +82,53 @@ test('translation rejects duplicate, missing and unknown cue IDs', () => {
   assert.throws(() => checkBatch({ cues: [{ id: '1', text: '번역' }, { id: 'unknown', text: '다른 구간' }] }, batch));
   const output = checkBatch({ cues: [{ id: '2', text: '20중첩을 사용하지 마세요.' }, { id: '1', text: '빠른 지원' }] }, batch);
   assert.equal(output[0].translatedText, '빠른 지원'); assert.equal(output[1].startMs, batch[1].startMs);
+});
+
+test('partial responses preserve only unambiguous IDs and never shift timestamps', () => {
+  const batch = Array.from({ length: 5 }, (_, i) => ({ id: String(i + 1), startMs: i * 1000, endMs: i * 1000 + 900, sourceText: `Line ${i}.` }));
+  let failure;
+  try { checkBatch({ cues: [{ id: '3', text: '세 번째' }, { id: '1', text: '첫 번째' }, { id: '1', text: '충돌' }, { id: '2', text: ' ' }, { id: 'unknown', text: '외부' }, { id: 4, text: '숫자 ID' }] }, batch); }
+  catch (error) { failure = error; }
+  assert(failure instanceof IncompleteTranslationError);
+  assert.deepEqual(failure.partialCues, [{ ...batch[2], translatedText: '세 번째' }]);
+  assert.equal(failure.translationIssue.missing, 4);
+  assert.equal(failure.translationIssue.duplicates, 1);
+  assert.equal(failure.translationIssue.unknown, 2);
+  assert.equal(failure.translationIssue.invalid, 1);
+});
+
+test('648-cue incomplete response survives restart and resumes only missing screen cues in one manual request', async t => {
+  let prepared = 0, requests = 0; const payloads = [];
+  const cues = Array.from({ length: 648 }, (_, i) => ({ id: String(i + 1), startMs: i * 1000, endMs: i * 1000 + 900, sourceText: i < 47 ? `Speech ${i}.` : `Repeated HUD ${i % 65}`, ...(i >= 47 ? { kind: 'screen', region: { x: .1, y: .1, w: .4, h: .1 } } : {}) }));
+  const fetcher = async (_url, init) => {
+    requests++; const body = JSON.parse(init.body), payload = JSON.parse(body.contents[0].parts[0].text); payloads.push(payload);
+    const schema = body.generationConfig.responseJsonSchema.properties.cues;
+    assert.equal(schema.minItems, payload.cues.length); assert.equal(schema.maxItems, payload.cues.length);
+    assert.deepEqual(schema.items.properties.id.enum, payload.cues.map(c => c.id));
+    assert(body.systemInstruction.parts[0].text.includes('never collapse repeated labels'));
+    const output = (requests === 1 ? payload.cues.filter(c => c.kind === 'speech') : payload.cues).map(c => ({ id: c.id, text: `${requests === 1 ? '음성' : '화면'} ${c.id}` }));
+    return new Response(JSON.stringify({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ cues: output }) }] } }], usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 50 } }));
+  };
+  const app = setup(t, { jobsOptions: { prepare: async () => { prepared++; return { cues, title: 'Repeated screen fixture', origin: 'test' }; }, fetcher } });
+  app.settings.save(config); const created = app.jobs.create({ ...jobInput, options: { ...jobInput.options, screenText: true } });
+  const failed = await waitJob(app.jobs, created.id); while (app.jobs.active) await tick();
+  assert.equal(failed.completedCues, 47); assert.equal(failed.status, 'failed'); assert.equal(requests, 1);
+  assert.equal(failed.translationIssue.missing, 601);
+  const folder = app.jobs.directory(created.id), checkpointPath = join(folder, 'translation.json');
+  assert(!existsSync(join(folder, 'translated.srt')));
+  const checkpoint = JSON.parse(readFileSync(checkpointPath)); assert.equal(Object.keys(checkpoint.cues).length, 47);
+  checkpoint.key = translationKey(failed.cues, { ...failed.options, ...failed.translationConfig, title: failed.title }, join(app.root, 'glossary/zzz.json'), 5);
+  writeFileSync(checkpointPath, JSON.stringify(checkpoint));
+  const restarted = new Jobs({ root: app.root, dataDir: app.jobs.dataDir, settings: app.settings, gate: { enter: async () => {} }, prepare: () => assert.fail('source must be reused'), fetcher });
+  restarted.resume(created.id); const completed = await waitJob(restarted, created.id); while (restarted.active) await tick();
+  assert.equal(completed.status, 'completed'); assert.equal(completed.completedCues, 648); assert.equal(requests, 2); assert.equal(prepared, 1);
+  assert.equal(payloads[0].cues.length, 648); assert.equal(payloads[1].cues.length, 601); assert.equal(payloads[1].contextCues.length, 47);
+  assert(payloads[1].cues.every(c => c.kind === 'screen')); assert(payloads[1].contextCues.every(c => c.kind === 'speech'));
+  assert.equal(payloads[1].glossary.entries.length, payloads[0].glossary.entries.length);
+  assert.equal(completed.cues[0].translatedText, '음성 1'); assert.equal(completed.cues[647].translatedText, '화면 648');
+  assert.deepEqual(completed.cues.map(c => [c.id, c.startMs, c.endMs, c.region]), cues.map(c => [c.id, c.startMs, c.endMs, c.region]));
+  assert.equal(parseSubtitles(readFileSync(join(folder, 'translated.srt'), 'utf8')).length, 648);
+  assert.equal(completed.translationIssue, null);
 });
 test('failed translation resumes from saved chunks, preserves timing and stores no plaintext key', async t => {
   const cues = Array.from({ length: 24 }, (_, index) => ({ id: String(index + 1), startMs: index * 4000, endMs: index * 4000 + 3500, sourceText: `Quick Assist ${index + 1}.` }));

@@ -28,7 +28,9 @@ export function publishGlossary(root = resolve(import.meta.dirname, '..')) {
   // Only these explicitly public database files can leave the workspace.
   const paths = ['README.md', 'README-ko.md', 'README-en.md', 'README-ja.md', 'README-zh-CN.md', 'latest.json', release.manifest.file,
     ...['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml'].map(file => `.github/ISSUE_TEMPLATE/${file}`),
-    ...['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md'].map(file => `catalog/${file}`)];
+    ...['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md'].map(file => `catalog/${file}`),
+    ...release.browseFiles];
+  if (release.browseFiles.some(file => !/^catalog\/(?:BROWSE\.md|INDEX\.md|terms\/[a-z0-9-]+-\d+\.md)$/.test(file))) throw new Error('Invalid public catalog page');
   const tree = api(`repos/${repo}/git/trees`, 'POST', { base_tree: base.tree.sha, tree: paths.map(path => ({ path, mode: '100644', type: 'blob', content: readFileSync(join(release.output, path), 'utf8') })) });
   if (tree.sha === base.tree.sha) return { repository: repo, url: remote.html_url, version: release.manifest.version, unchanged: true };
   const commit = api(`repos/${repo}/git/commits`, 'POST', { message: `Publish reviewed glossary ${release.manifest.version}`, tree: tree.sha, parents: [previous] });

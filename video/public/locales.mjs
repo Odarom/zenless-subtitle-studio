@@ -1,5 +1,6 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ['번역 응답 확인 필요: {expected}개 요청 중 유효한 번역 {accepted}개를 보관했습니다. 이어하기에서 미완료 {missing}개만 요청합니다. 자동 재요청하지 않았습니다.', 'Translation response needs review: saved {accepted} valid translations out of {expected} requested. Resume requests only the {missing} unfinished cues. No automatic retry was made.', '翻訳応答の確認が必要です。要求した{expected}件のうち、有効な翻訳{accepted}件を保存しました。「再開」では未完了の{missing}件のみ要求します。自動再試行はしていません。', '翻译响应需要检查：请求{expected}段，已保存{accepted}段有效翻译。点击继续时仅请求未完成的{missing}段，未自动重试。'],
   ["용어집 전송량 약 {size}KB · 분당 입력량 한도는 요청 횟수와 별도로 적용됩니다.","Glossary input: about {size}KB. Input-per-minute limits apply separately from request counts.","用語集の送信量：約{size}KB。分間入力上限はリクエスト回数とは別に適用されます。","术语表发送量约{size}KB；每分钟输入量上限与请求次数分别计算。"],
   ["분당 입력 토큰","Input tokens per minute","分間入力トークン","每分钟输入token"],
   ["분당 요청 수","Requests per minute","分間リクエスト数","每分钟请求数"],

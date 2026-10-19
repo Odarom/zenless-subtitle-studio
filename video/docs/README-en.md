@@ -1,4 +1,4 @@
-# ZZZ Subtitle Studio 0.6.3
+# ZZZ Subtitle Studio 0.6.4
 
 Reduced glossary payload size by sharing repeated descriptions without removing entries, meanings or rules. Names, character names and related skills use only the chosen source and target languages. Auto-detected sources use target-language names and aliases actually matching the input. When Gemini provides HTTP 429 quota details, the app distinguishes input tokens/minute, requests/minute, requests/day and zero allocation; missing details stay unidentified. Whole-video single-request defaults and no automatic retries remain. Failed 0.6.1 jobs with no translated results can Resume without repeating transcription. Actual free-tier acceptance and translation quality still require separate verification.
 
@@ -9,6 +9,8 @@ Translation supports 13 languages: Korean, English, Japanese, Simplified/Traditi
 Speech recognition and translation language choices now cover 13 languages. Screen OCR supports six: Korean, English, Japanese, Simplified/Traditional Chinese and Russian. Select OCR language independently, including when translating into another language. Video retains every glossary concept while sending needed localized spellings and actually matching aliases. Single-request defaults and no automatic retry after rate limits remain.
 
 [한국어](README-ko.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
+
+Valid translations are saved even when a response omits cues. Resume requests unfinished IDs only, retaining completed source cues as context. Response coverage is constrained so repeated screen text is requested for every cue. The full glossary, initial whole-video single request and no automatic retries remain. Unsaved responses from 0.6.3 and earlier cannot be recovered, but existing ASR/OCR is reused.
 
 A Windows x64 desktop app that recognizes and translates a selected video before playback. Each user runs the app on their PC with their own translation credentials.
 
