@@ -1,0 +1,151 @@
+{
+  "name": "Name / shorthand report (English)",
+  "description": "Report shorthand, official names, missing terms or usage rules without installing an app.",
+  "title": "[DB report] ",
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "No program installation is required. A GitHub account is required; the report and account name are public. Do not include API keys, personal information or private material. Suggestions are collected for review and may be reviewed with AI; submission does not automatically change the DB. New/unreleased terms await confirmed live availability."
+      }
+    },
+    {
+      "type": "dropdown",
+      "id": "category",
+      "attributes": {
+        "label": "Report category",
+        "options": [
+          "Shorthand / input alias",
+          "Community output shorthand",
+          "Official-name mapping error",
+          "Missing term",
+          "Meaning / usage-rule error",
+          "Other translation error"
+        ],
+        "default": 0
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "term",
+      "attributes": {
+        "label": "Term or original text",
+        "description": "Identify the character, item, stat or original term that needs correction."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "dropdown",
+      "id": "source-language",
+      "attributes": {
+        "label": "Source language",
+        "options": [
+          "Unknown / 不明 / 알 수 없음 / 未知",
+          "한국어 (ko)",
+          "English (en)",
+          "日本語 (ja)",
+          "简体中文 (zh-CN)",
+          "繁體中文 (zh-Hant)",
+          "Deutsch (de)",
+          "Français (fr)",
+          "Español (es)",
+          "Português (pt)",
+          "Русский (ru)",
+          "ไทย (th)",
+          "Tiếng Việt (vi)",
+          "Bahasa Indonesia (id)"
+        ],
+        "default": 0
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "dropdown",
+      "id": "target-language",
+      "attributes": {
+        "label": "Language to correct",
+        "options": [
+          "한국어 (ko)",
+          "English (en)",
+          "日本語 (ja)",
+          "简体中文 (zh-CN)",
+          "繁體中文 (zh-Hant)",
+          "Deutsch (de)",
+          "Français (fr)",
+          "Español (es)",
+          "Português (pt)",
+          "Русский (ru)",
+          "ไทย (th)",
+          "Tiếng Việt (vi)",
+          "Bahasa Indonesia (id)"
+        ],
+        "default": 0
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "current",
+      "attributes": {
+        "label": "Current name or shorthand"
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "suggestion",
+      "attributes": {
+        "label": "Suggested name or shorthand"
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "explanation",
+      "attributes": {
+        "label": "Problem and usage context",
+        "description": "Explain the problem and the context in which the term is used. Maximum 1,000 characters."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "reference",
+      "attributes": {
+        "label": "Reference links or screenshots",
+        "description": "Optional public reference links or screenshots, up to 2,000 characters."
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "checkboxes",
+      "id": "consent",
+      "attributes": {
+        "label": "Public report notice",
+        "options": [
+          {
+            "label": "I understand this report is public, collected for review and may be reviewed with AI.",
+            "required": true
+          }
+        ]
+      }
+    }
+  ]
+}
