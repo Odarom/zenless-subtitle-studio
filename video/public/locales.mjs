@@ -1,5 +1,17 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ["용어집 전송량 약 {size}KB · 분당 입력량 한도는 요청 횟수와 별도로 적용됩니다.","Glossary input: about {size}KB. Input-per-minute limits apply separately from request counts.","用語集の送信量：約{size}KB。分間入力上限はリクエスト回数とは別に適用されます。","术语表发送量约{size}KB；每分钟输入量上限与请求次数分别计算。"],
+  ["분당 입력 토큰","Input tokens per minute","分間入力トークン","每分钟输入token"],
+  ["분당 요청 수","Requests per minute","分間リクエスト数","每分钟请求数"],
+  ["하루 요청 수","Requests per day","1日のリクエスト数","每日请求数"],
+  ["기타 할당량","Other quota","その他の割り当て","其他配额"],
+  ["값 미제공","Value not supplied","値の提供なし","未提供数值"],
+  ["Google이 반환한 한도 — {type}: {limit}","Limit reported by Google — {type}: {limit}","Googleが返した上限 — {type}：{limit}","Google返回的上限 — {type}：{limit}"],
+  ["Gemini가 이 프로젝트·모델의 할당량을 0으로 반환했습니다. AI Studio에서 모델 사용 가능 여부와 사용률 한도를 확인하세요.","Gemini returned a zero quota for this project/model. Check model availability and rate limits in AI Studio.","Geminiがこのプロジェクト・モデルの割り当てを0と返しました。AI Studioでモデルの利用可否とレート上限を確認してください。","Gemini返回此项目/模型的配额为0。请在AI Studio检查模型可用性及使用率上限。"],
+  ["Gemini 분당 입력 토큰 한도에 도달했습니다. 요청 1회에 보낸 텍스트도 이 한도에 포함됩니다.","Gemini input tokens per minute limit reached. Text in a single request also counts toward this limit.","Geminiの分間入力トークン上限に達しました。1回のリクエストで送るテキストもこの上限に含まれます。","已达到Gemini每分钟输入token上限。单次请求发送的文本也计入此上限。"],
+  ["Gemini 하루 요청 한도에 도달했습니다. AI Studio에서 한도 초기화 시점을 확인하세요.","Gemini daily request limit reached. Check the quota reset time in AI Studio.","Geminiの1日のリクエスト上限に達しました。AI Studioでリセット時刻を確認してください。","已达到Gemini每日请求上限。请在AI Studio查看重置时间。"],
+  ["Gemini 분당 요청 횟수 한도에 도달했습니다. 같은 프로젝트의 다른 호출도 함께 계산됩니다.","Gemini requests per minute limit reached. Other calls in the same project also count.","Geminiの分間リクエスト上限に達しました。同じプロジェクトの他の呼び出しも合算されます。","已达到Gemini每分钟请求数上限。同一项目的其他调用也一并计算。"],
+  ["Gemini 사용량 제한(HTTP 429)입니다. 어떤 한도인지 응답에 표시되지 않았습니다. AI Studio의 모델별 사용률 한도를 확인하세요.","Gemini returned HTTP 429 without identifying the quota. Check the model-specific rate limits in AI Studio.","GeminiがHTTP 429を返しましたが、上限の種類は応答に含まれていません。AI Studioでモデル別のレート上限を確認してください。","Gemini返回HTTP 429，但未在响应中指明配额类型。请在AI Studio查看该模型的使用率上限。"],
   ['화면 인식 지원: 한국어·영어·일본어·중국어 간체/번체·러시아어. 번역 언어는 별도로 선택합니다.', 'Screen OCR supports Korean, English, Japanese, Simplified/Traditional Chinese and Russian. Choose the translation language separately.', '画面OCRは韓国語・英語・日本語・簡体字/繁体字中国語・ロシア語に対応します。翻訳先言語は別に選択します。', '屏幕OCR支持韩语、英语、日语、简体/繁体中文及俄语。翻译语言另行选择。'],
   ['용어집이 선택한 모델의 입력 범위를 넘을 수 있어 API를 호출하지 않았습니다. 입력 범위가 큰 모델을 선택하거나 용어집 전송 범위를 관련 용어만으로 바꾸세요.', 'The glossary may exceed this model’s input limit, so no API call was made. Choose a larger-context model or select related terms only.', '用語集がモデルの入力上限を超える可能性があるため、APIは呼び出していません。入力上限の大きいモデルか「関連用語のみ」を選択してください。', '术语表可能超出模型输入范围，未调用API。请选择输入范围更大的模型，或改用仅相关术语。'],
   ['용어집 전송 범위', 'Glossary scope', '用語集の送信範囲', '术语表发送范围'],

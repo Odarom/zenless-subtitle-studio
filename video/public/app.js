@@ -184,11 +184,16 @@ function renderDetail() {
   if (['failed', 'cancelled', 'interrupted'].includes(job.status)) controls.append(node('button', { class: 'primary', text: t('이어하기'), type: 'button', onclick: () => action('resume') }));
   element.replaceChildren(node('div', { class: 'detail-header' }, node('div', {}, node('div', { class: 'eyebrow', text: 'YOUR SUBTITLE PROJECT' }), node('h2', { text: job.title || t('영상 준비 중') }), node('small', { text: t('{status} · {languages} · {count}개 구간', { status: statusLabel(job.status), languages: job.options.transcribeOnly ? t('원문 자막') : `${job.options.sourceLanguage} → ${job.options.targetLanguage}`, count: job.cues.length }) })), controls));
   if (job.translationPlan) element.append(node('p', { class: 'hint', text: t('문장 {speech}개 · 화면 글자 {screen}개 · 용어 {terms}개 · 번역 요청 {requests}회', { speech: job.translationPlan.sentenceCount, screen: job.translationPlan.screenCount, terms: job.translationPlan.glossaryCount, requests: job.translationPlan.requests }) }));
+  if (Number.isFinite(job.translationPlan?.glossaryInputBytes)) element.append(node('p', { class: 'hint', text: t('용어집 전송량 약 {size}KB · 분당 입력량 한도는 요청 횟수와 별도로 적용됩니다.', { size: Math.ceil(job.translationPlan.glossaryInputBytes / 1024).toLocaleString(i18n.locale) }) }));
   if (job.status !== 'completed') {
     const determinate = Number.isFinite(job.stageProgress);
     const bar = node('div'); if (determinate) bar.style.width = `${Math.max(0, Math.min(100, job.stageProgress))}%`;
     element.append(node('div', { class: `progress-track${determinate ? '' : ' indeterminate'}` }, bar), node('p', { class: 'progress-message', text: i18n.message(job.message) }), node('p', { class: 'hint', text: t('완료된 번역 {done} / {total}개 구간 · 모든 구간이 준비되면 자막을 저장하고 적용할 수 있습니다.', { done: job.completedCues || 0, total: job.cues.length || '—' }) }));
     if (job.error) element.append(node('div', { class: 'error-box', text: i18n.message(job.error) }));
+    if (job.apiLimit?.limits?.length) {
+      const labels = { 'input-tokens-minute': '분당 입력 토큰', 'requests-minute': '분당 요청 수', 'requests-day': '하루 요청 수', other: '기타 할당량' };
+      for (const limit of job.apiLimit.limits) element.append(node('p', { class: 'hint', text: t('Google이 반환한 한도 — {type}: {limit}', { type: t(labels[limit.type] || labels.other), limit: Number.isSafeInteger(limit.limit) ? limit.limit.toLocaleString(i18n.locale) : t('값 미제공') }) }));
+    }
     return;
   }
   const downloadMode = node('select', { id: 'downloadMode', 'aria-label': t('저장할 자막 내용') }, node('option', { value: 'translated', text: job.options.transcribeOnly ? t('원문 자막') : t('번역 자막') }), ...(!job.options.transcribeOnly ? [node('option', { value: 'bilingual', text: t('원문 + 번역 병기') }), node('option', { value: 'source', text: t('원문 자막') })] : []));

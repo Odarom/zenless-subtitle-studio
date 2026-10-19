@@ -12,7 +12,7 @@ function connectionFailure(error, config, startedAt, phase) {
   return failure;
 }
 
-export async function geminiTranslation(config, instructions, payload, schema, fetcher = fetch, { onRetry = () => {}, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), maxAttempts = 2 } = {}) {
+export async function geminiTranslation(config, instructions, payload, schema, fetcher = fetch, { onRetry = () => {}, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), maxAttempts = 2, rateLimitError } = {}) {
   let response;
   const startedAt = performance.now();
   const temporaryStatuses = new Set([500, 502, 503, 504]);
@@ -45,7 +45,10 @@ export async function geminiTranslation(config, instructions, payload, schema, f
     }
     break;
   }
-  if (response.status === 429) throw new UserError('Gemini 사용 한도에 도달했습니다. AI Studio에서 무료 한도와 재사용 가능 시간을 확인하세요. 다른 API로 자동 전환하지 않았습니다.');
+  if (response.status === 429) {
+    if (rateLimitError) throw await rateLimitError(response);
+    throw new UserError('Gemini 사용 한도에 도달했습니다. AI Studio에서 무료 한도와 재사용 가능 시간을 확인하세요. 다른 API로 자동 전환하지 않았습니다.');
+  }
   if (temporaryStatuses.has(response.status)) {
     const error = new UserError(maxAttempts === 1 ? `Gemini 서버가 일시적으로 요청을 처리하지 못했습니다(HTTP ${response.status}). 자동 재요청하지 않았습니다.` : `Gemini 서버가 일시적으로 요청을 처리하지 못했습니다(HTTP ${response.status}). 한 번 재시도했지만 실패했습니다. 잠시 후 다시 보내주세요.`);
     error.code = 'GEMINI_UNAVAILABLE';

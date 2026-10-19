@@ -4,11 +4,13 @@ import { validateCombatAttributes } from '../src/attributes.js';
 import { geminiTranslation } from '../src/gemini.js';
 import { readFileSync } from 'node:fs';
 import { deepLTranslation, ollamaTranslation } from './providers.mjs';
-import { BASE_LANGUAGES, localizedNames, selectNames } from '../src/languages.js';
+import { TEXT_LANGUAGES, localizedNames, selectNames } from '../src/languages.js';
+import { compactVideoGlossary, GLOSSARY_FORMAT_INSTRUCTION } from './glossary-payload.mjs';
+import { geminiLimitError } from './gemini-limits.mjs';
 
-export const PROMPT_VERSION = 4;
-export function translationKey(cues, options, glossaryPath) {
-  return createHash('sha256').update(JSON.stringify({ cues: cues.map(({ id, startMs, endMs, sourceText }) => ({ id, startMs, endMs, sourceText })), options, glossary: createHash('sha256').update(readFileSync(glossaryPath)).digest('hex'), version: PROMPT_VERSION })).digest('hex');
+export const PROMPT_VERSION = 5;
+export function translationKey(cues, options, glossaryPath, version = PROMPT_VERSION) {
+  return createHash('sha256').update(JSON.stringify({ cues: cues.map(({ id, startMs, endMs, sourceText }) => ({ id, startMs, endMs, sourceText })), options, glossary: createHash('sha256').update(readFileSync(glossaryPath)).digest('hex'), version })).digest('hex');
 }
 export function checkBatch(output, batch) {
   if (!output || !Array.isArray(output.cues) || output.cues.length !== batch.length) throw new Error('번역 결과에 빠진 자막이 있습니다. 완료된 묶음은 저장했습니다. 이어하기로 다시 시도하세요.');
@@ -33,12 +35,19 @@ export function cueWarnings(cue, target) {
 export function videoGlossary(cues, options, glossaryPath) {
   const entries = loadGlossary(glossaryPath);
   const selected = options.glossaryMode === 'relevant' ? relevantTerms(entries, cues.map(c => c.sourceText).join('\n'), Infinity) : entries;
-  const languages = [...new Set(['en', options.targetLanguage, ...(options.sourceLanguage === 'auto' || !options.sourceLanguage ? BASE_LANGUAGES : [options.sourceLanguage])])];
+  const languages = [...new Set([options.targetLanguage, options.sourceLanguage || 'en'].filter(language => Object.hasOwn(TEXT_LANGUAGES, language || '')))];
+  const supplement = value => {
+    if (!value || typeof value !== 'object') return value;
+    if (Array.isArray(value)) return value.map(supplement);
+    const pairs = Object.entries(value);
+    if (pairs.length && pairs.every(([key]) => Object.hasOwn(TEXT_LANGUAGES, key))) return selectNames(value, languages);
+    return Object.fromEntries(pairs.map(([key, item]) => [key, supplement(item)]));
+  };
   const text = cues.map(cue => cue.sourceText).join('\n').toLowerCase();
   return selected.map(entry => ({ ...entry, preferred: selectNames(localizedNames(entry), languages), aliases: entry.aliases.filter(alias => text.includes(alias.toLowerCase())) }))
     .map(({ id, preferred, communityPreferred, aliases, category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }) => ({ id, preferred, aliases,
     ...(options.style === 'community' && communityPreferred?.[options.targetLanguage] ? { outputPreferred: { [options.targetLanguage]: communityPreferred[options.targetLanguage] } } : {}),
-    category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }));
+    category, meaning, rule, communityRule, characterName: supplement(characterName), relatedSkills: supplement(relatedSkills), autoUse, releaseStatus, releaseVersion }));
 }
 export async function translateBatch({ allCues, batch, options, config, glossaryPath, glossary: plannedGlossary, usage, gate, update, signal, fetcher = fetch }) {
   signal?.throwIfAborted();
@@ -54,8 +63,9 @@ Read the whole supplied transcript and screen text together before translating. 
 Preserve names, numbers, units, percentages, negation, conditions, uncertainty, questions, combat action types, action order and repeated inputs. Never summarize or add game facts.
 The glossary may contain the entire database, including unrelated entries: select a concept only when the text and context fit its aliases and rules. Use outputPreferred[targetLanguage] when present, otherwise preferred[targetLanguage]. Entries with autoUse=false must not be automatically substituted. Prerelease names are tentative, not confirmed released mechanics. Keep ambiguous aliases unresolved when evidence is insufficient. A longer name takes precedence over a name contained within it. Preserve literal names when the speaker discusses their spelling or translation.
 Style: ${options.style === 'community' ? 'Use only registered gamer shorthand, preserving all meaning.' : 'Use full official names and natural, clear subtitles.'}
-Use original proper names if no localized name is supplied. Source text already in the target language should be preserved. Keep speech tone; do not add explanations or speaker labels. Line breaks may improve readability but must not omit meaning.`;
-  const payload = { title: options.title, sourceLanguage: options.sourceLanguage, targetLanguage: options.targetLanguage, wholeDocument: config.provider === 'deepl', before, cues: batch.map(cue => ({ id: cue.id, text: cue.sourceText, kind: cue.kind || 'speech', startMs: cue.startMs, endMs: cue.endMs })), after, glossary };
+Use original proper names if no localized name is supplied. Source text already in the target language should be preserved. Keep speech tone; do not add explanations or speaker labels. Line breaks may improve readability but must not omit meaning.
+${GLOSSARY_FORMAT_INSTRUCTION}`;
+  const payload = { title: options.title, sourceLanguage: options.sourceLanguage, targetLanguage: options.targetLanguage, wholeDocument: config.provider === 'deepl', before, cues: batch.map(cue => ({ id: cue.id, text: cue.sourceText, kind: cue.kind || 'speech', startMs: cue.startMs, endMs: cue.endMs })), after, glossary: config.provider === 'deepl' ? glossary : compactVideoGlossary(glossary) };
   const schema = { type: 'object', properties: { cues: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, text: { type: 'string' } }, required: ['id', 'text'], additionalProperties: false } } }, required: ['cues'], additionalProperties: false };
   await gate?.enter(config, { signal, update });
   signal?.throwIfAborted();
@@ -63,7 +73,7 @@ Use original proper names if no localized name is supplied. Source text already 
   const cancelableFetch = (url, init) => fetcher(url, { ...init, signal: AbortSignal.any([signal || new AbortController().signal, init.signal || new AbortController().signal]) });
   let output, tokenUsage;
   if (config.provider === 'gemini') {
-    const result = await geminiTranslation(config, instructions, payload, schema, cancelableFetch, { maxAttempts: 1 });
+    const result = await geminiTranslation(config, instructions, payload, schema, cancelableFetch, { maxAttempts: 1, rateLimitError: response => geminiLimitError(response, config.model) });
     output = result.output; tokenUsage = result.usage;
   } else if (config.provider === 'deepl' || config.provider === 'ollama') {
     const result = config.provider === 'deepl' ? await deepLTranslation(config, payload, cancelableFetch) : await ollamaTranslation(config, instructions, payload, schema, cancelableFetch);

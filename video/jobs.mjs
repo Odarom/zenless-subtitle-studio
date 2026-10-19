@@ -63,7 +63,7 @@ export class Jobs {
       const api = this.settings.private();
       if (api.provider !== job.translationConfig.provider || api.model !== job.translationConfig.model) throw new Error('이 작업의 API 제공자 또는 모델이 현재 설정과 다릅니다. 원래 설정으로 되돌린 후 이어하거나 새 작업을 시작하세요.');
     }
-    this.save(job, { status: 'queued', message: '완료된 구간부터 이어할 준비를 하고 있습니다.', error: null }); this.pump(); return this.summary(job);
+    this.save(job, { status: 'queued', message: '완료된 구간부터 이어할 준비를 하고 있습니다.', error: null, apiLimit: null }); this.pump(); return this.summary(job);
   }
   pump() {
     if (this.active) return;
@@ -71,11 +71,11 @@ export class Jobs {
     if (!job) return;
     const controller = new AbortController(); this.active = { id: job.id, controller };
     this.run(job, controller.signal).catch(error => {
-      this.save(job, { status: controller.signal.aborted ? 'cancelled' : 'failed', error: controller.signal.aborted ? null : error.message, message: controller.signal.aborted ? '작업을 중단했습니다. 완료된 결과는 보관했습니다.' : error.message });
+      this.save(job, { status: controller.signal.aborted ? 'cancelled' : 'failed', error: controller.signal.aborted ? null : error.message, apiLimit: controller.signal.aborted ? null : error.apiLimit || null, message: controller.signal.aborted ? '작업을 중단했습니다. 완료된 결과는 보관했습니다.' : error.message });
     }).finally(() => { this.active = null; this.pump(); });
   }
   async run(job, signal) {
-    this.save(job, { status: 'running', error: null, stageProgress: null });
+    this.save(job, { status: 'running', error: null, apiLimit: null, stageProgress: null });
     const directory = this.directory(job.id);
     const transcript = join(directory, 'transcript.json');
     if (!existsSync(transcript)) {
@@ -99,6 +99,9 @@ export class Jobs {
       const key = translationKey(source.cues, options, glossaryPath);
       const checkpointPath = join(directory, 'translation.json');
       const checkpoint = readJson(checkpointPath, { key, cues: {} });
+      // A rejected 0.6.1 single request has no translated results to mix. Keep
+      // its expensive local ASR/OCR output when only prompt transport changed.
+      if (checkpoint.key !== key && Object.keys(checkpoint.cues).length === 0 && checkpoint.key === translationKey(source.cues, options, glossaryPath, 4)) checkpoint.key = key;
       if (checkpoint.key !== key) throw new Error('원문·용어집·번역 설정이 변경되어 기존 결과를 이어할 수 없습니다. 새 작업으로 번역하세요.');
       const glossary = videoGlossary(source.cues, options, glossaryPath);
       const plan = this.plan(source.cues, config, options, glossary), { batches, ...planInfo } = plan;

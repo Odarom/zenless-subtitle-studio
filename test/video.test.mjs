@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { once } from 'node:events';
 import vm from 'node:vm';
 import { parseSubtitles, serializeSubtitles, youtubeVideoId } from '../video/subtitles.mjs';
-import { checkBatch } from '../video/translation.mjs';
+import { checkBatch, translationKey } from '../video/translation.mjs';
 import { createVideoServer } from '../video/server.mjs';
 import { transcribeWithRuntime, tools } from '../video/media.mjs';
 import { moduleFiles } from '../scripts/video-package.mjs';
@@ -34,6 +34,29 @@ function setup(t, options = {}) {
 }
 const config = { provider: 'gemini', model: 'gemini-3-flash-preview', apiKey: 'test-key-not-real-12345678', dailyLimit: 100 };
 const jobInput = { title: 'test', input: { youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }, options: { sourceLanguage: 'en', targetLanguage: 'ko', style: 'official' } };
+
+test('quota failure records safe details and an empty legacy checkpoint resumes without transcribing again', async t => {
+  let prepared = 0, requests = 0;
+  const cues = [{ id: '1', startMs: 0, endMs: 2000, sourceText: 'Quick Assist.' }];
+  const app = setup(t, { jobsOptions: {
+    prepare: async () => { prepared++; return { cues, title: 'quota check', origin: 'test' }; },
+    fetcher: async () => {
+      requests++;
+      if (requests === 1) return new Response(JSON.stringify({ error: { details: [{ '@type': 'type.googleapis.com/google.rpc.QuotaFailure', violations: [{ quotaId: 'GenerateContentInputTokensPerModelPerMinute-FreeTier', quotaValue: '250000' }] }] } }), { status: 429 });
+      return new Response(JSON.stringify({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ cues: [{ id: '1', text: '빠른 지원.' }] }) }] } }] }));
+    }
+  } });
+  app.settings.save(config);
+  const created = app.jobs.create(jobInput), failed = await waitJob(app.jobs, created.id);
+  assert.equal(requests, 1); assert.equal(failed.status, 'failed');
+  assert.equal(failed.apiLimit.limits[0].type, 'input-tokens-minute');
+  assert.equal(failed.apiLimit.limits[0].limit, 250000);
+  const key = translationKey(failed.cues, { ...failed.options, ...failed.translationConfig, title: failed.title }, join(app.root, 'glossary/zzz.json'), 4);
+  writeFileSync(join(app.jobs.directory(created.id), 'translation.json'), JSON.stringify({ key, cues: {} }));
+  app.jobs.resume(created.id); const completed = await waitJob(app.jobs, created.id);
+  assert.equal(completed.status, 'completed'); assert.equal(prepared, 1); assert.equal(requests, 2);
+  assert.equal(completed.apiLimit, null); assert.equal(completed.cues[0].translatedText, '빠른 지원.');
+});
 
 test('SRT/VTT round trips preserve timing, entities and repeated automatic captions', () => {
   const cues = parseSubtitles(fixture);

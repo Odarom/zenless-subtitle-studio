@@ -1,8 +1,9 @@
 import { Buffer } from 'node:buffer';
 import { validateCues } from './subtitles.mjs';
 import { deepLRequestBody } from './providers.mjs';
+import { compactVideoGlossary } from './glossary-payload.mjs';
 
-export const PLAN_VERSION = 2;
+export const PLAN_VERSION = 3;
 const terminal = /[.!?。！？]["'”’」』）)]*$/u;
 const abbreviation = /\b(?:Mr|Mrs|Ms|Dr|Prof|vs|etc|e\.g|i\.e)\.$/iu;
 const joinText = (a, b) => a.trimEnd() + (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]$/u.test(a) && /^[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(b) ? '' : ' ') + b.trimStart();
@@ -32,7 +33,8 @@ export function estimatedOutputTokens(cues, targetLanguage) {
 }
 export function translationPlan(cues, config, { targetLanguage = 'ko', translationMode = 'single' } = {}, glossary = []) {
   const limits = providerLimits(config), maxOutputTokens = Math.min(config.maxOutputTokens || limits.output, limits.output);
-  const glossaryTokens = Math.ceil(Buffer.byteLength(JSON.stringify(glossary), 'utf8') / 2);
+  const glossaryInputBytes = Buffer.byteLength(JSON.stringify(config.provider === 'deepl' ? glossary : compactVideoGlossary(glossary)), 'utf8');
+  const glossaryTokens = Math.ceil(glossaryInputBytes / 2);
   if (config.provider !== 'deepl' && glossaryTokens + maxOutputTokens + 6000 > limits.context) throw new Error('용어집이 선택한 모델의 입력 범위를 넘을 수 있어 API를 호출하지 않았습니다. 입력 범위가 큰 모델을 선택하거나 용어집 전송 범위를 관련 용어만으로 바꾸세요.');
   const fits = batch => {
     const output = estimatedOutputTokens(batch, targetLanguage);
@@ -51,5 +53,5 @@ export function translationPlan(cues, config, { targetLanguage = 'ko', translati
     while (low < high) { const end = Math.ceil((low + high) / 2); if (fits(cues.slice(start, end))) low = end; else high = end - 1; }
     batches.push(cues.slice(start, low)); start = low;
   }
-  return { version: PLAN_VERSION, mode: translationMode, requests: batches.length, sentenceCount: cues.filter(c => c.kind !== 'screen').length, screenCount: cues.filter(c => c.kind === 'screen').length, glossaryCount: glossary.length, estimatedOutputTokens: estimatedOutputTokens(cues, targetLanguage), maxOutputTokens, batches };
+  return { version: PLAN_VERSION, mode: translationMode, requests: batches.length, sentenceCount: cues.filter(c => c.kind !== 'screen').length, screenCount: cues.filter(c => c.kind === 'screen').length, glossaryCount: glossary.length, glossaryInputBytes, estimatedOutputTokens: estimatedOutputTokens(cues, targetLanguage), maxOutputTokens, batches };
 }

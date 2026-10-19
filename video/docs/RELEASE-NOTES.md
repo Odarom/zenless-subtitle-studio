@@ -1,27 +1,19 @@
-# ZZZ Subtitle Studio 0.6.1
+# ZZZ Subtitle Studio 0.6.2
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 ## 한국어
 
-왼쪽 메뉴와 화면 조작이 반응하지 않던 배포 파일 누락을 수정했습니다.
-
-용어집 카드의 언어 수는 현재 설치된 DB에서 계산합니다. 화면 언어는 메뉴 표시용 4개이고, 영상의 원어·번역 언어는 13개입니다. 유튜브 음성을 새로 받아쓰는 옵션은 기본 켜짐이며, 끄면 기존 원어 자막(자동 생성 포함)을 먼저 사용하고 없을 때 음성을 인식합니다. ‘번역 없이 원어 자막만 저장하기’는 기본 꺼짐입니다. 이 옵션을 켜면 번역 API 호출·요금 없이 원문을 저장하며, 음성·화면 인식은 선택한 옵션대로 진행합니다.
+전체 용어집의 항목·의미·적용 규칙을 유지하면서 반복 설명을 공유해 전송량을 줄였습니다. 명칭·캐릭터명·관련 스킬명은 선택한 원어와 번역어만 보냅니다. 원어 자동 감지는 번역어 명칭과 실제 원문에 일치한 별칭을 사용합니다. Gemini 429 응답에 한도 정보가 있으면 분당 입력 토큰·분당 요청·하루 요청·할당량 0을 구분해 표시하며, 정보가 없으면 원인 미확인으로 안내합니다. 기본 영상 전체 1회 요청과 자동 재요청 없음은 유지합니다. 번역 결과가 없던 0.6.1 실패 작업은 원문을 다시 인식하지 않고 ‘이어하기’로 진행할 수 있습니다. 무료 한도의 실제 통과 여부와 번역 품질은 별도로 확인해야 합니다.
 
 ## English
 
-Restored sidebar navigation and screen controls by including a missing browser module in the portable release.
-
-The glossary card counts languages from the currently installed DB. Menu text has four languages; video source and translation choices have 13. Fresh YouTube audio transcription is on by default. Turn it off to prefer existing source-language captions, including auto-generated ones, with speech recognition as fallback. “Save source subtitles without translating” is off by default. Enabling it saves the original text without translation API calls or charges; selected speech/screen recognition still runs.
+Reduced glossary payload size by sharing repeated descriptions without removing entries, meanings or rules. Names, character names and related skills use only the chosen source and target languages. Auto-detected sources use target-language names and aliases actually matching the input. When Gemini provides HTTP 429 quota details, the app distinguishes input tokens/minute, requests/minute, requests/day and zero allocation; missing details stay unidentified. Whole-video single-request defaults and no automatic retries remain. Failed 0.6.1 jobs with no translated results can Resume without repeating transcription. Actual free-tier acceptance and translation quality still require separate verification.
 
 ## 日本語
 
-配布版の画面用ファイル不足を修正し、左メニューと画面操作を復旧しました。
-
-用語集カードの言語数は現在のDBから計算します。メニュー表示は4言語、動画の原語・翻訳先は13言語です。YouTube音声の新規書き起こしは標準でオンです。オフにすると既存の原語字幕（自動生成を含む）を優先し、なければ音声認識します。「翻訳せず原語字幕だけを保存」は標準でオフです。オンにすると翻訳APIの呼び出し・料金なしで原文を保存し、選択した音声・画面認識は行います。
+用語集の全項目・意味・適用規則を維持し、重複説明を共有して送信量を削減しました。名称・キャラクター名・関連スキル名は選択した原語と翻訳先だけを送ります。原語の自動検出時は翻訳先の名称と実際の原文に一致した別名を使います。Geminiの429応答に情報があれば分間入力トークン・分間リクエスト・1日のリクエスト・割り当て0を区別し、なければ原因未確認と表示します。動画全体1回の要求と自動再試行なしは維持します。翻訳結果がない0.6.1の失敗作業は、再認識せず「再開」できます。無料上限内での成功と翻訳品質は別途確認が必要です。
 
 ## 简体中文
 
-修复便携版缺少界面文件的问题，恢复左侧菜单及界面操作。
-
-术语表卡片根据当前安装的数据库计算语言数量。菜单显示有4种语言，视频原文和目标语言有13种。从YouTube音频重新转写默认开启；关闭后优先使用既有原文字幕（含自动生成字幕），没有时再识别音频。“仅保存原文字幕，不翻译”默认关闭。开启后保存原文，不调用翻译API也不产生翻译API费用；语音和屏幕识别仍按所选设置进行。
+保留术语表的全部条目、含义和规则，通过共享重复说明减少发送量。名称、角色名及相关技能名仅发送所选原文和目标语言。原文自动检测时使用目标语言名称及实际匹配原文的别名。Gemini的429响应若提供配额详情，将区分每分钟输入token、每分钟请求、每日请求及配额为0；无详情则提示原因未确认。仍默认整段视频单次请求，不自动重试。0.6.1中未生成翻译的失败任务可直接继续，无需重新识别。实际是否满足免费配额及翻译质量仍需单独验证。
