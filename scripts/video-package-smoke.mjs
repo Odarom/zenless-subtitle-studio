@@ -114,7 +114,7 @@ try {
   const ocrVideo = readFileSync(join(root, 'data/video/smoke/ocr/position-test.mp4'));
   const videoResponse = await fetch(`${base}/api/uploads?name=screen-position-test.mp4`, { method: 'POST', headers, body: ocrVideo });
   const videoUpload = await videoResponse.json(); if (!videoResponse.ok) throw new Error(videoUpload.error);
-  const ocrCreated = await api('/api/jobs', 'POST', { input: { fileId: videoUpload.id }, options: { speech: false, screenText: true, screenLanguage: 'en', transcribeOnly: true } });
+  const ocrCreated = await api('/api/jobs', 'POST', { input: { fileId: videoUpload.id, youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }, options: { speech: false, screenText: true, screenLanguage: 'en', transcribeOnly: true } });
   let ocrJob;
   for (let attempt = 0; attempt < 180; attempt++) {
     ocrJob = await api(`/api/jobs/${ocrCreated.id}`);
@@ -132,10 +132,23 @@ try {
   if ((await api(`/api/jobs/${ocrJob.id}/export?format=json`)).cues.some(cue => cue.id === selectedCue)) throw new Error('삭제한 자막이 저장 파일에 포함되었습니다.');
   await api(`/api/jobs/${ocrJob.id}`, 'PATCH', { changes: [{ id: selectedCue, excluded: false }] });
   if (JSON.stringify(await api(`/api/jobs/${ocrJob.id}/export?format=json`)) !== JSON.stringify(project)) throw new Error('삭제 취소 후 자막 시간·위치가 변경되었습니다.');
+  // Seed the save cache with our own public OCR test fixture. Exercise the real
+  // packaged HTTP download path without contacting YouTube or a translation API.
+  const cachedVideo = join(app, `data/video/jobs/${ocrJob.id}/saved-video.mp4`);
+  copyFileSync(join(root, 'data/video/smoke/ocr/position-test.mp4'), cachedVideo);
+  writeFileSync(join(app, `data/video/jobs/${ocrJob.id}/saved-video.json`), JSON.stringify({ videoId: ocrJob.videoId, name: 'saved-video.mp4' }));
+  const videoTicket = await api(`/api/jobs/${ocrJob.id}/video`, 'POST');
+  const download = await fetch(base + videoTicket.url);
+  if (!download.ok || !download.headers.get('content-disposition')?.includes('attachment')) throw new Error('별도 영상 다운로드 응답을 확인하지 못했습니다.');
+  const separatelySaved = join(folder, 'separately-saved-video.mp4'); writeFileSync(separatelySaved, Buffer.from(await download.arrayBuffer()));
+  if (await sha256File(separatelySaved) !== await sha256File(cachedVideo)) throw new Error('별도 영상 저장 결과가 다릅니다.');
+  await api(`/api/jobs/${ocrJob.id}`, 'DELETE'); await api(`/api/jobs/${job.id}`, 'DELETE');
+  for (const path of [`data/video/jobs/${ocrJob.id}`, `data/video/jobs/${job.id}`, `data/video/uploads/${videoUpload.id}.mp4`, `data/video/uploads/${videoUpload.id}.json`, `data/video/uploads/${upload.id}.wav`, `data/video/uploads/${upload.id}.json`]) if (existsSync(join(app, path))) throw new Error('기록 삭제 후 작업 파일이 남았습니다.');
+  if (!existsSync(separatelySaved) || !existsSync(join(root, 'data/video/smoke/ocr/position-test.mp4'))) throw new Error('원본 또는 별도 저장 영상이 삭제되었습니다.');
   const glossaryCheck = await api('/api/glossary/check', 'POST', {});
   const updatedGlossary = await api('/api/glossary/update', 'POST', {});
   const expectedGlossary = glossaryCheck.available || glossaryCheck.current;
   if (updatedGlossary.current.count !== expectedGlossary.count || updatedGlossary.current.sha256 !== expectedGlossary.sha256) throw new Error('공개 GitHub 용어집 연결을 확인하지 못했습니다.');
-  report = { version: release.version, archiveSha256: release.sha256, bundledNode: release.nodeVersion, archiveVerified: true, cleanKeys: !initialSettings.hasKey, initialJobs: initialJobs.length, globalPathDisabled: true, nonAsciiAndSpacePath: true, bracketPath: true, firstTimeSetup: 'completed (verified cached downloads)', archiveExtractor: 'Windows PowerShell 5.1 + .NET', cpuTranscription: 'completed', optionalCpuOcr: 'completed', projectExport: true, speechScreenExports: true, reversibleCueDeletion: true, extensionCueActionFiles: true, productionShadowClosed: true, githubGlossaryUpdate: true, fourLanguageReadmes: true, elapsedMs: Date.now() - started, cueCount: cues.length, translationApiCalls: 0 };
+  report = { version: release.version, archiveSha256: release.sha256, bundledNode: release.nodeVersion, archiveVerified: true, cleanKeys: !initialSettings.hasKey, initialJobs: initialJobs.length, globalPathDisabled: true, nonAsciiAndSpacePath: true, bracketPath: true, firstTimeSetup: 'completed (verified cached downloads)', archiveExtractor: 'Windows PowerShell 5.1 + .NET', cpuTranscription: 'completed', optionalCpuOcr: 'completed', projectExport: true, speechScreenExports: true, reversibleCueDeletion: true, jobDeletionRemovesMediaAndUploadCopies: true, separateVideoDownload: 'verified with own cached test video (no live YouTube request)', separateOriginalsAndDownloadsPreserved: true, extensionCueActionFiles: true, productionShadowClosed: true, githubGlossaryUpdate: true, fourLanguageReadmes: true, elapsedMs: Date.now() - started, cueCount: cues.length, translationApiCalls: 0 };
   writeFileSync(join(root, 'dist', 'video-package-qa.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report));
 } finally { child.kill(); await new Promise(resolveExit => { if (child.exitCode !== null) resolveExit(); else child.once('close', resolveExit); }); }

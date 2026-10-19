@@ -6,7 +6,7 @@ export async function cueAction(message, sender, { extensionId, getToken, fetche
     || url?.protocol !== 'https:' || url.port || !['www.youtube.com','m.youtube.com'].includes(url.hostname) || videoId !== message.videoId
     || !['exclude','report'].includes(message.action) || !/^[a-f0-9-]{36}$/.test(message.jobId || '') || !/^\d{1,8}$/.test(message.cueId || '')) throw new Error('유튜브 영상과 연결된 자막을 확인하세요.');
   const token = await getToken();
-  if (!/^[a-f0-9]{64}$/.test(token || '')) throw new Error('작업실 설정의 PC 연결 코드를 입력하세요.');
+  if (!/^[a-f0-9]{64}$/.test(token || '')) throw new Error('프로그램 왼쪽 「API 및 연결 설정」에서 「PC 연결 코드 복사」를 눌러 코드를 입력하세요.');
   const api = async (path, method = 'GET', body) => {
     let response; try { response = await fetcher(BASE + path, { method, redirect:'error', signal:AbortSignal.timeout(25000), headers:{Authorization:`Bearer ${token}`,...(body === undefined ? {} : {'Content-Type':'application/json'})}, ...(body === undefined ? {} : {body:JSON.stringify(body)}) }); }
     catch { throw new Error('PC 프로그램에 연결하지 못했습니다. video-run.cmd를 실행하세요.'); }

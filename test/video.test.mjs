@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync, rmdirSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import { join, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { once } from 'node:events';
@@ -25,6 +26,7 @@ function setup(t, options = {}) {
   const app = createVideoServer({ root, token: 'a'.repeat(64), ...options, jobsOptions: { gate: { enter: async () => {} }, ...options.jobsOptions } });
   t.after(async () => {
     for (const job of app.jobs.jobs.values()) app.jobs.cancel(job.id);
+    app.videos.close();
     while (app.jobs.active) await tick();
     if (app.server.listening) await new Promise(resolve => app.server.close(resolve));
     const target = resolve(root), scoped = relative(resolve(testBase), target);
@@ -185,7 +187,7 @@ test('HTTP 400 from a saved task resumes with a constant schema and reuses its t
   assert.equal(done.status,'completed');assert.equal(calls,2);assert.equal(prepared,1);assert.equal(done.apiRequestError,null);
 });
 
-test('cancel interrupts an active request and deleting its record preserves uploads, keys and other jobs', async t => {
+test('cancel interrupts an active request and deleting its record preserves unrelated uploads, keys and other jobs', async t => {
   let started;const ready=new Promise(done=>started=done);
   const app=setup(t,{jobsOptions:{prepare:async()=>({cues:parseSubtitles(fixture),origin:'test'}),fetcher:async(_url,init)=>{started();return new Promise((_done,reject)=>{init.signal.addEventListener('abort',()=>reject(init.signal.reason),{once:true});if(init.signal.aborted)reject(init.signal.reason);});}}});
   app.settings.save(config);const keyBytes=readFileSync(join(app.jobs.dataDir,'api-vault.json'));
@@ -227,7 +229,135 @@ test('HTTP API protects keys and jobs, accepts file input, and exports only fini
   assert.equal((await fetch(`${base}/api/jobs/${job.id}`,{method:'DELETE',headers})).status,200);
   assert.equal((await fetch(`${base}/api/jobs/${job.id}`,{headers})).status,404);
   assert.equal((await fetch(`${base}/api/jobs`,{headers}).then(r=>r.json())).length,0);
-  assert(existsSync(join(app.jobs.dataDir,'uploads',file.id+'.vtt')));
+  assert(!existsSync(join(app.jobs.dataDir,'uploads',file.id+'.vtt')));
+  assert(!existsSync(join(app.jobs.dataDir,'uploads',file.id+'.json')));
+});
+
+function uploadFixture(app, { id = randomUUID(), extension = '.mp4', metadataPath } = {}) {
+  const directory = join(app.jobs.dataDir, 'uploads'), path = join(directory, id + extension);
+  writeFileSync(path, 'APP-OWNED-MEDIA');
+  writeFileSync(join(directory, id + '.json'), JSON.stringify({ id, name: 'input' + extension, path: metadataPath || path }));
+  return { id, path, metadata: join(directory, id + '.json') };
+}
+
+test('record deletion removes its media, upload metadata, subtitles and checkpoints but preserves originals and exports', async t => {
+  const app = setup(t, { jobsOptions: { prepare: async () => ({ cues: parseSubtitles(fixture), origin: 'test' }) } });
+  const original = join(app.root, 'original.mp4'), downloaded = join(app.root, 'downloaded.srt');
+  writeFileSync(original, 'ORIGINAL'); writeFileSync(downloaded, 'SEPARATELY-SAVED');
+  const upload = uploadFixture(app, { metadataPath: original });
+  const created = app.jobs.create({ input: { fileId: upload.id }, options: { transcribeOnly: true } });
+  await waitJob(app.jobs, created.id); while (app.jobs.active) await tick();
+  const directory = app.jobs.directory(created.id);
+  for (const name of ['screen-video.mp4', 'audio.webm', 'speech.wav', 'translation.json']) writeFileSync(join(directory, name), 'REMOVE');
+  app.jobs.remove(created.id);
+  assert(!existsSync(directory)); assert(!existsSync(upload.path)); assert(!existsSync(upload.metadata));
+  assert.equal(readFileSync(original, 'utf8'), 'ORIGINAL'); assert.equal(readFileSync(downloaded, 'utf8'), 'SEPARATELY-SAVED');
+});
+
+test('shared upload survives record deletion and restart until the last referencing job is deleted', async t => {
+  const app = setup(t, { jobsOptions: { prepare: async () => ({ cues: parseSubtitles(fixture), origin: 'test' }) } });
+  const upload = uploadFixture(app), input = { input: { fileId: upload.id }, options: { transcribeOnly: true } };
+  const first = app.jobs.create(input), second = app.jobs.create(input);
+  await waitJob(app.jobs, second.id); while (app.jobs.active) await tick();
+  app.jobs.remove(first.id); assert(existsSync(upload.path)); assert(existsSync(upload.metadata));
+  const reopened = new Jobs({ root: app.root, dataDir: app.jobs.dataDir, settings: app.settings });
+  assert.equal(reopened.cleanupOrphanUploads().removedFiles, 0); assert(existsSync(upload.path));
+  reopened.remove(second.id); assert(!existsSync(upload.path)); assert(!existsSync(upload.metadata));
+});
+
+test('startup after an update removes legacy unreferenced uploads and retains every persisted job input', async t => {
+  const app = setup(t), keep = [];
+  for (const status of ['completed', 'failed', 'cancelled', 'queued', 'running']) {
+    const upload = uploadFixture(app); keep.push(upload);
+    const id = randomUUID(); mkdirSync(app.jobs.directory(id));
+    writeFileSync(join(app.jobs.directory(id), 'job.json'), JSON.stringify({ id, input: { fileId: upload.id }, status, createdAt: new Date().toISOString(), cues: [] }));
+  }
+  const orphan = uploadFixture(app), missingMetadata = uploadFixture(app, { extension: '.wav' });
+  writeFileSync(orphan.metadata + '.tmp', 'STALE-METADATA');
+  rmSync(missingMetadata.metadata);
+  const unknown = join(app.jobs.dataDir, 'uploads', 'unmanaged.mp4'); writeFileSync(unknown, 'KEEP-UNKNOWN');
+  const migrated = createVideoServer({ root: app.root, token: 'b'.repeat(64) });
+  t.after(async () => { if (migrated.server.listening) await new Promise(done => migrated.server.close(done)); });
+  assert(existsSync(orphan.path), 'constructing a second server must not clean uploads');
+  migrated.server.listen(0, '127.0.0.1'); await once(migrated.server, 'listening');
+  assert(!existsSync(orphan.path)); assert(!existsSync(orphan.metadata)); assert(!existsSync(orphan.metadata + '.tmp')); assert(!existsSync(missingMetadata.path));
+  for (const upload of keep) { assert(existsSync(upload.path)); assert(existsSync(upload.metadata)); }
+  assert.equal(readFileSync(unknown, 'utf8'), 'KEEP-UNKNOWN');
+  const base = `http://127.0.0.1:${migrated.server.address().port}`;
+  assert.equal((await fetch(base + '/api/storage')).status, 401);
+  const { cleanup } = await fetch(base + '/api/storage', { headers: { Authorization: `Bearer ${migrated.token}` } }).then(response => response.json());
+  assert.equal(cleanup.removedFiles, 4); assert(cleanup.removedBytes > 0); assert.equal(cleanup.failedFiles, 0);
+  assert.equal([...migrated.jobs.jobs.values()].filter(job => job.status === 'interrupted').length, 2);
+});
+
+test('a failed duplicate launch does not remove a running app upload awaiting job creation', async t => {
+  const app = setup(t); app.server.listen(0, '127.0.0.1'); await once(app.server, 'listening');
+  const pending = uploadFixture(app), duplicate = createVideoServer({ root: app.root, token: 'b'.repeat(64) });
+  const failure = once(duplicate.server, 'error'); duplicate.server.listen(app.server.address().port, '127.0.0.1');
+  assert.equal((await failure)[0].code, 'EADDRINUSE');
+  assert(existsSync(pending.path)); assert(existsSync(pending.metadata));
+});
+
+test('upload cleanup refuses directory links and never follows metadata paths outside app storage', async t => {
+  const app = setup(t, { jobsOptions: { prepare: async () => ({ cues: parseSubtitles(fixture), origin: 'test' }) } });
+  const upload = uploadFixture(app), created = app.jobs.create({ input: { fileId: upload.id }, options: { transcribeOnly: true } });
+  await waitJob(app.jobs, created.id); while (app.jobs.active) await tick();
+  const directory = join(app.jobs.dataDir, 'uploads'), saved = join(app.jobs.dataDir, 'uploads-saved'), outside = join(app.root, 'outside-uploads');
+  // Rename stays entirely inside the test fixture; the link points at a separate
+  // fixture directory containing a same-ID file that must never be deleted.
+  const { renameSync } = await import('node:fs'); renameSync(directory, saved);
+  mkdirSync(outside); const protectedFile = join(outside, upload.id + '.mp4'); writeFileSync(protectedFile, 'KEEP-OUTSIDE');
+  symlinkSync(outside, directory, process.platform === 'win32' ? 'junction' : 'dir');
+  assert.throws(() => app.jobs.remove(created.id), /정리 경로/); assert(existsSync(app.jobs.directory(created.id)));
+  assert.equal(app.jobs.cleanupOrphanUploads().failedFiles, 1); assert.equal(readFileSync(protectedFile, 'utf8'), 'KEEP-OUTSIDE');
+  // A directory named like managed media is not a file and must not be removed.
+  rmSync(directory); renameSync(saved, directory); rmSync(upload.path); mkdirSync(upload.path);
+  assert.throws(() => app.jobs.remove(created.id), /정리 경로/); assert(existsSync(app.jobs.directory(created.id)));
+  rmdirSync(upload.path); writeFileSync(upload.path, 'APP-OWNED-MEDIA');
+  app.jobs.remove(created.id); assert(!existsSync(upload.path)); assert.equal(readFileSync(protectedFile, 'utf8'), 'KEEP-OUTSIDE');
+});
+
+test('YouTube video save uses an authenticated request, an isolated single-use download and a removable job cache', async t => {
+  let calls = 0;
+  const media = Buffer.from('FIXTURE-VIDEO-WITH-AUDIO');
+  const app = setup(t, { jobsOptions: { prepare: async () => ({ cues: parseSubtitles(fixture), origin: 'test' }) }, videoOptions: {
+    getTools: () => ({ ytdlp: 'fixture-ytdlp', ffmpeg: 'fixture-ffmpeg', ready: { ytdlp: true, ffmpeg: true } }),
+    run: async (_executable, args) => { calls++; assert(args.includes('!is_live')); assert(args.includes('bv*[height<=1080]+ba/b[height<=1080]')); assert(args.includes('after_move:filepath')); const output = args[args.indexOf('-o') + 1].replace('%(ext)s', 'mp4'); writeFileSync(output, media); return { stdout: output + '\n' }; }
+  } });
+  app.server.listen(0, '127.0.0.1'); await once(app.server, 'listening');
+  const job = app.jobs.create({ ...jobInput, title: '영상 "테스트"' + '😀'.repeat(80), options: { transcribeOnly: true } });
+  await waitJob(app.jobs, job.id); while (app.jobs.active) await tick();
+  const base = `http://127.0.0.1:${app.server.address().port}`, headers = { Authorization: `Bearer ${app.token}` }, endpoint = base + `/api/jobs/${job.id}/video`;
+  assert.equal((await fetch(endpoint, { method: 'POST' })).status, 401); assert.equal(calls, 0);
+  const prepared = await fetch(endpoint, { method: 'POST', headers }).then(response => response.json());
+  assert.match(prepared.url, /^\/api\/video-downloads\/[a-f0-9]{64}$/); assert(!prepared.url.includes(app.token)); assert.equal(prepared.bytes, media.length);
+  assert.equal(app.jobs.summary(app.jobs.get(job.id)).canDelete, false);
+  assert.equal((await fetch(base + `/api/jobs/${job.id}`, { method: 'DELETE', headers })).status, 409);
+  assert.equal((await fetch(base + prepared.url, { headers: { Origin: 'https://evil.example' } })).status, 403);
+  const saved = await fetch(base + prepared.url); assert.equal(saved.status, 200); assert(saved.headers.get('content-disposition').includes("filename*=UTF-8''"));
+  const downloaded = Buffer.from(await saved.arrayBuffer()); assert.deepEqual(downloaded, media);
+  assert.equal((await fetch(base + prepared.url)).status, 404);
+  const repeated = await fetch(base + `/api/jobs/${job.id}/video`, { method: 'POST', headers }).then(response => response.json()).then(info => fetch(base + info.url));
+  assert.equal(repeated.status, 200); assert.deepEqual(Buffer.from(await repeated.arrayBuffer()), media);
+  while (app.jobs.videoSaves.size) await tick(); assert.equal(calls, 1, 'repeated saves reuse the completed job cache');
+  const externalDownload = join(app.root, 'separately-downloaded.mp4'); writeFileSync(externalDownload, downloaded);
+  app.jobs.remove(job.id); assert(!existsSync(app.jobs.directory(job.id))); assert.deepEqual(readFileSync(externalDownload), media);
+});
+
+test('video preparation cancellation stops its own work, releases deletion locks and does not alter completed subtitles', async t => {
+  let started, stopped = false; const ready = new Promise(done => started = done);
+  const app = setup(t, { jobsOptions: { prepare: async () => ({ cues: parseSubtitles(fixture), origin: 'test' }) }, videoOptions: {
+    getTools: () => ({ ytdlp: 'fixture-ytdlp', ffmpeg: 'fixture-ffmpeg', ready: { ytdlp: true, ffmpeg: true } }),
+    run: async (_executable, _args, { signal }) => { started(); await new Promise((_done, reject) => { signal.addEventListener('abort', () => { stopped = true; reject(signal.reason); }, { once: true }); }); }
+  } });
+  const job = app.jobs.create({ ...jobInput, options: { transcribeOnly: true } }); await waitJob(app.jobs, job.id); while (app.jobs.active) await tick();
+  app.server.listen(0, '127.0.0.1'); await once(app.server, 'listening');
+  const before = readFileSync(join(app.jobs.directory(job.id), 'job.json'));
+  const controller = new AbortController(), pending = fetch(`http://127.0.0.1:${app.server.address().port}/api/jobs/${job.id}/video`, { method: 'POST', headers: { Authorization: `Bearer ${app.token}` }, signal: controller.signal }); await ready;
+  assert.throws(() => app.jobs.remove(job.id), /영상 저장/); controller.abort(); await assert.rejects(pending, { name: 'AbortError' });
+  for (let attempt = 0; attempt < 100 && app.jobs.videoSaves.size; attempt++) await tick();
+  assert(stopped); assert.equal(app.jobs.videoSaves.size, 0); assert.deepEqual(readFileSync(join(app.jobs.directory(job.id), 'job.json')), before);
+  assert(!existsSync(join(app.jobs.directory(job.id), 'saved-video.json'))); app.jobs.remove(job.id);
 });
 test('YouTube overlay follows seeking, offset, ads and video navigation with text-only rendering', () => {
   let listener, frame;

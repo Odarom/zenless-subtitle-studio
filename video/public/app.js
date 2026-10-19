@@ -7,7 +7,7 @@ const t = (...args) => i18n.t(...args);
 const applyStaticLanguage = bindDocument(document, i18n);
 applyStaticLanguage();
 const $ = id => document.getElementById(id);
-const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), uploadController: null, actions: new Set(), refreshSerial: 0 };
+const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), videoSaves: new Map(), uploadController: null, actions: new Set(), refreshSerial: 0 };
 const statusLabel = (status, cancelling = false) => cancelling ? t('중단 중') : ({ queued: t('대기 중'), running: t('처리 중'), completed: t('완료'), failed: t('실패'), cancelled: t('중단됨'), interrupted: t('이어하기 가능') })[status] || status;
 function node(tag, attrs = {}, ...children) {
   const element = document.createElement(tag);
@@ -86,7 +86,7 @@ async function refreshJobs() {
   if (state.selected) {
     const summary = state.jobs.find(job => job.id === state.selected);
     if (!summary) { clearSelectedJob(); return; }
-    if (summary && (summary.updatedAt !== state.shownVersion || !state.detail)) {
+    if (summary && (summary.updatedAt !== state.shownVersion || summary.videoSaving !== state.detail?.videoSaving || !state.detail)) {
       const id = state.selected; let detail;
       try { detail = await apiJson(`/api/jobs/${id}`); }
       catch (error) { if (serial !== state.refreshSerial || state.selected !== id) return; throw error; }
@@ -105,7 +105,7 @@ function jobButtons(job) {
   const busy = ['queued', 'running'].includes(job.status), pending = state.actions.has(job.id), controls = node('div', { class: 'button-row' });
   if (busy) controls.append(node('button', { class: 'secondary', type: 'button', text: t(job.cancelRequested ? '중단 중' : '작업 중단'), disabled: pending || job.cancelRequested, onclick: () => action('cancel', job.id) }));
   if (['failed', 'cancelled', 'interrupted'].includes(job.status)) controls.append(node('button', { class: 'primary', type: 'button', text: t('이어하기'), disabled: pending, onclick: () => action('resume', job.id) }));
-  controls.append(node('button', { class: 'secondary', type: 'button', text: t('기록 삭제'), disabled: pending || job.status === 'running' || job.cancelRequested, title: job.status === 'running' ? t('실행 중인 작업은 먼저 중단한 뒤 삭제하세요.') : '', onclick: () => action('delete', job.id) }));
+  controls.append(node('button', { class: 'secondary', type: 'button', text: t('기록 삭제'), disabled: pending || job.status === 'running' || job.cancelRequested || job.videoSaving || state.videoSaves.has(job.id), title: job.videoSaving ? t('영상 저장을 마치거나 중단한 뒤 기록을 삭제하세요.') : job.status === 'running' ? t('실행 중인 작업은 먼저 중단한 뒤 삭제하세요.') : '', onclick: () => action('delete', job.id) }));
   return controls;
 }
 function confirmJobDeletion() {
@@ -114,7 +114,8 @@ function confirmJobDeletion() {
     const dialog = node('dialog', { id: 'deleteJobDialog', 'aria-labelledby': 'deleteJobTitle' });
     const finish = accepted => { dialog.close(); dialog.remove(); resolve(accepted); };
     dialog.append(node('h2', { id: 'deleteJobTitle', text: t('기록 삭제') }),
-      node('p', { text: t('이 작업의 기록·자막·임시 파일을 삭제할까요? 원본 파일과 API 설정은 삭제하지 않습니다.') }),
+      node('p', { text: t('이 작업의 기록과 프로그램에 보관된 영상·자막·임시 파일을 삭제할까요? 따로 저장한 원본·다운로드 파일과 API 설정은 유지합니다.') }),
+      node('p', { class: 'description', text: t('다른 작업도 사용하는 영상 사본은 마지막 작업 기록을 삭제할 때 정리합니다.') }),
       node('div', { class: 'button-row' },
         node('button', { class: 'secondary', type: 'button', text: t('닫기'), onclick: () => finish(false) }),
         node('button', { class: 'primary', type: 'button', text: t('기록 삭제'), onclick: () => finish(true) })));
@@ -128,7 +129,7 @@ async function action(name, id = state.selected) {
   state.actions.add(id); state.refreshSerial++; renderJobLists(); if (state.detail) renderDetail();
   try {
     await apiJson(name === 'delete' ? `/api/jobs/${id}` : `/api/jobs/${id}/${name}`, { method: name === 'delete' ? 'DELETE' : 'POST' });
-    if (name === 'delete') { if (state.selected === id) clearSelectedJob(); toast(t('작업 기록을 삭제했습니다.')); }
+    if (name === 'delete') { if (state.selected === id) clearSelectedJob(); const preview = state.previewUrls.get(id); if (preview) URL.revokeObjectURL(preview); state.previewUrls.delete(id); toast(t('작업 기록을 삭제했습니다.')); }
   } catch (error) { toast(error.message, true); }
   finally { state.actions.delete(id); try { await refreshJobs(); } catch (error) { toast(error.message, true); } if (state.detail) renderDetail(); }
 }
@@ -141,6 +142,18 @@ async function download(format, positioned = false) {
     const anchor = node('a', { href: url, download: `${(state.detail.title || t('젠레스 자막')).replace(/[<>:"/\\|?*]/g, '_')}.${mode}${track === 'all' ? '' : '.' + track}${positioned ? ".positioned" : ""}.${format}` });
     document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
   } catch (error) { toast(error.message, true); }
+}
+async function saveVideo(job) {
+  if (state.videoSaves.has(job.id)) { state.videoSaves.get(job.id).abort(); return; }
+  const controller = new AbortController(); state.videoSaves.set(job.id, controller);
+  renderJobLists(); renderDetail(); toast(t('음성이 포함된 유튜브 영상을 준비하고 있습니다. 영상 저장 취소로 중단할 수 있습니다.'));
+  try {
+    const result = await apiJson(`/api/jobs/${job.id}/video`, { method: 'POST', signal: controller.signal });
+    controller.signal.throwIfAborted();
+    const anchor = node('a', { href: result.url, download: result.filename }); document.body.append(anchor); anchor.click(); anchor.remove();
+    toast(t('브라우저의 다운로드 목록에서 영상 저장을 확인하세요. 저장한 영상에는 번역 자막이 합쳐지지 않습니다.'));
+  } catch (error) { toast(error.name === 'AbortError' ? t('영상 저장을 취소했습니다.') : error.message, error.name !== 'AbortError'); }
+  finally { state.videoSaves.delete(job.id); try { await refreshJobs(); } catch {} renderJobLists(); if (state.detail) renderDetail(); }
 }
 function renderPreview(job) {
   const fileInput = node('input', { type: 'file', accept: 'video/*,audio/*', hidden: true, onchange: () => {
@@ -242,7 +255,7 @@ function renderDetail() {
   const downloadMode = node('select', { id: 'downloadMode', 'aria-label': t('저장할 자막 내용') }, node('option', { value: 'translated', text: job.options.transcribeOnly ? t('원문 자막') : t('번역 자막') }), ...(!job.options.transcribeOnly ? [node('option', { value: 'bilingual', text: t('원문 + 번역 병기') }), node('option', { value: 'source', text: t('원문 자막') })] : []));
   const downloadTrack = node('select', { id: 'downloadTrack', 'aria-label': t('저장할 자막 종류') }, node('option', { value: 'all', text: t('음성 자막 + 화면 자막') }), node('option', { value: 'speech', text: t('음성 자막만') }), node('option', { value: 'screen', text: t('화면 자막만') }));
   const buttons = node('div', { class: 'button-row' }, downloadTrack, downloadMode, node('button', { class: 'primary', type: 'button', text: t('SRT 저장 ↓'), onclick: () => download('srt') }), node('button', { class: 'secondary', type: 'button', text: t('VTT 저장 ↓'), onclick: () => download('vtt') }), node('button', { class: 'secondary', type: 'button', text: t('위치 포함 VTT ↓'), onclick: () => download('vtt', true) }), node('button', { class: 'secondary', type: 'button', text: t('프로젝트 JSON ↓'), onclick: () => download('json') }));
-  if (job.videoId) buttons.append(node('a', { class: 'secondary', href: `https://www.youtube.com/watch?v=${job.videoId}`, target: '_blank', rel: 'noopener', text: t('유튜브에서 열기 ↗') }));
+  if (job.videoId) buttons.append(node('button', { class: 'secondary', type: 'button', text: t(state.videoSaves.has(job.id) ? '영상 저장 취소' : job.videoSaving ? '영상 저장 중' : '유튜브 영상 저장 ↓'), disabled: job.videoSaving && !state.videoSaves.has(job.id), onclick: () => saveVideo(job) }), node('a', { class: 'secondary', href: `https://www.youtube.com/watch?v=${job.videoId}`, target: '_blank', rel: 'noopener', text: t('유튜브에서 열기 ↗') }));
   element.append(node('p', { class: 'progress-message', text: i18n.message(job.message) }), buttons);
   element.append(node('p', { class: 'meta-line', text: `${job.origin?.includes('auto') ? t('유튜브 자동 자막 기반 · 원문 오류를 확인하세요.') : job.origin === 'whisper' ? t('음성 인식 기반 · {runtime}', { runtime: i18n.message(job.runtime) || t('로컬 처리') }) : t('기존 원어 자막 기반')}${job.translationConfig ? ` · ${job.translationConfig.provider} / ${job.translationConfig.model}` : ''} · ${t('확인 표시 {count}개 구간', { count: job.cues.filter(cue => cue.warnings?.length).length })}` }));
   if (job.videoId) element.append(node('p', { class: 'hint', text: t('유튜브 영상에서 확장 프로그램을 열고 이 작업의 자막을 적용하세요.') }));
@@ -270,7 +283,7 @@ $('uiLanguage').addEventListener('change', () => {
   i18n.setLocale($('uiLanguage').value);
   try { localStorage.setItem(UI_LANGUAGE_STORAGE_KEY, i18n.locale); } catch {}
   applyStaticLanguage(); selectedFile(state.file);
-  renderSettingsLabels(); renderTools(); renderJobLists(); renderDetail(); renderGlossary(); renderProgram();
+  renderSettingsLabels(); renderTools(); renderJobLists(); renderDetail(); renderGlossary(); renderProgram(); renderStorageCleanup();
   if ($('reportDialog').open) $('reportDialog').close();
   $('toast').hidden = true;
 });
@@ -390,7 +403,7 @@ $('exportReport').addEventListener('click', async () => {
 try {
   const session = await fetch('/api/session', { headers: { 'X-ZZZ-Local': '1' } }); if (!session.ok) throw new Error(t('로컬 연결을 시작하지 못했습니다.'));
   state.token = (await session.json()).token;
-  await Promise.all([loadSettings(), loadTools(), loadGlossary(), loadProgram()]);
+  await Promise.all([loadSettings(), loadTools(), loadGlossary(), loadProgram(), loadStorageCleanup()]);
   const youtube = new URLSearchParams(location.search).get('youtube'); if (youtube) $('youtubeUrl').value = youtube;
   const selectedJob = new URLSearchParams(location.search).get('job');
   await refreshJobs(); if (selectedJob && state.jobs.some(job => job.id === selectedJob)) await selectJob(selectedJob); else if (state.jobs.length && !youtube) await selectJob(state.jobs[0].id);
@@ -398,6 +411,14 @@ try {
 } catch (error) { toast(error.message, true); }
 
 async function loadProgram() { state.program = await apiJson('/api/program'); renderProgram(); }
+async function loadStorageCleanup() { state.storageCleanup = (await apiJson('/api/storage')).cleanup; renderStorageCleanup(); }
+function renderStorageCleanup() {
+  const info = state.storageCleanup, notice = $('storageCleanupNotice');
+  notice.hidden = !info || !info.removedFiles && !info.failedFiles;
+  if (!info) return;
+  notice.textContent = (info.removedFiles ? t('기록에 없는 영상·임시 파일 {count}개를 정리했습니다. 확보한 공간: {size} MB', { count: info.removedFiles, size: (info.removedBytes / 1048576).toLocaleString(i18n.locale, { maximumFractionDigits: 1 }) }) : '')
+    + (info.failedFiles ? ' ' + t('일부 남은 파일을 정리하지 못했습니다. 파일을 사용하는 프로그램을 닫고 작업실을 다시 실행하세요.') : '');
+}
 function renderProgram() {
   const info = state.program; if (!info) return;
   $('programStatus').textContent = t('현재 프로그램 {version}', { version: info.currentVersion }) + (info.available ? ' · ' + t('새 버전 {version}', { version: info.available.version }) : '');

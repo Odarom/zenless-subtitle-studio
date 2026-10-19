@@ -1,27 +1,51 @@
-# ZZZ Subtitle Studio 0.6.6
+# ZZZ Subtitle Studio 0.6.7
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 ## 한국어
 
-자막 확인 목록과 영상 위의 자막 메뉴에서 개별 자막을 삭제할 수 있습니다. 삭제한 자막은 재생·저장 파일에서 빠지며, 작업실의 「삭제한 자막」 탭에서 복원할 수 있습니다. 유튜브에서는 PC에 연결해 완료 작업을 적용한 뒤 음성·화면 자막을 클릭하면 신고·삭제 메뉴가 열립니다. 메뉴를 열면 재생을 잠시 멈추고, 닫으면 원래 재생 중이었을 때 다시 재생합니다. 신고는 설명을 입력해 보내기를 눌렀을 때 기존 비공개 신고 서버로 전송합니다. 프로그램 업데이트 후 확장 관리 화면에서 확장을 새로고침하고 유튜브 페이지도 새로고침하세요. 저장 대상의 기본값은 「음성 자막 + 화면 자막」이며 「음성 자막만」「화면 자막만」도 선택할 수 있습니다. SRT·VTT·위치 포함 VTT·프로젝트 JSON에 동일하게 적용됩니다. 고정 글자의 낮은 신뢰도 오타가 앞뒤의 같은 문구 사이 한 프레임에만 있을 때는 보정하며, 숫자·부정 표현의 변화와 사라진 구간은 합치지 않습니다.
+작업 기록을 삭제하면 해당 작업을 위해 프로그램 안에 보관된 영상·음성·업로드 자막 사본, 생성 자막과 중간 파일을 함께 지웁니다. 같은 사본을 다른 작업도 쓰면 마지막 기록을 삭제할 때 정리합니다. 업데이트 후 실행할 때에는 이전 버전에서 기록 없이 남겨진 업로드 사본과 정보 파일도 자동 정리합니다. 남아 있는 작업의 입력 파일, PC의 원본, 따로 다운로드한 영상·자막, API 키·설정·신고는 유지합니다. 정리 결과와 실패 안내는 작업 기록 화면에 표시됩니다. 완료된 유튜브 작업의 「유튜브 영상 저장 ↓」로 음성이 포함된 영상을 최대 1080p로 따로 저장할 수 있습니다. 번역 자막이 영상에 합쳐지는 기능은 아니며, 자막은 SRT/VTT 등으로 따로 저장하세요. 저장 위치는 브라우저의 다운로드 설정에 따릅니다.
 
-화면 글자를 참고 문맥으로만 취급하고 원문 그대로 반환하는 사례에 대응해 번역 요청문을 보강했습니다. 화면 설명·제목·UI도 모두 번역 대상임을 명시하고, 번역 언어와 음성·화면의 대상 수를 용어집 뒤에도 다시 제공합니다. 같은 문구·고정 위치의 화면 글자는 코드로 묶어 한 번 번역한 뒤 원래 ID·시간·위치에 다시 연결합니다. 연속 표시만 한 구간으로 합치며, 사라진 시간에는 표시하지 않습니다. 문구·숫자·대소문자·위치가 다르거나 이동하는 글자는 별도로 처리합니다. OCR 상자의 작은 위치 흔들림만 허용합니다. 추가 언어 판별·차단·자동 재번역은 넣지 않았고 기존 검사는 유지합니다. 전체 영상과 용어집의 기본 1회 요청 방식은 같습니다. 기존 완료 결과는 자동 변경되지 않습니다. 요청 구성·중복 재사용·타이밍·실제 배포 ZIP을 검사했으며 실제 API 번역 품질 개선은 아직 확인하지 않았습니다.
+여기서 **PC 작업실**은 `Start.cmd`를 실행하면 브라우저에 열리는 **ZZZ 자막 작업실** 페이지(`http://127.0.0.1:4318`)를 말합니다.
+
+1. Chrome/Edge의 확장 관리 화면에서 개발자 모드를 켜고 **압축해제된 확장 프로그램 로드**로 함께 받은 `video-extension` 폴더를 선택합니다.
+2. 프로그램 폴더의 **Start.cmd**를 실행하고, 브라우저에 열린 프로그램 페이지로 이동합니다.
+3. 페이지 **왼쪽 메뉴의 「API 및 연결 설정」**을 누릅니다. 아래로 내려 **「유튜브 확장 프로그램 연결」** 카드의 **「PC 연결 코드 복사」**를 누릅니다.
+4. 유튜브 영상을 열고 브라우저 오른쪽 위의 확장 프로그램 아이콘에서 **ZZZ 자막 작업실**을 엽니다. **「PC 연결 코드」** 칸에 붙여 넣고 **「연결」**을 누릅니다. 이 코드는 번역 API 키와 별개입니다.
+5. **「완료된 자막」**에서 해당 영상의 작업을 고르고 **「선택한 자막 적용」**을 누릅니다. 사용하는 동안 `Start.cmd` 실행 창을 켜 두세요. 이 PC에서 처리하므로 별도 영상 처리 서버는 필요 없습니다.
 
 ## English
 
-Delete individual subtitles from the review list or the menu opened by clicking a subtitle. Deleted items are omitted from playback and saved files; restore them in the Deleted subtitles tab. On YouTube, connect the PC app and apply a completed job, then click speech or screen subtitles to report/delete them. The menu pauses playback and resumes on close only if it was previously playing. Reports go to the existing private report service only after you enter an explanation and submit. After updating the app, reload the extension in the browser’s extension manager and refresh YouTube. Saving defaults to Speech + screen subtitles; Speech subtitles only and Screen subtitles only are also available for SRT, VTT, positioned VTT and project JSON. A low-confidence one-frame OCR spelling flicker between repeated stationary text may be corrected; changed numbers, negations and disappearance gaps are preserved.
+Deleting a job record also removes all video/audio/uploaded-subtitle copies, generated subtitles and intermediate files stored for that job in the app. Shared copies remain until their last job is deleted. Startup after updating also clears upload copies and metadata left without a job record by older versions. Inputs for retained jobs, original PC files, separate video/subtitle downloads, API keys, settings and reports stay. The history view shows cleanup results or failures. On a completed YouTube job, Save YouTube video ↓ downloads a separate video with audio, up to 1080p. Translated subtitles are not burned into the video; save SRT/VTT separately. The destination follows your browser’s download settings.
 
-Strengthened translation instructions so screen explanations, headings and UI are explicit translation targets, with target language and speech/screen counts repeated after the glossary. Code groups identical stationary screen text for one translation, then restores every original ID, interval and position. Continuous display may merge; disappearance gaps remain empty. Different words, numbers, case, locations and moving text remain separate, allowing only small OCR-box jitter. No new language detection, blocking or automatic retranslation was added; existing checks remain. Whole-video/full-glossary single-request behavior is unchanged. Saved completed results are not automatically modified. Request construction, reuse, timing and actual release ZIP were checked; actual API translation quality improvement has not yet been verified.
+**PC Studio** means the **ZZZ Subtitle Studio** page opened in your browser by `Start.cmd` (`http://127.0.0.1:4318`).
+
+1. In Chrome/Edge extension management, enable developer mode and load the included `video-extension` folder using **Load unpacked**.
+2. Run **Start.cmd** in the program folder and open the program page that appears in your browser.
+3. Click **API & connection in the left menu**. Scroll to the **Connect the YouTube extension** card and click **Copy PC connection code**.
+4. Open a YouTube video, then open **ZZZ Subtitle Studio** from the browser’s extension icon at the top right. Paste into **PC connection code** and click **Connect**. This code is separate from your translation API key.
+5. Choose the video’s job under **Finished subtitles** and click **Apply selected subtitles**. Keep the `Start.cmd` window open while using it. Processing runs on this PC; no separate video-processing server is needed.
 
 ## 日本語
 
-確認一覧や字幕をクリックして開くメニューから個別字幕を削除できます。削除分は再生・保存ファイルから除外され、「削除した字幕」タブで復元できます。YouTubeではPCに接続して完了作業を適用後、音声・画面字幕をクリックすると報告・削除メニューが開きます。メニュー表示中は停止し、閉じると元々再生中だった場合のみ再開します。説明を入力して送信した報告だけが既存の非公開受付へ届きます。アプリ更新後、拡張機能管理画面で拡張を再読み込みし、YouTubeページも更新してください。保存対象の標準は「音声字幕 + 画面字幕」で、「音声字幕のみ」「画面字幕のみ」もSRT・VTT・位置付きVTT・プロジェクトJSONで選べます。同じ固定文言の間にある低信頼度・1フレームだけのOCR誤字は補正しますが、数値・否定表現の変化や消えた区間は結合しません。
+履歴を削除すると、その作業用にアプリ内に保存した動画・音声・アップロード字幕のコピー、生成字幕、中間ファイルをすべて消去します。共有コピーは最後の作業履歴を削除するときに整理します。更新後の起動時には、旧版で履歴のないまま残ったアップロードコピーと情報ファイルも自動整理します。残っている作業の入力、PC上の元ファイル、別途ダウンロードした動画・字幕、APIキー・設定・報告は保持します。整理結果や失敗は作業履歴画面に表示します。完了したYouTube作業の「YouTube動画を保存 ↓」から、音声を含む最大1080pの動画を別途保存できます。翻訳字幕は動画に焼き込まれません。SRT/VTTなどで別途保存してください。保存先はブラウザのダウンロード設定に従います。
 
-画面の説明・見出し・UIも翻訳対象と明示し、翻訳先と音声・画面の対象数を用語集の後にも記載するよう要求を強化しました。同じ文言・固定位置の画面文字はコードでまとめて1回翻訳し、元のID・表示時刻・位置へ戻します。連続表示だけを結合し、消えた時間には表示しません。文言・数値・大文字小文字・位置が異なる場合や移動文字は別扱いとし、OCR枠の小さな揺れのみ許容します。新しい言語判定・ブロック・自動再翻訳は加えず既存の検査を維持します。動画全体と全用語集を1回で送る標準動作は同じです。完了済みの保存訳は自動変更しません。要求構成・再利用・時刻・実際の配布ZIPを検証しましたが、実APIでの翻訳品質改善は未確認です。
+**PC作業室**は、`Start.cmd`を実行するとブラウザに開く**ZZZ字幕スタジオ**のページ（`http://127.0.0.1:4318`）です。
+
+1. Chrome/Edgeの拡張機能管理でデベロッパーモードを有効にし、同梱の`video-extension`フォルダーを展開済み拡張機能として読み込みます。
+2. プログラムのフォルダーにある**Start.cmd**を実行し、ブラウザに開いたプログラムのページへ移動します。
+3. **左メニューの「API・接続設定」**を開き、下へスクロールして**「YouTube拡張機能を接続」**カードの**「PC接続コードをコピー」**を押します。
+4. YouTube動画を開き、ブラウザ右上の拡張機能アイコンから**ZZZ字幕スタジオ**を開きます。**「PC接続コード」**欄に貼り付けて**「接続」**を押します。このコードは翻訳APIキーとは別です。
+5. **「完成した字幕」**から動画の作業を選び、**「選択した字幕を適用」**を押します。使用中は`Start.cmd`のウィンドウを開いたままにします。このPCで処理するため、別の動画処理サーバーは不要です。
 
 ## 简体中文
 
-可在校对列表或点击字幕打开的菜单中删除单条字幕。删除后不再播放或导出，可在“已删除字幕”标签页恢复。在YouTube连接PC并应用已完成任务后，点击语音或屏幕字幕即可举报/删除。菜单打开时暂停，关闭时仅在原本播放中的情况下继续播放。填写说明并点击发送后，举报才会送达现有私密举报服务。更新程序后，请在浏览器扩展管理页重新加载扩展并刷新YouTube。导出默认“语音字幕 + 屏幕字幕”，SRT、VTT、含位置VTT及项目JSON也可选择“仅语音字幕”或“仅屏幕字幕”。相同固定文案之间仅一帧、置信度较低的OCR拼写抖动可修正；数值、否定变化及消失时段保持独立。
+删除任务记录时，同时删除应用为该任务保存的视频、音频、上传字幕副本、生成字幕及中间文件。共享副本在最后一条相关任务记录删除时清理。更新后启动时，也会自动清理旧版本遗留的无任务记录关联的上传副本及信息文件。保留现有任务的输入文件、电脑上的原始文件、另行下载的视频和字幕、API密钥、设置及举报。清理结果或失败提示显示在任务记录页面。已完成的YouTube任务新增“保存YouTube视频 ↓”，可另外下载最高1080p且包含声音的视频。译文字幕不会烧录进视频，请另存SRT/VTT等字幕。保存位置取决于浏览器的下载设置。
 
-加强翻译要求，明确屏幕说明、标题及UI也是翻译目标，并在术语表后重申目标语言及语音/屏幕各自数量。代码将相同文案和固定位置的屏幕文字合并请求一次翻译，再恢复每个原始ID、时段及位置。只合并连续显示，消失期间不会显示。不同文案、数值、大小写、位置及移动文字分开处理，仅容许OCR框轻微抖动。不新增语言检测、拦截或自动重译，保留既有检查；默认整段视频及完整术语表单次请求不变。已完成的保存结果不会自动修改。已验证请求构成、复用、时间及实际发行ZIP，尚未验证实际API翻译质量是否改善。
+**PC工作室**是运行`Start.cmd`后在浏览器中打开的**ZZZ字幕工作室**页面（`http://127.0.0.1:4318`）。
+
+1. 在Chrome/Edge扩展管理中开启开发者模式，加载随附的`video-extension`文件夹。
+2. 运行程序文件夹内的**Start.cmd**，切换到浏览器中打开的程序页面。
+3. 点击**左侧菜单“API 与连接设置”**，向下滚动，在**“连接 YouTube 扩展程序”**卡片中点击**“复制本机连接码”**。
+4. 打开YouTube视频，从浏览器右上角扩展图标打开**ZZZ字幕工作室**，粘贴到**“本机连接码”**栏并点击**“连接”**。此连接码与翻译API密钥不同。
+5. 在**“已完成字幕”**中选择该视频的任务，点击**“应用所选字幕”**。使用期间保持`Start.cmd`窗口开启，所有处理在此电脑进行，无需另设视频处理服务器。

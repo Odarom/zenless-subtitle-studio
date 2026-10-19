@@ -3,7 +3,7 @@ import { join, resolve } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { zipOperation, sha256File } from '../video/downloads.mjs';
 import { DEFAULT_PROGRAM_REPOSITORY } from '../video/distribution.mjs';
 
@@ -57,7 +57,11 @@ try {
   for (let i = 0; i < 100 && (await api('/api/jobs/' + job.id)).status !== 'completed'; i++) await delay();
   if ((await api('/api/jobs/' + job.id)).status !== 'completed') throw new Error('검사용 원문 작업 실패');
   await api('/api/jobs/' + job.id, 'PATCH', { changes: [{ id: '1', excluded: true }] });
-  const keep = ['data/video/api-vault.json', '.secrets/video-api.key', '.secrets/video-connection.key', '.models/qa-marker', '.tools/video/qa-marker', `data/video/jobs/${job.id}/job.json`];
+  const staleId = randomUUID(), staleCopy = join(app, `data/video/uploads/${staleId}.mp4`), staleMetadata = join(app, `data/video/uploads/${staleId}.json`);
+  writeFileSync(staleCopy, 'LEGACY-UNREFERENCED-VIDEO'); writeFileSync(staleMetadata, JSON.stringify({ id: staleId, path: staleCopy }));
+  const originalVideo = join(folder, 'user-original.mp4'), downloadedSubtitle = join(folder, 'user-download.srt');
+  writeFileSync(originalVideo, 'KEEP-ORIGINAL-VIDEO'); writeFileSync(downloadedSubtitle, 'KEEP-DOWNLOADED-SUBTITLE');
+  const keep = ['data/video/api-vault.json', '.secrets/video-api.key', '.secrets/video-connection.key', '.models/qa-marker', '.tools/video/qa-marker', `data/video/jobs/${job.id}/job.json`, `data/video/uploads/${uploaded.id}.srt`, `data/video/uploads/${uploaded.id}.json`];
   const before = new Map(keep.map(path => [path, digest(readFileSync(join(app, path)))]));
   const checked = await api('/api/program/check', 'POST', {});
   if (checked.available?.version !== release.version) throw new Error('업데이트 확인 실패');
@@ -66,9 +70,13 @@ try {
   if (!(await api('/api/jobs/' + job.id)).cues[0].excluded) throw new Error('자막 삭제 상태 유지 실패');
   if (!existsSync(join(folder, 'video-extension/background.mjs')) || JSON.parse(readFileSync(join(folder, 'video-extension/manifest.json'))).version !== release.version) throw new Error('확장 업데이트 확인 실패');
   for (const [path, hash] of before) if (digest(readFileSync(join(app, path))) !== hash) throw new Error('사용자 자료 변경: ' + path);
+  if (existsSync(staleCopy) || existsSync(staleMetadata)) throw new Error('업데이트 후 기록 없는 이전 영상 사본이 남았습니다.');
+  if (readFileSync(originalVideo, 'utf8') !== 'KEEP-ORIGINAL-VIDEO' || readFileSync(downloadedSubtitle, 'utf8') !== 'KEEP-DOWNLOADED-SUBTITLE') throw new Error('별도 저장 파일이 변경되었습니다.');
+  const cleanup = (await api('/api/storage')).cleanup;
+  if (cleanup.removedFiles !== 2 || cleanup.failedFiles || cleanup.removedBytes <= 0) throw new Error('이전 사본 정리 결과를 확인하지 못했습니다.');
   const manifest = JSON.parse(readFileSync(join(folder, 'release-manifest.json'), 'utf8'));
   if (manifest.version !== release.version || !manifest.installedRuntimePreserved || !JSON.parse(readFileSync(join(app, 'data/video/program-update-receipt.json'))).installedAt) throw new Error('설치 결과 확인 실패');
-  const result = { version: release.version, archiveSha256: release.sha256, simulatedPreviousVersion: '0.3.99 (updater already installed)', realZipExtraction: true, bundledSupervisorRestart: true, bracketKoreanSpacePath: true, globalPathDisabled: true, settingsKeysModelsToolsHistoryPreserved: true, runtimePreserved: true, translationApiCalls: 0 };
+  const result = { version: release.version, archiveSha256: release.sha256, simulatedPreviousVersion: '0.3.99 (updater already installed)', realZipExtraction: true, bundledSupervisorRestart: true, bracketKoreanSpacePath: true, globalPathDisabled: true, settingsKeysModelsToolsHistoryPreserved: true, referencedUploadsPreserved: true, legacyOrphanUploadsRemoved: true, separateOriginalsAndDownloadsPreserved: true, runtimePreserved: true, translationApiCalls: 0 };
   writeFileSync(join(root, 'dist/video-update-qa.json'), JSON.stringify(result, null, 2)); console.log(JSON.stringify(result));
 } finally {
   if (child.exitCode === null) spawnSync(join(process.env.SystemRoot || 'C:/Windows', 'System32/taskkill.exe'), ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' });

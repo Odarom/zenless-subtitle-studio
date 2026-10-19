@@ -8,6 +8,7 @@ import { sentenceCues, translationPlan } from './translation-plan.mjs';
 import { RequestGate } from './request-gate.mjs';
 import { serializeSubtitles, validateCues, youtubeVideoId } from './subtitles.mjs';
 import { TEXT_LANGUAGES, OCR_LANGUAGES } from '../src/languages.js';
+import { unusedUploadFiles, removeUploadFiles } from './upload-storage.mjs';
 
 export const LANGS = ['auto', ...Object.keys(TEXT_LANGUAGES)];
 export class Jobs {
@@ -16,7 +17,7 @@ export class Jobs {
     this.glossaryPath = glossaryPath;
     this.gate = gate; this.plan = plan;
     this.path = join(dataDir, 'jobs'); mkdirSync(this.path, { recursive: true });
-    this.jobs = new Map(); this.active = null; this.usage = new VideoUsage(dataDir);
+    this.jobs = new Map(); this.active = null; this.videoSaves = new Set(); this.usage = new VideoUsage(dataDir);
     for (const entry of readdirSync(this.path)) {
       if (!/^[a-f0-9-]{36}$/.test(entry)) continue;
       const path = join(this.path, entry, 'job.json');
@@ -28,7 +29,7 @@ export class Jobs {
   }
   directory(id) { return join(this.path, id); }
   save(job, patch = {}) { Object.assign(job, patch, { updatedAt: new Date().toISOString() }); saveJson(join(this.directory(job.id), 'job.json'), job); }
-  summary(job) { const { cues, ...value } = job; return { ...value, canDelete: this.active?.id !== job.id && job.status !== 'running', cueCount: cues?.filter(cue => !cue.excluded).length || 0, excludedCueCount: cues?.filter(cue => cue.excluded).length || 0, warningCount: cues?.filter(cue => !cue.excluded && cue.warnings?.length).length || 0 }; }
+  summary(job) { const { cues, ...value } = job; return { ...value, videoSaving: this.videoSaves.has(job.id), canDelete: this.active?.id !== job.id && job.status !== 'running' && !this.videoSaves.has(job.id), cueCount: cues?.filter(cue => !cue.excluded).length || 0, excludedCueCount: cues?.filter(cue => cue.excluded).length || 0, warningCount: cues?.filter(cue => !cue.excluded && cue.warnings?.length).length || 0 }; }
   list() { return [...this.jobs.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(job => this.summary(job)); }
   get(id) { const job = this.jobs.get(id); if (!job) throw Object.assign(new Error('작업을 찾지 못했습니다.'), { statusCode: 404 }); return job; }
   create(input) {
@@ -57,15 +58,29 @@ export class Jobs {
     } else this.save(job, { status: 'cancelled', cancelRequested: false, error: null, stageProgress: null, message: '작업을 중단했습니다. 이어하기로 재개할 수 있습니다.' });
     return this.summary(job);
   }
+  referencedUploads(exceptJobId) { return new Set([...this.jobs.values()].filter(job => job.id !== exceptJobId).map(job => job.input?.fileId).filter(Boolean)); }
+  cleanupOrphanUploads() {
+    // Called only after this server successfully binds its port, before uploads
+    // can arrive. Failed duplicate launches must never clean a running app's files.
+    try {
+      return { checkedAt: new Date().toISOString(), ...removeUploadFiles(unusedUploadFiles(this.dataDir, this.referencedUploads()), { bestEffort: true }) };
+    } catch { return { checkedAt: new Date().toISOString(), removedFiles: 0, removedBytes: 0, failedFiles: 1 }; }
+  }
   remove(id) {
     if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error('작업 경로가 올바르지 않습니다.');
     const job = this.get(id);
     if (this.active?.id === id || job.status === 'running') throw Object.assign(new Error('실행 중인 작업은 먼저 중단한 뒤 삭제하세요.'), { statusCode: 409 });
+    if (this.videoSaves.has(id)) throw Object.assign(new Error('영상 저장을 마치거나 중단한 뒤 기록을 삭제하세요.'), { statusCode: 409 });
     const target = resolve(this.path, id), root = realpathSync(this.path);
     const resolved = existsSync(target) ? realpathSync(target) : target, scope = relative(root, resolved);
     if (!scope || scope.startsWith('..') || isAbsolute(scope) || relative(resolve(this.path), target) !== id) throw new Error('작업 경로가 올바르지 않습니다.');
-    // Only this job's outputs/checkpoints/temp media are removed. Uploads,
-    // original user files, other jobs, settings, keys and reports stay separate.
+    // Remove this job's upload copy too, once no other retained job needs it.
+    // Validate every upload path before deleting anything. Files selected from
+    // outside the app and separately saved downloads are never deletion targets.
+    const uploadId = job.input?.fileId;
+    if (uploadId && !/^[a-f0-9-]{36}$/.test(uploadId)) throw new Error('작업 경로가 올바르지 않습니다.');
+    const uploads = uploadId ? unusedUploadFiles(this.dataDir, this.referencedUploads(id), uploadId) : [];
+    removeUploadFiles(uploads);
     rmSync(target, { recursive: true, force: true });
     this.jobs.delete(id);
     return { deleted: id };

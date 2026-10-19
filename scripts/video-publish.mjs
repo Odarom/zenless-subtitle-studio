@@ -77,8 +77,10 @@ export async function publishProgram(root = resolve(import.meta.dirname, '..'), 
   if (release.version !== VIDEO_VERSION || await sha256File(release.output) !== release.sha256) throw new Error('배포 ZIP 버전 또는 체크섬을 확인하세요.');
   const qa = JSON.parse(readFileSync(join(root, 'dist/video-package-qa.json'), 'utf8'));
   if (qa.version !== VIDEO_VERSION || qa.archiveSha256 !== release.sha256 || !qa.cpuTranscription || !qa.optionalCpuOcr) throw new Error('최종 배포본 검사를 먼저 완료하세요.');
+  if (!qa.jobDeletionRemovesMediaAndUploadCopies || !qa.separateVideoDownload || !qa.separateOriginalsAndDownloadsPreserved) throw new Error('최종 배포본의 파일 정리·영상 저장 검사를 먼저 완료하세요.');
   const updateQa = JSON.parse(readFileSync(join(root, 'dist/video-update-qa.json'), 'utf8'));
   if (updateQa.version !== VIDEO_VERSION || updateQa.archiveSha256 !== release.sha256 || !updateQa.bundledSupervisorRestart || !updateQa.settingsKeysModelsToolsHistoryPreserved) throw new Error('최종 배포본의 업데이트·재시작 검사를 먼저 완료하세요.');
+  if (!updateQa.legacyOrphanUploadsRemoved || !updateQa.referencedUploadsPreserved || !updateQa.separateOriginalsAndDownloadsPreserved) throw new Error('업데이트 후 이전 잔여 파일 정리·작업 파일 보존 검사를 먼저 완료하세요.');
   const tag = `v${VIDEO_VERSION}`; let published;
   try { published = api(`repos/${repo}/releases/tags/${tag}`); } catch (error) { if (!/HTTP 404/.test(error.message)) throw error; }
   if (published) {

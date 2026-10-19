@@ -10,10 +10,10 @@ const $ = id => document.getElementById(id);
 let tab, videoId, token = '';
 const say = (text, error = false) => { $('message').textContent = i18n.message(text); $('message').className = error ? 'error' : ''; };
 async function api(path) {
-  if (!token) throw new Error(t('작업실 설정의 PC 연결 코드를 입력하세요.'));
+  if (!token) throw new Error(t('프로그램 왼쪽 「API 및 연결 설정」에서 「PC 연결 코드 복사」를 눌러 코드를 입력하세요.'));
   let response;
   try { response = await fetch(`${BASE}${path}`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(10000) }); }
-  catch { throw new Error(t('PC 프로그램에 연결하지 못했습니다. video-run.cmd를 실행하세요.')); }
+  catch { throw new Error(t('PC 프로그램에 연결하지 못했습니다. 프로그램 폴더의 Start.cmd를 실행하세요.')); }
   const value = await response.json(); if (!response.ok) throw new Error(value.error || t('PC 연결을 확인하세요.')); return value;
 }
 async function send(message) {
@@ -37,7 +37,7 @@ function renderJobs() {
   say(matches.length ? t('PC 연결 완료 · 자막 {count}개', { count: matches.length }) : t('PC 연결 완료. 작업실에서 이 영상을 먼저 번역하세요.'));
 }
 function handle(id, callback) { $(id).addEventListener('click', async () => { try { $(id).disabled = true; await callback(); } catch (error) { say(error.message, true); } finally { $(id).disabled = false; } }); }
-handle('connect', async () => { token = $('token').value.trim(); if (!/^[a-f0-9]{64}$/.test(token)) throw new Error(t('작업실에서 복사한 PC 연결 코드를 입력하세요.')); await refresh(); await chrome.storage.local.set({ connectionToken: token }); });
+handle('connect', async () => { token = $('token').value.trim(); if (!/^[a-f0-9]{64}$/.test(token)) throw new Error(t('프로그램 왼쪽 「API 및 연결 설정」에서 「PC 연결 코드 복사」를 눌러 코드를 입력하세요.')); await refresh(); await chrome.storage.local.set({ connectionToken: token }); });
 handle('refresh', refresh);
 handle('openStudio', async () => { await chrome.tabs.create({ url: `${BASE}/?youtube=${encodeURIComponent(videoId ? `https://www.youtube.com/watch?v=${videoId}` : '')}` }); });
 handle('apply', async () => {
