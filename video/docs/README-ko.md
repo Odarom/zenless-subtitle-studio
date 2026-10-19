@@ -53,3 +53,16 @@ Intel/AMD CPU를 지원합니다. 음성 GPU 가속은 NVIDIA/AMD의 Vulkan 호�
 API 키는 이 PC의 별도 암호화 저장소에 저장합니다. `app/data`, `app/.secrets`, PC 연결 코드, 본인 설정은 다른 사람에게 전달하지 마세요. 배포 원본 ZIP을 전달하세요. 번역 API에는 선택한 텍스트·문맥과 기본적으로 전체 용어집을 보냅니다. 입력량에 따라 무료 계정의 TPM 한도에 걸릴 수 있습니다. 팬 제작 도구이며 게임 제작사의 공식 프로그램은 아닙니다.
 
 0.2.0의 대괄호 경로 설치 문제는 0.2.1부터 수정되었습니다. 대괄호·한글·공백 경로를 사용할 수 있습니다. 문제가 있으면 최신 배포본 폴더 전체를 새로 풀고 실행하세요. 준비를 다시 하려면 `Setup.cmd`를 사용하세요.
+
+## 사용한 오픈소스와 라이선스
+
+| 구성 요소 | 용도 | 라이선스·고지 |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | 프로그램 실행 | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 음성 받아쓰기 | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | 음성 인식 모델 | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | 유튜브 영상·자막 처리 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 오디오 변환·영상 프레임 추출 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 선택형 화면 글자 인식 | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+Node.js는 배포 ZIP에 포함되며, 라이선스 원문은 `runtime/LICENSE-Node.txt`에 들어 있습니다. 나머지 도구·모델은 처음 사용할 때 배포처에서 직접 내려받습니다. yt-dlp 소스의 Unlicense와 Windows 실행 파일의 GPLv3+를 구분하며, 설치하는 FFmpeg는 GPL 빌드입니다. 빌드에 포함된 추가 라이브러리와 OCR 모델에는 각각의 라이선스가 적용됩니다. 자세한 출처·배포·고지는 [구성 요소 안내](THIRD-PARTY-NOTICES.md)를 확인하세요. 구성 요소를 재배포할 때는 해당 배포물의 고지·라이선스 원문과 필요한 소스 제공 조건도 확인해야 합니다.

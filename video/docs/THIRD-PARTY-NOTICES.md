@@ -4,6 +4,17 @@
 
 ## 한국어
 
+| 구성 요소 | 용도 | 라이선스·고지 |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | 프로그램 실행 | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 음성 받아쓰기 | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | 음성 인식 모델 | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | 유튜브 영상·자막 처리 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 오디오 변환·영상 프레임 추출 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 선택형 화면 글자 인식 | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+Node.js는 배포 ZIP에 포함되며, 라이선스 원문은 `runtime/LICENSE-Node.txt`에 들어 있습니다. 나머지 도구·모델은 처음 사용할 때 배포처에서 직접 내려받습니다. yt-dlp 소스의 Unlicense와 Windows 실행 파일의 GPLv3+를 구분하며, 설치하는 FFmpeg는 GPL 빌드입니다. 빌드에 포함된 추가 라이브러리와 OCR 모델에는 각각의 라이선스가 적용됩니다. 자세한 출처·배포·고지는 이 문서를 확인하세요. 구성 요소를 재배포할 때는 해당 배포물의 고지·라이선스 원문과 필요한 소스 제공 조건도 확인해야 합니다.
+
 - [Node.js](https://nodejs.org/) — runtime/LICENSE-Node.txt
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [whisper.cpp](https://github.com/ggml-org/whisper.cpp) — https://github.com/SubtitleEdit/support-files
@@ -20,6 +31,17 @@ yt-dlp, whisper.cpp CPU/Vulkan 배포본, FFmpeg와 음성 모델은 첫 실행�
 ---
 
 ## English
+
+| Component | Purpose | License and notices |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | Application runtime | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | Speech transcription | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | Speech recognition model | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube media and captions | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | Audio conversion and frame extraction | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | Optional screen OCR | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+Node.js is bundled in the ZIP with original notices in `runtime/LICENSE-Node.txt`. Other tools/models download directly from their distributors on first use. Distinguish the yt-dlp source Unlicense from its GPLv3+ Windows executable; the downloaded FFmpeg is a GPL build. Additional build libraries and OCR models retain their respective licenses. See this document for sources and distribution details. Redistributing components also requires checking their notices, original licenses and any corresponding-source obligations.
 
 - [Node.js](https://nodejs.org/) — runtime/LICENSE-Node.txt
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
@@ -38,6 +60,17 @@ For game-term provenance, review and released/prerelease status, see app/glossar
 
 ## 日本語
 
+| 構成要素 | 用途 | ライセンス・告知 |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | アプリ実行 | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 音声の書き起こし | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | 音声認識モデル | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube動画・字幕処理 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 音声変換・動画フレーム抽出 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 任意の画面OCR | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+Node.jsはZIPに同梱し、ライセンス原文は`runtime/LICENSE-Node.txt`に収録しています。他のツール・モデルは初回利用時に配布元から直接取得します。yt-dlpのソースのUnlicenseとWindows実行ファイルのGPLv3+を区別し、取得するFFmpegはGPLビルドです。追加ライブラリやOCRモデルには各自のライセンスが適用されます。出典・配布の詳細はこの文書を確認してください。構成要素を再配布する際は、告知・ライセンス原文・必要な対応ソースの提供条件も確認してください。
+
 - [Node.js](https://nodejs.org/) — runtime/LICENSE-Node.txt
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [whisper.cpp](https://github.com/ggml-org/whisper.cpp) — https://github.com/SubtitleEdit/support-files
@@ -54,6 +87,17 @@ yt-dlp、whisper.cppのCPU/Vulkan配布版、FFmpeg、音声モデルは初回�
 ---
 
 ## 简体中文
+
+| 组件 | 用途 | 许可证与声明 |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | 程序运行环境 | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 语音转写 | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | 语音识别模型 | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube视频与字幕处理 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 音频转换与视频帧提取 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 可选屏幕文字识别 | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+ZIP包含Node.js，许可证原文位于`runtime/LICENSE-Node.txt`。其他工具和模型在首次使用时直接从发布方下载。yt-dlp源码的Unlicense与其Windows可执行文件的GPLv3+不同；下载的FFmpeg为GPL构建。额外库和OCR模型分别适用各自许可证。来源及分发说明见本文件。重新分发组件时，还需确认声明、许可证原文及相应源码提供要求。
 
 - [Node.js](https://nodejs.org/) — runtime/LICENSE-Node.txt
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)

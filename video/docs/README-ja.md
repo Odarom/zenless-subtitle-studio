@@ -51,3 +51,16 @@ Intel/AMD CPUに対応します。音声GPU処理にはNVIDIA/AMDのVulkan対応
 キーはPC内で暗号化して保存します。`app/data`、`app/.secrets`、接続コードや個人設定は他人に渡さず、配布元のZIPを共有してください。クラウド翻訳には文章・文脈と標準で用語集全体を送信します。無料アカウントのTPM上限を超える場合があります。ゲーム公式ではないファン制作ツールです。
 
 0.2.0の角括弧パスの問題は0.2.1以降で修正済みです。角括弧・韓国語・空白のあるパスに対応します。必要なら新しい配布版全体を展開し直してください。ツールの再準備には`Setup.cmd`を使います。
+
+## 使用オープンソースとライセンス
+
+| 構成要素 | 用途 | ライセンス・告知 |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | アプリ実行 | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 音声の書き起こし | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | 音声認識モデル | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube動画・字幕処理 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 音声変換・動画フレーム抽出 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 任意の画面OCR | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+Node.jsはZIPに同梱し、ライセンス原文は`runtime/LICENSE-Node.txt`に収録しています。他のツール・モデルは初回利用時に配布元から直接取得します。yt-dlpのソースのUnlicenseとWindows実行ファイルのGPLv3+を区別し、取得するFFmpegはGPLビルドです。追加ライブラリやOCRモデルには各自のライセンスが適用されます。出典・配布の詳細は[構成要素の告知](THIRD-PARTY-NOTICES.md)を確認してください。構成要素を再配布する際は、告知・ライセンス原文・必要な対応ソースの提供条件も確認してください。

@@ -53,3 +53,16 @@
 0.2.0 中方括号路径导致的安装问题已从0.2.1起修复。支持方括号、韩文及空格路径。如有问题，请重新完整解压新版。重新准备工具可运行 `Setup.cmd`。
 
 云翻译默认发送完整术语表，可能超出免费账户的每分钟Token（TPM）配额。
+
+## 使用的开源组件与许可证
+
+| 组件 | 用途 | 许可证与声明 |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | 程序运行环境 | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 语音转写 | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
+| [Whisper](https://github.com/openai/whisper) | 语音识别模型 | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube视频与字幕处理 | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
+| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | 音频转换与视频帧提取 | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
+| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | 可选屏幕文字识别 | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
+
+ZIP包含Node.js，许可证原文位于`runtime/LICENSE-Node.txt`。其他工具和模型在首次使用时直接从发布方下载。yt-dlp源码的Unlicense与其Windows可执行文件的GPLv3+不同；下载的FFmpeg为GPL构建。额外库和OCR模型分别适用各自许可证。来源及分发说明见[第三方组件声明](THIRD-PARTY-NOTICES.md)。重新分发组件时，还需确认声明、许可证原文及相应源码提供要求。
