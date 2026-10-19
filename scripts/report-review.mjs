@@ -100,7 +100,7 @@ async function main() {
     }
     if (!options['discord-only'] && !options['private-only']) {
       const github = await collectGithubReports(options.repository || DEFAULT_GLOSSARY_REPOSITORY, githubRequest);
-      data.reports.push(...github.reports); data.sources.push('github-video');
+      data.reports.push(...github.reports); data.sources.push('github-video', 'github-glossary');
       if (github.ignored) data.warnings.push(`형식이 맞지 않는 GitHub 신고 ${github.ignored}건은 제외했습니다.`);
     }
     if (options['video-file']) {

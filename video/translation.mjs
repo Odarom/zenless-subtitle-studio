@@ -4,8 +4,9 @@ import { validateCombatAttributes } from '../src/attributes.js';
 import { geminiTranslation } from '../src/gemini.js';
 import { readFileSync } from 'node:fs';
 import { deepLTranslation, ollamaTranslation } from './providers.mjs';
+import { BASE_LANGUAGES, localizedNames, selectNames } from '../src/languages.js';
 
-export const PROMPT_VERSION = 3;
+export const PROMPT_VERSION = 4;
 export function translationKey(cues, options, glossaryPath) {
   return createHash('sha256').update(JSON.stringify({ cues: cues.map(({ id, startMs, endMs, sourceText }) => ({ id, startMs, endMs, sourceText })), options, glossary: createHash('sha256').update(readFileSync(glossaryPath)).digest('hex'), version: PROMPT_VERSION })).digest('hex');
 }
@@ -32,7 +33,10 @@ export function cueWarnings(cue, target) {
 export function videoGlossary(cues, options, glossaryPath) {
   const entries = loadGlossary(glossaryPath);
   const selected = options.glossaryMode === 'relevant' ? relevantTerms(entries, cues.map(c => c.sourceText).join('\n'), Infinity) : entries;
-  return selected.map(({ id, preferred, communityPreferred, aliases, category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }) => ({ id, preferred, aliases,
+  const languages = [...new Set(['en', options.targetLanguage, ...(options.sourceLanguage === 'auto' || !options.sourceLanguage ? BASE_LANGUAGES : [options.sourceLanguage])])];
+  const text = cues.map(cue => cue.sourceText).join('\n').toLowerCase();
+  return selected.map(entry => ({ ...entry, preferred: selectNames(localizedNames(entry), languages), aliases: entry.aliases.filter(alias => text.includes(alias.toLowerCase())) }))
+    .map(({ id, preferred, communityPreferred, aliases, category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }) => ({ id, preferred, aliases,
     ...(options.style === 'community' && communityPreferred?.[options.targetLanguage] ? { outputPreferred: { [options.targetLanguage]: communityPreferred[options.targetLanguage] } } : {}),
     category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }));
 }

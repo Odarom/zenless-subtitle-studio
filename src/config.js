@@ -1,8 +1,6 @@
 export class UserError extends Error {}
 
-export const LANGUAGES = Object.freeze({
-  ko: '한국어', en: 'English', ja: '日本語', 'zh-CN': '简体中文',
-});
+export { TEXT_LANGUAGES as LANGUAGES } from './languages.js';
 
 export function settings(env = process.env, { requireSecrets = true, requireTranslation = true } = {}) {
   const apiMode = env.API_MODE || 'server';

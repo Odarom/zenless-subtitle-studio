@@ -183,6 +183,7 @@ for (const entry of JSON.parse(readFileSync('glossary/community.json', 'utf8')).
     matched.communityRule = entry.rule;
     matched.communitySources = entry.sources;
     if (entry.communityPreferred) matched.communityPreferred = entry.communityPreferred;
+    if (entry.communityPreferredDrafts) matched.communityPreferredDrafts = entry.communityPreferredDrafts;
     if (entry.verifiedAt) matched.communityVerifiedAt = entry.verifiedAt;
     if (entry.reviewedAt) matched.communityReviewedAt = entry.reviewedAt;
     if (entry.sourceNotes) matched.communitySourceNotes = entry.sourceNotes;

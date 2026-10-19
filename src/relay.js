@@ -5,7 +5,7 @@ import { hasTranslatableText } from './emoji.js';
 import { createHash } from 'node:crypto';
 const reviewHash = text => createHash('sha256').update(text).digest('hex');
 
-const forwardLabels = { ko: '전달된 글', en: 'Forwarded message', ja: '転送されたメッセージ', 'zh-CN': '转发消息' };
+const forwardLabels = { ko: '전달된 글', en: 'Forwarded message', ja: '転送されたメッセージ', 'zh-CN': '转发消息', 'zh-Hant': '轉發訊息', de: 'Weitergeleitete Nachricht', fr: 'Message transféré', es: 'Mensaje reenviado', pt: 'Mensagem encaminhada', ru: 'Пересланное сообщение', th: 'ข้อความที่ส่งต่อ', vi: 'Tin nhắn được chuyển tiếp', id: 'Pesan diteruskan' };
 
 export function messageText(message) {
   const clean = part => {

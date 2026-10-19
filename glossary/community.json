@@ -23,7 +23,18 @@
         "ko": "빛나",
         "en": "YSG"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "yixuan-short-name",
@@ -42,7 +53,18 @@
       "communityPreferred": {
         "en": "YX"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:ex-ex-basic-combo",
@@ -78,7 +100,18 @@
         "ko": "강강평",
         "en": "EX → EX → BA"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:hold-ex-special",
@@ -109,7 +142,18 @@
         "ko": "강꾹",
         "en": "hold EX"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:preserve-san-z",
@@ -128,7 +172,18 @@
       "reviewedAt": "2026-10-09",
       "sources": [
         "san-z가 싼즈로 번역되었으며 원문 표기를 유지하라는 사용자 요청, 2026-10-09"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "notorious-dead-end-butcher-short-name",
@@ -150,7 +205,18 @@
       "communityPreferred": {
         "ko": "매살자"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "infernal-revenant-short-name",
@@ -169,7 +235,18 @@
       "communityPreferred": {
         "ko": "연옥"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "quick-assist",
@@ -198,7 +275,18 @@
         "ko": "빠지",
         "en": "QA"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "ex-special-attack-korean-short-name",
@@ -224,7 +312,18 @@
         "ko": "강특",
         "en": "EX"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "kaboom-the-cannon-short-name",
@@ -246,7 +345,18 @@
         "en": "Kaboom"
       },
       "outputReviewedAt": "2026-10-12",
-      "reviewedAt": "2026-10-19"
+      "reviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "dash-attack-da",
@@ -259,7 +369,18 @@
       "status": "user-provided",
       "sources": [
         "DA가 Dash Attack과 Deadly Assault 모두의 약어라는 사용자 설명, 2026-10-08"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "deadly-assault-da",
@@ -280,7 +401,18 @@
         "ko": "강습",
         "en": "DA"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "astral-voice-short-name",
@@ -300,7 +432,18 @@
       "communityPreferred": {
         "ko": "고요"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "enhanced-basic-attack",
@@ -322,7 +465,18 @@
       "status": "user-provided",
       "sources": [
         "프로젝트 기획 대화의 사용자 설명, 2026-10-06"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-percent-atk",
@@ -361,7 +515,18 @@
         "en": "ATK%",
         "zh-CN": "大攻击"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-flat-atk",
@@ -396,7 +561,18 @@
         "ko": "깡공",
         "zh-CN": "小攻击"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-percent-def",
@@ -435,7 +611,18 @@
         "en": "DEF%",
         "zh-CN": "大防御"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-flat-def",
@@ -470,7 +657,18 @@
         "ko": "깡방",
         "zh-CN": "小防御"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-percent-hp",
@@ -506,7 +704,18 @@
         "en": "HP%",
         "zh-CN": "大生命"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-flat-hp",
@@ -541,7 +750,18 @@
         "ko": "깡체",
         "zh-CN": "小生命"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-flat-pen",
@@ -575,7 +795,18 @@
         "ko": "깡관"
       },
       "outputReviewedAt": "2026-10-12",
-      "category": "stat"
+      "category": "stat",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "stat-base-atk",
@@ -606,7 +837,18 @@
       "communityPreferred": {
         "ko": "기초공"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-31000",
@@ -631,7 +873,18 @@
         "ko": "치확",
         "en": "CR"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-32700",
@@ -662,7 +915,18 @@
         "ja": "会心ダメ",
         "zh-CN": "暴伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-31100",
@@ -691,7 +955,18 @@
         "ko": "관통%",
         "en": "PEN%"
       },
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-31300",
@@ -720,7 +995,18 @@
         "ja": "異常マス"
       },
       "outputReviewedAt": "2026-10-13",
-      "communitySourceNotes": "이상마·상마·AP를 같은 개념으로 인식하고 한국어 커뮤니티 출력은 이상마를 사용한다."
+      "communitySourceNotes": "이상마·상마·AP를 같은 개념으로 인식하고 한국어 커뮤니티 출력은 이상마를 사용한다.",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-33000",
@@ -744,7 +1030,18 @@
         "ko": "장악",
         "en": "AM"
       },
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-31600",
@@ -770,7 +1067,18 @@
         "ko": "에회",
         "en": "ER"
       },
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-31200",
@@ -785,7 +1093,18 @@
       "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
       "sources": [
         "https://www.prydwen.gg/zenless/guides/agents-attributes"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-32200",
@@ -808,7 +1127,18 @@
         "ko": "불피증",
         "zh-CN": "火伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-32300",
@@ -831,7 +1161,18 @@
         "ko": "에피증",
         "zh-CN": "以太伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-32400",
@@ -854,7 +1195,18 @@
         "ko": "전피증",
         "zh-CN": "电伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-32500",
@@ -876,7 +1228,18 @@
         "ko": "얼피증",
         "zh-CN": "冰伤"
       },
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-stat-32600",
@@ -899,7 +1262,18 @@
         "ko": "물피증",
         "zh-CN": "物伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-basic-attack",
@@ -926,7 +1300,18 @@
         "ko": "평타",
         "en": "BA"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-dodge-counter",
@@ -950,7 +1335,18 @@
         "ko": "회반",
         "en": "DC"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-chain-attack",
@@ -969,7 +1365,18 @@
         "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
         "https://zenless-zone-zero.fandom.com/wiki/Glossary",
         "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-ultimate",
@@ -994,7 +1401,18 @@
         "ko": "궁",
         "en": "ult"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-assist-follow-up",
@@ -1017,7 +1435,18 @@
       "communityPreferred": {
         "en": "AFU"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-perfect-dodge",
@@ -1036,7 +1465,18 @@
         "https://zenless-zone-zero.fandom.com/wiki/Glossary",
         "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
       ],
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "aliases-combat-defensive-assist",
@@ -1053,7 +1493,18 @@
         "https://static.nanoka.cc/zzz/3.2/en/character/1011.json",
         "https://zenless-zone-zero.fandom.com/wiki/Glossary",
         "기존 공식 동작을 바탕으로 정리한 커뮤니티/띄어쓰기 별칭, 2026-10-09"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:crit-pair",
@@ -1082,7 +1533,18 @@
         "ko": "치치",
         "zh-CN": "双暴"
       },
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:main-stat",
@@ -1114,7 +1576,18 @@
         "ko": "주옵",
         "ja": "メインステ"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:sub-stat",
@@ -1149,7 +1622,18 @@
         "ko": "부옵",
         "ja": "サブステ"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:signature-engine",
@@ -1191,7 +1675,18 @@
         "ja": "餅武器",
         "zh-CN": "专武"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:cooldown",
@@ -1222,7 +1717,18 @@
       "communityPreferred": {
         "ko": "쿨타임"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:damage-bonus",
@@ -1254,7 +1760,18 @@
         "ja": "ダメバフ",
         "zh-CN": "增伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:damage-reduction",
@@ -1284,7 +1801,18 @@
         "ko": "피감",
         "zh-CN": "减伤"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:defense-reduction",
@@ -1316,7 +1844,18 @@
         "en": "DEF shred",
         "zh-CN": "减防"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:resistance-reduction",
@@ -1362,7 +1901,18 @@
         "en": "RES shred",
         "zh-CN": "减抗"
       },
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:on-field",
@@ -1386,7 +1936,18 @@
       "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
       "sources": [
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:off-field",
@@ -1410,7 +1971,18 @@
       "sourceNotes": "개념·기본 명칭은 아래 자료를 참고했다. 띄어쓰기, 퍼/퍼센트/% 표기 및 언어별 짧은 번역 표현은 프로젝트에서 정리한 별칭이며 모든 표기가 출처에 그대로 등장한다는 뜻은 아니다. 커뮤니티 표현을 제작사의 공식 명칭으로 보증하지 않는다.",
       "sources": [
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:best-in-slot",
@@ -1438,7 +2010,18 @@
       "communityPreferred": {
         "en": "BiS"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-0",
@@ -1469,7 +2052,18 @@
       "sources": [
         "https://moegirl.icu/绝区零/梗",
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-1",
@@ -1494,7 +2088,18 @@
       "sources": [
         "https://moegirl.icu/绝区零/梗",
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-2",
@@ -1519,7 +2124,18 @@
       "sources": [
         "https://moegirl.icu/绝区零/梗",
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-3",
@@ -1544,7 +2160,18 @@
       "sources": [
         "https://moegirl.icu/绝区零/梗",
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-4",
@@ -1569,7 +2196,18 @@
       "sources": [
         "https://moegirl.icu/绝区零/梗",
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-5",
@@ -1594,7 +2232,18 @@
       "sources": [
         "https://moegirl.icu/绝区零/梗",
         "https://wikiwiki.jp/mukankeizone/用語集"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:mindscape-6",
@@ -1629,7 +2278,18 @@
         "ja": "完凸",
         "zh-CN": "满影"
       },
-      "outputReviewedAt": "2026-10-12"
+      "outputReviewedAt": "2026-10-12",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "culmination-plural",
@@ -1643,7 +2303,18 @@
       "reviewedAt": "2026-10-12",
       "sources": [
         "사용자 제공 극치 소모량 비교 원문에서 확인한 영어 복수형, 2026-10-12"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:notorious-label",
@@ -1661,7 +2332,18 @@
       "reviewedAt": "2026-10-12",
       "sources": [
         "Notorious 타이머와 DA 타이머는 별개이며 노토리우스로 옮겨야 한다는 사용자 확인, 2026-10-12"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "shunguang-special-3-short-names",
@@ -1687,7 +2369,18 @@
         "https://static.nanoka.cc/zzz/3.2/ko/character/1431.json",
         "https://static.nanoka.cc/zzz/3.2/en/character/1431.json",
         "한국어·영어 /skill/special/description/3/name 대조; 이름을 줄여 부르는 출력 표기, 2026-10-13"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "shunguang-special-4-short-names",
@@ -1713,7 +2406,18 @@
         "https://static.nanoka.cc/zzz/3.2/ko/character/1431.json",
         "https://static.nanoka.cc/zzz/3.2/en/character/1431.json",
         "한국어·영어 /skill/special/description/4/name 대조; 이름을 줄여 부르는 출력 표기, 2026-10-13"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "deadly-assault-adversity-short-names",
@@ -1740,7 +2444,18 @@
         "ja": "逆境",
         "zh-CN": "绝境"
       },
-      "outputReviewedAt": "2026-10-13"
+      "outputReviewedAt": "2026-10-13",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:m0w1-build",
@@ -1771,7 +2486,18 @@
       "outputReviewedAt": "2026-10-13",
       "sources": [
         "신고 R-20261013-1bf04face58f의 올명전 팀=full M0W1이라는 사용자 설명, 2026-10-13"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:all-m0w1-team",
@@ -1804,7 +2530,18 @@
       "outputReviewedAt": "2026-10-13",
       "sources": [
         "신고 R-20261013-1bf04face58f의 올명전 팀=full M0W1이라는 사용자 설명, 2026-10-13"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "deadly-assault-trial-short-names",
@@ -1831,7 +2568,18 @@
         "ja": "試練",
         "zh-CN": "试炼"
       },
-      "outputReviewedAt": "2026-10-13"
+      "outputReviewedAt": "2026-10-13",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "unknown-corruption-complex-initials",
@@ -1852,7 +2600,18 @@
       ],
       "status": "user-provided",
       "reviewedAt": "2026-10-19",
-      "outputReviewedAt": "2026-10-19"
+      "outputReviewedAt": "2026-10-19",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:scorched-horizon-base-name",
@@ -1874,7 +2633,18 @@
       ],
       "status": "user-provided",
       "reviewedAt": "2026-10-13",
-      "outputReviewedAt": "2026-10-13"
+      "outputReviewedAt": "2026-10-13",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:typhon-family-name",
@@ -1896,7 +2666,18 @@
       ],
       "status": "user-provided",
       "reviewedAt": "2026-10-19",
-      "outputReviewedAt": "2026-10-13"
+      "outputReviewedAt": "2026-10-13",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:shill-buff",
@@ -1925,7 +2706,18 @@
       ],
       "status": "user-provided",
       "reviewedAt": "2026-10-13",
-      "outputReviewedAt": "2026-10-13"
+      "outputReviewedAt": "2026-10-13",
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     },
     {
       "id": "community:resistance-ignore",
@@ -1964,7 +2756,33 @@
         "https://static.nanoka.cc/zzz/3.2/ja/character/1051.json",
         "https://static.nanoka.cc/zzz/3.2/zh/character/1041.json",
         "https://static.nanoka.cc/zzz/3.2/zh/character/1051.json"
-      ]
+      ],
+      "communityPreferredDrafts": {
+        "zh-Hant": null,
+        "de": null,
+        "fr": null,
+        "es": null,
+        "pt": null,
+        "ru": null,
+        "th": null,
+        "vi": null,
+        "id": null
+      }
     }
+  ],
+  "outputLanguages": [
+    "ko",
+    "en",
+    "ja",
+    "zh-CN",
+    "zh-Hant",
+    "de",
+    "fr",
+    "es",
+    "pt",
+    "ru",
+    "th",
+    "vi",
+    "id"
   ]
 }

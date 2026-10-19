@@ -7,7 +7,9 @@ const models = {
   en: ['rec_en_PP-OCRv3_infer.onnx', 'dict_en.txt'],
   ja: ['rec_japan_PP-OCRv3_infer.onnx', 'dict_japan.txt'],
   ko: ['rec_korean_PP-OCRv3_infer.onnx', 'dict_korean.txt'],
-  'zh-CN': ['rec_ch_PP-OCRv4_infer.onnx', 'dict_chinese.txt']
+  'zh-CN': ['rec_ch_PP-OCRv4_infer.onnx', 'dict_chinese.txt'],
+  'zh-Hant': ['rec_chinese_cht_PP-OCRv3_infer.onnx', 'dict_chinese_cht.txt'],
+  ru: ['rec_cyrillic_PP-OCRv3_infer.onnx', 'dict_cyrillic.txt']
 };
 export class RapidOcr {
   constructor(executable, language, { signal } = {}) {

@@ -1,5 +1,7 @@
 # ZZZ Discord翻訳
 
+翻訳は韓国語・英語・日本語・簡体字/繁体字中国語・ドイツ語・フランス語・スペイン語・ポルトガル語・ロシア語・タイ語・ベトナム語・インドネシア語の13言語に対応します。画面表示と説明書は従来の4言語です。既存1,868概念に追加9言語の名称16,802件を対応付け、テスト用の値10件を除外しました。不明な名称は補作しません。新規・未公開用語は正式実装を確認してから検討します。このプログラム更新後、同じ13言語内の名称追加・修正はDB更新で受け取れます。新しい言語コード自体の追加にはプログラム更新も必要です。
+
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 [ボットを導入](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [PCプログラム](https://github.com/Odarom/zenless-discord-translator/releases/latest) · [利用規約](TERMS.md) · [プライバシー](PRIVACY.md)

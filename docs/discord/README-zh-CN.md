@@ -1,5 +1,7 @@
 # ZZZ Discord翻译器
 
+翻译支持韩语、英语、日语、简体/繁体中文、德语、法语、西班牙语、葡萄牙语、俄语、泰语、越南语和印尼语，共13种语言。界面及说明保留原有4种语言。为1,868个既有概念关联额外9种语言的16,802个名称，排除10个测试占位值，不编造缺失名称。新增及未发布术语须确认正式实装后再审核。安装本次程序更新后，同一13种语言内的名称补充和修正可通过DB更新接收；增加新语言代码仍需程序更新。
+
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 [安装机器人](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [下载PC程序](https://github.com/Odarom/zenless-discord-translator/releases/latest) · [使用条款](TERMS.md) · [隐私政策](PRIVACY.md)

@@ -1,6 +1,8 @@
 import { createHash } from 'node:crypto';
 import { githubRepository } from './glossary-updates.mjs';
-const languages = [null, 'ko', 'en', 'ja', 'zh-CN'];
+import { TEXT_LANGUAGES } from '../src/languages.js';
+import { parseGlossaryIssueBody } from '../src/glossary-report-form.js';
+const languages = [null, ...Object.keys(TEXT_LANGUAGES)];
 const statuses = ['pending', 'reviewing', 'needs-info', 'resolved', 'rejected'];
 const string = (value, max, required = false) => {
   if (typeof value !== 'string' || value.length > max || required && !value.trim()) throw new Error('Invalid report text');
@@ -30,13 +32,14 @@ export function parseGithubReport(issue, repository) {
   githubRepository(repository);
   if (issue.pull_request || !Number.isSafeInteger(issue.number) || issue.number < 1 || typeof issue.body !== 'string' || issue.body.length > 65536) return null;
   const match = /<!-- zzz-video-report:v1 -->\s*```json[ \t]*\r?\n([\s\S]*?)\r?\n```(?:\s|$)/.exec(issue.body);
-  if (!match) return null;
   let report;
-  try { report = normalizeVideoReport(JSON.parse(match[1])); } catch { return null; }
+  if (match) { try { report = normalizeVideoReport(JSON.parse(match[1])); } catch { return null; } }
+  else report = parseGlossaryIssueBody(issue.body);
+  if (!report) return null;
   const updatedAt = Date.parse(issue.updated_at), createdAt = Date.parse(issue.created_at);
   if (!Number.isFinite(updatedAt) || !Number.isFinite(createdAt)) return null;
   const labelStatus = (issue.labels || []).map(label => typeof label === 'string' ? label : label.name).find(label => label?.startsWith('review:'))?.slice(7);
-  return { ...report, submissionId: report.id, id: `G-${issue.number}`, origin: 'github-video', createdAt, updatedAt,
+  return { ...report, ...(report.id ? { submissionId: report.id } : {}), id: `G-${issue.number}`, origin: match ? 'github-video' : 'github-glossary', createdAt, updatedAt,
     status: issue.state === 'closed' ? issue.state_reason === 'not_planned' ? 'rejected' : 'resolved' : statuses.includes(labelStatus) ? labelStatus : 'pending',
     github: { repository, number: issue.number, url: `https://github.com/${repository}/issues/${issue.number}`, bodyHash: createHash('sha256').update(issue.body).digest('hex') } };
 }
@@ -49,7 +52,7 @@ export async function collectGithubReports(repository, request) {
     for (const issue of issues) {
       const report = parseGithubReport(issue, repository);
       if (report) reports.push(report);
-      else if (issue.body?.includes('<!-- zzz-video-report:v1 -->')) ignored++;
+      else if (issue.body?.includes('<!-- zzz-video-report:v1 -->') || issue.title?.startsWith('[DB report]') || /^### (?:신고 종류|Report category|報告の種類|举报类型)\r?$/m.test(issue.body || '')) ignored++;
     }
     if (issues.length < 100) return { reports, ignored };
   }

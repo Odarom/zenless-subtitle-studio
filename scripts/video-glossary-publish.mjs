@@ -22,11 +22,13 @@ export function publishGlossary(root = resolve(import.meta.dirname, '..')) {
   try { remote = api(`repos/${repo}`); }
   catch (error) { if (!/HTTP 404/.test(error.message)) throw error; remote = api('user/repos', 'POST', { name: repo.split('/')[1], description: 'Reviewed Zenless Zone Zero glossary in Korean, English, Japanese and Simplified Chinese. Shared subtitle and Discord translation feedback.', private: false, has_issues: true, auto_init: true }); }
   if (remote.private) throw new Error('용어집 업데이트는 공개 저장소가 필요합니다. 기존 저장소의 공개 범위는 변경하지 않았습니다.');
+  if (!remote.has_issues) api(`repos/${repo}`, 'PATCH', { has_issues: true });
   const branch = remote.default_branch, previous = api(`repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`).object.sha;
   const base = api(`repos/${repo}/git/commits/${previous}`);
   // Only these explicitly public database files can leave the workspace.
   const paths = ['README.md', 'README-ko.md', 'README-en.md', 'README-ja.md', 'README-zh-CN.md', 'latest.json', release.manifest.file,
-    ...['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md'].map(file => `catalog/${file}`)];
+    ...['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml'].map(file => `.github/ISSUE_TEMPLATE/${file}`),
+    ...['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md'].map(file => `catalog/${file}`)];
   const tree = api(`repos/${repo}/git/trees`, 'POST', { base_tree: base.tree.sha, tree: paths.map(path => ({ path, mode: '100644', type: 'blob', content: readFileSync(join(release.output, path), 'utf8') })) });
   if (tree.sha === base.tree.sha) return { repository: repo, url: remote.html_url, version: release.manifest.version, unchanged: true };
   const commit = api(`repos/${repo}/git/commits`, 'POST', { message: `Publish reviewed glossary ${release.manifest.version}`, tree: tree.sha, parents: [previous] });

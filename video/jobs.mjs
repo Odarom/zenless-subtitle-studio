@@ -7,8 +7,9 @@ import { translateBatch, translationKey, videoGlossary } from './translation.mjs
 import { sentenceCues, translationPlan } from './translation-plan.mjs';
 import { RequestGate } from './request-gate.mjs';
 import { serializeSubtitles, validateCues, youtubeVideoId } from './subtitles.mjs';
+import { TEXT_LANGUAGES, OCR_LANGUAGES } from '../src/languages.js';
 
-export const LANGS = ['auto', 'en', 'ja', 'zh-CN', 'ko'];
+export const LANGS = ['auto', ...Object.keys(TEXT_LANGUAGES)];
 export class Jobs {
   constructor({ root, dataDir, settings, prepare = prepareSource, translate = translateBatch, fetcher = fetch, glossaryPath = () => join(root, 'glossary', 'zzz.json'), gate = new RequestGate(dataDir), plan = translationPlan }) {
     this.root = root; this.dataDir = dataDir; this.settings = settings; this.prepare = prepare; this.translate = translate; this.fetcher = fetcher;
@@ -32,12 +33,12 @@ export class Jobs {
   get(id) { const job = this.jobs.get(id); if (!job) throw Object.assign(new Error('작업을 찾지 못했습니다.'), { statusCode: 404 }); return job; }
   create(input) {
     if (!input || typeof input !== 'object' || !input.input || !input.options) throw new Error('영상과 번역 설정을 확인하세요.');
-    const { sourceLanguage = 'en', targetLanguage = 'ko', style = 'official', forceAsr = false, transcribeOnly = false, speech = true, screenText = false, screenLanguage = sourceLanguage === 'auto' ? 'en' : sourceLanguage, screenIntervalMs = 1000, screenStartMs = 0, screenEndMs = null } = input.options;
+    const { sourceLanguage = 'en', targetLanguage = 'ko', style = 'official', forceAsr = false, transcribeOnly = false, speech = true, screenText = false, screenLanguage = OCR_LANGUAGES.includes(sourceLanguage) ? sourceLanguage : 'en', screenIntervalMs = 1000, screenStartMs = 0, screenEndMs = null } = input.options;
     const translationMode = input.options.translationMode || 'single';
     const glossaryMode = input.options.glossaryMode || 'full';
     if (!['full', 'relevant'].includes(glossaryMode)) throw new Error('용어집 전송 범위를 확인하세요.');
     if (!['single', 'large-batches'].includes(translationMode)) throw new Error('번역 요청 방식을 확인하세요.');
-    if (typeof speech !== 'boolean' || typeof screenText !== 'boolean' || !speech && !screenText || !LANGS.slice(1).includes(screenLanguage) || ![500, 1000, 2000].includes(screenIntervalMs) || !Number.isSafeInteger(screenStartMs) || screenStartMs < 0 || screenStartMs > 7 * 86400000 || screenEndMs !== null && (!Number.isSafeInteger(screenEndMs) || screenEndMs <= screenStartMs || screenEndMs > 7 * 86400000)) throw new Error('음성·화면 글자 선택과 분석 구간을 확인하세요.');
+    if (typeof speech !== 'boolean' || typeof screenText !== 'boolean' || !speech && !screenText || !OCR_LANGUAGES.includes(screenLanguage) || ![500, 1000, 2000].includes(screenIntervalMs) || !Number.isSafeInteger(screenStartMs) || screenStartMs < 0 || screenStartMs > 7 * 86400000 || screenEndMs !== null && (!Number.isSafeInteger(screenEndMs) || screenEndMs <= screenStartMs || screenEndMs > 7 * 86400000)) throw new Error('음성·화면 글자 선택과 분석 구간을 확인하세요.');
     if (!LANGS.includes(sourceLanguage) || !LANGS.slice(1).includes(targetLanguage) || !['official', 'community'].includes(style) || typeof forceAsr !== 'boolean' || typeof transcribeOnly !== 'boolean') throw new Error('번역 언어 또는 스타일을 확인하세요.');
     if (input.input.fileId && !/^[a-f0-9-]{36}$/.test(input.input.fileId)) throw new Error('선택한 파일이 올바르지 않습니다.');
     let videoId;

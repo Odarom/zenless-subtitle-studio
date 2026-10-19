@@ -4,6 +4,7 @@ import { join, extname, dirname, resolve } from 'node:path';
 import { availableParallelism } from 'node:os';
 import { readJson } from './state.mjs';
 import { parseSubtitles, youtubeVideoId } from './subtitles.mjs';
+import { whisperLanguage, subtitleLanguages } from '../src/languages.js';
 
 function locate(name) {
   const result = spawnSync(process.platform === 'win32' ? 'where.exe' : 'which', [name], { encoding: 'utf8', windowsHide: true, shell: false });
@@ -60,7 +61,7 @@ export async function transcribeWithRuntime({ t, options, wav, output, signal, u
   const initial = device === 'cpu' || !t.whisperVulkan ? 'cpu' : 'vulkan';
   if (initial === 'cpu' && !cpu) throw new Error('CPU 음성 인식 도구를 먼저 준비하세요.');
   const threads = options.speechThreads ? Math.max(1, Math.min(availableParallelism(), options.speechThreads)) : Math.min(8, availableParallelism());
-  const args = ['-m', t.model, '-f', wav, '-l', options.sourceLanguage === 'zh-CN' ? 'zh' : options.sourceLanguage, '-osrt', '-of', output, '-pp', '-t', String(threads), '-ml', '84', '-sow', ...(t.vadModel ? ['--vad', '--vad-model', t.vadModel, '--vad-min-silence-duration-ms', '500', '--vad-speech-pad-ms', '200'] : [])];
+  const args = ['-m', t.model, '-f', wav, '-l', whisperLanguage(options.sourceLanguage), '-osrt', '-of', output, '-pp', '-t', String(threads), '-ml', '84', '-sow', ...(t.vadModel ? ['--vad', '--vad-model', t.vadModel, '--vad-min-silence-duration-ms', '500', '--vad-speech-pad-ms', '200'] : [])];
   const attempt = async (backend, fallback = false) => {
     let runtime = backend === 'cpu' ? fallback ? 'CPU 음성 인식 (GPU에서 자동 전환)' : 'CPU 음성 인식' : 'Vulkan 음성 인식';
     let usedGpu = false;
@@ -104,7 +105,7 @@ export async function prepareSource(job, { root, directory, upload, signal, upda
     update({ title: metadata.title || job.title, videoId: id, durationMs: metadata.duration ? Math.round(metadata.duration * 1000) : null });
     const lang = job.options.sourceLanguage === 'auto' ? metadata.language : job.options.sourceLanguage;
     if (!job.options.forceAsr && lang) {
-      const codes = lang === 'zh-CN' ? ['zh-CN', 'zh-Hans', 'zh', 'zh-orig'] : [`${lang}-orig`, lang];
+      const codes = subtitleLanguages(lang);
       const manual = codes.find(code => metadata.subtitles?.[code]?.length);
       const automatic = (!metadata.language || metadata.language === lang || metadata.language.startsWith(`${lang}-`)) && codes.find(code => metadata.automatic_captions?.[code]?.length);
       const selected = manual || automatic;

@@ -1,6 +1,7 @@
 // Public, deliberately small wire format. Discord identity and credentials
 // never belong in the project maintainer's copy.
-const languages = ['ko', 'en', 'ja', 'zh-CN'];
+import { TEXT_LANGUAGES } from './languages.js';
+const languages = Object.keys(TEXT_LANGUAGES);
 const types = ['term', 'missing', 'meaning', 'wording', 'other'];
 export function normalizeSharedDiscordReport(input) {
   const text = (value, max, required = false) => {

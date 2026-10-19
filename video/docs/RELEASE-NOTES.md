@@ -1,41 +1,27 @@
-# ZZZ Subtitle Studio · 0.5.2
+# ZZZ Subtitle Studio 0.6.0
 
-[한국어](#한국어) · [English](#english) · [日本語](#日本語) · [简体中文](#简体中文)
+[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 ## 한국어
 
-서버·개발·용어집·신고·구성 요소 설명을 한국어·영어·일본어·중국어 간체로 보완했습니다. 프로그램과 문서 표시 이름은 ZZZ로 변경했고 GitHub 주소와 업데이트 경로는 유지합니다.
+번역 언어는 한국어·영어·일본어·중국어 간체/번체·독일어·프랑스어·스페인어·포르투갈어·러시아어·태국어·베트남어·인도네시아어 13개입니다. 화면 표시와 설명서는 기존 4개 언어를 유지합니다. 기존 항목 1,868개에 추가 9개 언어의 이름 16,802개를 연결했습니다. 테스트 표시가 있는 10개 값은 제외했으며, 없는 이름은 만들어 채우지 않습니다. 신규·미출시 용어는 라이브 적용 확인 후 검토합니다. 프로그램을 이번 버전으로 업데이트한 뒤에는 같은 13개 언어의 이름 추가·수정을 DB 업데이트로 받을 수 있습니다. 새 언어 코드 자체를 추가할 때는 프로그램 업데이트도 필요합니다.
 
-ZIP 전체를 풀고 Start.cmd를 실행하세요. 0.4.0 이상은 설정의 프로그램 업데이트를 사용할 수 있고, 0.3.0 이하는 최신 전체 배포를 설치합니다. Chrome/Edge에서 포함된 video-extension을 새로고침하고 YouTube도 새로고침하세요. 개인 기록·영상·API 키는 배포에 포함하지 않습니다. 업데이트는 현재 설치의 개인 자료를 유지하며 삭제한 설치의 자료를 자동 복구하지 않습니다.
-
-전체 영상과 기본 전체 용어집을 한 요청에 보내는 기존 방식은 유지됩니다. 모델 입력·출력·TPM·일일 한도는 계속 적용됩니다. 작은 모델에는 관련 용어만 직접 선택하세요. OCR은 선택 사항입니다. [한국어 안내](README-ko.md)를 확인하세요.
-
----
+음성 인식과 번역 언어를 13개로 확장했습니다. 화면 OCR은 한국어·영어·일본어·중국어 간체/번체·러시아어 6개 언어를 지원합니다. 다른 언어를 번역 대상으로 선택해도 OCR 언어는 이 지원 범위에서 별도로 선택합니다. 영상은 전체 개념을 유지하며, 번역에 필요한 언어별 이름과 실제 일치한 별칭만 전송합니다. 기본 한 번 요청과 한도 오류 후 자동 재요청 없음은 유지합니다.
 
 ## English
 
-Added Korean, English, Japanese and Simplified Chinese explanations for hosting, development, glossary, reports and components. Program/document display names now use ZZZ; GitHub addresses and update routes are unchanged.
+Translation supports 13 languages: Korean, English, Japanese, Simplified/Traditional Chinese, German, French, Spanish, Portuguese, Russian, Thai, Vietnamese and Indonesian. Interface text and guides remain in four languages. Another 16,802 localized names extend 1,868 existing concepts across nine additional languages. Ten placeholder values are excluded; missing names are not invented. New/unreleased terms require confirmed live availability before review. After installing this program update, additions and corrections within these 13 languages can arrive through DB updates. Adding a new language code still requires a program update.
 
-Extract the entire ZIP and run Start.cmd. Versions 0.4.0+ can use program updates in settings; 0.3.0 or older needs the latest complete release. Reload the included video-extension in Chrome/Edge and refresh YouTube. Releases contain no personal history, videos or API keys. Updates retain private data in the current installation; they do not recover a deleted installation's files.
-
-Whole-video requests with the complete glossary by default are unchanged. Model input/output, TPM and daily quotas still apply. Smaller models can explicitly select related terms only. OCR remains optional. See the [English guide](README-en.md).
-
----
+Speech recognition and translation language choices now cover 13 languages. Screen OCR supports six: Korean, English, Japanese, Simplified/Traditional Chinese and Russian. Select OCR language independently, including when translating into another language. Video retains every glossary concept while sending needed localized spellings and actually matching aliases. Single-request defaults and no automatic retry after rate limits remain.
 
 ## 日本語
 
-サーバー・開発・用語集・報告・構成要素の説明を韓国語・英語・日本語・簡体字中国語で整備しました。プログラムと文書の表示名はZZZへ変更し、GitHubアドレスと更新経路は維持します。
+翻訳は韓国語・英語・日本語・簡体字/繁体字中国語・ドイツ語・フランス語・スペイン語・ポルトガル語・ロシア語・タイ語・ベトナム語・インドネシア語の13言語に対応します。画面表示と説明書は従来の4言語です。既存1,868概念に追加9言語の名称16,802件を対応付け、テスト用の値10件を除外しました。不明な名称は補作しません。新規・未公開用語は正式実装を確認してから検討します。このプログラム更新後、同じ13言語内の名称追加・修正はDB更新で受け取れます。新しい言語コード自体の追加にはプログラム更新も必要です。
 
-ZIP全体を展開しStart.cmdを実行してください。0.4.0以降は設定のプログラム更新、0.3.0以前は最新の全体配布を導入します。Chrome/Edgeで同梱video-extensionを再読込しYouTubeも更新します。個人履歴・動画・APIキーは配布に含めません。更新は現在の設置内の個人資料を保持しますが、削除した設置の資料を自動復元しません。
-
-動画全文と標準で用語集全体を1要求に送る方式は維持します。モデル入力・出力・TPM・日次上限は適用されます。小型モデルは関連用語のみを手動選択できます。OCRは任意です。[日本語ガイド](README-ja.md)を参照してください。
-
----
+音声認識・翻訳の選択肢を13言語へ拡張しました。画面OCRは韓国語・英語・日本語・簡体字/繁体字中国語・ロシア語の6言語です。翻訳先と独立してOCR対応言語を選択します。全概念を維持し、必要な言語の名称と実際に一致した別名のみ送信します。標準の1回要求とレート制限後の自動再試行なしを維持します。
 
 ## 简体中文
 
-补充服务器、开发、术语表、举报与组件的韩语、英语、日语、简体中文说明。程序和文档显示名称改为ZZZ，GitHub地址及更新路径不变。
+翻译支持韩语、英语、日语、简体/繁体中文、德语、法语、西班牙语、葡萄牙语、俄语、泰语、越南语和印尼语，共13种语言。界面及说明保留原有4种语言。为1,868个既有概念关联额外9种语言的16,802个名称，排除10个测试占位值，不编造缺失名称。新增及未发布术语须确认正式实装后再审核。安装本次程序更新后，同一13种语言内的名称补充和修正可通过DB更新接收；增加新语言代码仍需程序更新。
 
-完整解压ZIP并运行Start.cmd。0.4.0以上可用设置中的程序更新，0.3.0及更早版本需安装最新完整包。在Chrome/Edge重新加载随附video-extension并刷新YouTube。发布包不含个人记录、视频或API密钥。更新保留当前安装的私人资料，不会自动恢复已删除安装的文件。
-
-维持默认一次发送完整视频文本及全部术语表的方式。模型输入、输出、TPM与每日配额仍适用，小模型可明确选择仅相关术语。OCR仍为可选。参见[简体中文指南](README-zh-CN.md)。
+语音识别及翻译选项扩展至13种语言。屏幕OCR支持韩语、英语、日语、简体/繁体中文及俄语6种语言，与翻译目标分开选择。保留全部术语概念，仅发送所需语言名称及实际匹配的别名。继续默认单次请求，遇到速率限制后不自动重试。

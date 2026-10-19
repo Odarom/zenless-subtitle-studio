@@ -315,3 +315,22 @@ apply只更新举报状态和备注，不编辑、测试或发布词典。A-ID�
 Discord举报存在权限受限的data/reports.sqlite，包含用户提交原文/译文、说明/建议、语言、标识及模型/词典/规则哈希，不保存API设置。普通关联追踪保存哈希与元数据而非本文。仅读取选中译文关联的一条原文或共享快照；原文编辑/删除后可让用户输入并标为未验证。旧追踪可能缺少哈希，服务器最多保留1,000条消息ID。长译文分段时保存选中译段和完整原文，附加语境请写说明。
 
 机器人本地限制为每用户每小时5条、24小时20条，每服务器500条、总体2,000条，每用户3秒可开一次表单。即使原文删除，举报仍最多保存90天；机器人移出服务器后删除该服务器本地举报。PC导出的reports/不自动删除，请只保留需要证据，不公开reports/和data/。收集、状态更新和分发不调用翻译AI API，也不自动重译或改DB。
+
+
+## GitHub · Manual glossary reports
+
+### 한국어
+
+[프로그램 없이 용어·약어 신고](https://github.com/Odarom/zenless-translation-database/issues/new/choose)에서 약어·입력 별칭, 커뮤니티 출력, 공식 명칭 오류, 누락 용어와 설명·규칙 오류를 직접 작성할 수 있습니다. 4개 언어의 양식에서 수정 대상 13개 언어를 선택합니다. GitHub 로그인이 필요하며 신고와 계정 이름은 공개됩니다. 개인정보·API 키·비공개 자료는 올리지 마세요. 기존 G-이슈번호 형식으로 Discord·영상과 같은 검토 목록에 수집하며 제안이 자동으로 DB에 반영되지는 않습니다.
+
+### English
+
+[Report names or shorthand without a program](https://github.com/Odarom/zenless-translation-database/issues/new/choose). Four localized forms accept manual aliases, community output, official-name errors, missing terms and usage-rule problems across 13 target languages. GitHub login is required; report contents and account names are public. Do not post personal information, API keys or private material. Reports use G-issue-number IDs in the same Discord/video review queue; suggestions never update the DB automatically.
+
+### 日本語
+
+[アプリなしで用語・略語を報告](https://github.com/Odarom/zenless-translation-database/issues/new/choose)できます。4言語の様式から修正対象13言語を選び、入力別名・コミュニティ出力・正式名の誤り・未登録用語・説明やルールの問題を記入します。GitHubログインが必要で内容とアカウント名は公開されます。個人情報・APIキー・非公開資料を投稿しないでください。G-番号でDiscord・動画と同じ確認一覧へ収集し、提案を自動適用しません。
+
+### 简体中文
+
+[无需程序，举报术语或简称](https://github.com/Odarom/zenless-translation-database/issues/new/choose)。4种界面语言的表单可选择13种目标语言，手动提交输入别名、社区输出、官方名称错误、缺失术语或说明规则问题。需要GitHub登录，内容及账号名公开；请勿提交个人信息、API密钥或非公开资料。使用G-编号与Discord及视频举报统一收集，不自动修改DB。

@@ -1,5 +1,6 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ['화면 인식 지원: 한국어·영어·일본어·중국어 간체/번체·러시아어. 번역 언어는 별도로 선택합니다.', 'Screen OCR supports Korean, English, Japanese, Simplified/Traditional Chinese and Russian. Choose the translation language separately.', '画面OCRは韓国語・英語・日本語・簡体字/繁体字中国語・ロシア語に対応します。翻訳先言語は別に選択します。', '屏幕OCR支持韩语、英语、日语、简体/繁体中文及俄语。翻译语言另行选择。'],
   ['용어집이 선택한 모델의 입력 범위를 넘을 수 있어 API를 호출하지 않았습니다. 입력 범위가 큰 모델을 선택하거나 용어집 전송 범위를 관련 용어만으로 바꾸세요.', 'The glossary may exceed this model’s input limit, so no API call was made. Choose a larger-context model or select related terms only.', '用語集がモデルの入力上限を超える可能性があるため、APIは呼び出していません。入力上限の大きいモデルか「関連用語のみ」を選択してください。', '术语表可能超出模型输入范围，未调用API。请选择输入范围更大的模型，或改用仅相关术语。'],
   ['용어집 전송 범위', 'Glossary scope', '用語集の送信範囲', '术语表发送范围'],
   ['전체 용어집 (기본)', 'Entire glossary (default)', '用語集全体（標準）', '完整术语表（默认）'],

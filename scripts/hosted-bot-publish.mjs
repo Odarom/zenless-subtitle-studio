@@ -19,7 +19,7 @@ export function botSource(root) {
   for(const directory of ['src','test'])for(const entry of readdirSync(join(root,directory),{withFileTypes:true}))if(entry.isFile()&&entry.name.endsWith('.js'))add(`${directory}/${entry.name}`);
   for(const file of ['check.js','reports-cli.mjs','local-ai.js','download-ollama.js','set-provider.js','build-glossary.js','fetch-source.js','source-fetch.mjs','sync-glossary.mjs','glossary-abbreviations.mjs','discord-runner.mjs','runner-ui.mjs','runner-build.mjs'])add(`scripts/${file}`);
   for(const file of ['index.html','app.js','style.css'])add(`runner/public/${file}`);
-  for(const file of ['zzz.json','sources.json','community.json','curated.json','reviewed-mechanics.json','README.md','ABBREVIATIONS.md','LIFECYCLE.md'])add(`glossary/${file}`);
+  for(const file of ['zzz.json','sources.json','community.json','curated.json','reviewed-mechanics.json', 'localizations.json','README.md','ABBREVIATIONS.md','LIFECYCLE.md'])add(`glossary/${file}`);
   for(const file of ['package.json','package-lock.json','.env.example','.env.runner.example','run.cmd','runner.cmd','local-ai.cmd','choose-ai.cmd','glossary-sync.cmd','SERVER-API.md'])add(file);
   add('HOSTING.md','docs/discord/HOSTING.md');
   add('ARCHITECTURE.md','docs/discord/ARCHITECTURE.md');
@@ -75,7 +75,7 @@ export function publishBot(root=resolve(import.meta.dirname,'..'),{recreate=fals
   if(existing.tree.some(e=>e.type==='blob' && !files.has(e.path)))throw new Error('문서 외 파일이 있습니다. 사용자가 요청한 --recreate 작업으로 다시 만드세요.');
   const tree=api(`repos/${repo}/git/trees`,'POST',{tree:[...files].map(([path,content])=>({path,mode:'100644',type:'blob',content}))});
   let commit=head;
-  if(tree.sha!==base.tree.sha){commit=api(`repos/${repo}/git/commits`,'POST',{message:'Update four-language documentation and ZZZ display names',tree:tree.sha,parents:[head]}).sha;api(`repos/${repo}/git/refs/heads/main`,'PATCH',{sha:commit,force:false});}
+  if(tree.sha!==base.tree.sha){commit=api(`repos/${repo}/git/commits`,'POST',{message:'Add thirteen translation languages and compatible glossary updates',tree:tree.sha,parents:[head]}).sha;api(`repos/${repo}/git/refs/heads/main`,'PATCH',{sha:commit,force:false});}
   api(`repos/${repo}`,'PATCH',{description,homepage:BOT_INVITE,has_wiki:false});
   const actual=api(`repos/${repo}/git/trees/${commit}?recursive=1`).tree.filter(e=>e.type==='blob').map(e=>e.path);
   if(actual.length!==files.size || actual.some(path=>!files.has(path)))throw new Error('게시된 문서 목록이 다릅니다.');

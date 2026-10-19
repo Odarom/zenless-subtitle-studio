@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { loadGlossary } from '../src/translator.js';
 import { readJson, saveJson } from './state.mjs';
 import { DEFAULT_GLOSSARY_REPOSITORY } from './distribution.mjs';
+import { EXTRA_LANGUAGES } from '../src/languages.js';
 
 export const glossaryHash = bytes => createHash('sha256').update(bytes).digest('hex');
 export function githubRepository(value, { optional = false } = {}) {
@@ -17,6 +18,8 @@ export function validateCatalog(data) {
   for (const e of data.entries) {
     if (!e || typeof e.id !== 'string' || !e.id || e.id.length > 250 || ids.has(e.id) || !Array.isArray(e.aliases) || e.aliases.length > 500 || !e.aliases.every(a => typeof a === 'string' && a.length && a.length <= 1000) || typeof e.meaning !== 'string' || !e.meaning || typeof e.rule !== 'string' || !e.rule || !e.preferred || typeof e.preferred !== 'object' || Array.isArray(e.preferred) || Object.entries(e.preferred).some(([lang, value]) => !['ko', 'en', 'ja', 'zh-CN'].includes(lang) || typeof value !== 'string' || !value.trim())) throw new Error('용어집 항목의 id/aliases/meaning/rule을 확인하세요.');
     ids.add(e.id);
+    if (e.localizedNames !== undefined && (!e.localizedNames || typeof e.localizedNames !== 'object' || Array.isArray(e.localizedNames)
+      || Object.entries(e.localizedNames).some(([lang, value]) => !EXTRA_LANGUAGES.includes(lang) || typeof value !== 'string' || !value.trim() || value.length > 1000))) throw new Error('용어집의 추가 언어 명칭을 확인하세요.');
   }
   return data;
 }

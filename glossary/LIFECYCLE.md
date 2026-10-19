@@ -1,5 +1,7 @@
 # 용어집 갱신 · Glossary lifecycle · 用語集更新 · 术语表更新
 
+[**용어·약어 오류 신고**](https://github.com/Odarom/zenless-translation-database/issues/new/choose) · [Report names / shorthand](https://github.com/Odarom/zenless-translation-database/issues/new/choose) · [用語・略語を報告](https://github.com/Odarom/zenless-translation-database/issues/new/choose) · [举报术语或简称](https://github.com/Odarom/zenless-translation-database/issues/new/choose)
+
 [한국어](#한국어) · [English](#english) · [日本語](#日本語) · [简体中文](#简体中文)
 
 ## 한국어
@@ -150,3 +152,22 @@ cached仍在线检查版本列表，并复用完整下载缓存。比较后若�
 不把BriefName_…、OfficialName_…、(Test…)等占位符登记为名称。仅保存有实际名称的语言；目标语言缺失时保留原固有名，不编造官方名称或技能数值。范围是短名称，不含完整技能说明、首领数值或所有社区简称。新简称在community.json单独记录语境和来源。
 
 可能与常规战斗术语冲突的参考名词在reviewed-mechanics.json保存已审原名与语境。同ID英文原名变化后暂停自动引用。括号、引号等UI装饰及韩文空格变体用作搜索别名，首选名保留来源原貌。仅在运行工具时更新，未注册每日版本监控。公开采集和版本比较不调用翻译AI API，也不使用机器人密钥。
+
+
+## Additional languages · 2026-10-19
+
+### 한국어
+
+추가 언어 입력은 localizations.json에서 관리합니다. 기존 네 언어가 모두 일치하는 live 항목에만 localizedNames를 적용하며, 이름·상태가 바뀌면 해당 대응을 보류합니다. 네 언어 기본 명칭은 덮어쓰지 않습니다. `node scripts/sync-glossary.mjs sync --localizations-only`로 현재 원본 버전을 유지한 후보를 생성하고, 검토 후 기존 apply 명령으로 백업·적용합니다. 일반 sync에서도 이 입력을 다시 적용하며, 적용 시 입력 해시도 확인합니다.
+
+### English
+
+Additional-name inputs live in localizations.json. Apply localizedNames only to live entries whose four baseline names still match; changed names/status hold that mapping. Never overwrite the four base names. Run `node scripts/sync-glossary.mjs sync --localizations-only` to stage a candidate without changing source versions, review, then use the existing apply command for backup/application. Normal sync also reapplies this input and checks its hash on apply.
+
+### 日本語
+
+追加名はlocalizations.jsonで管理し、既存4言語名がすべて一致するlive項目だけにlocalizedNamesを適用します。名称・状態が変わった対応は保留し、基本4言語名を上書きしません。`node scripts/sync-glossary.mjs sync --localizations-only`で元の版を維持して候補生成し、確認後に従来のapplyでバックアップ・適用します。通常syncでも再適用し、apply時に入力ハッシュを確認します。
+
+### 简体中文
+
+附加名称输入保存在localizations.json，仅对四种基准名称均匹配的live条目应用localizedNames；名称或状态变化则暂停对应，不覆盖原四种名称。使用`node scripts/sync-glossary.mjs sync --localizations-only`保留来源版本生成候选，审核后用原apply命令备份并应用。常规sync也重新应用此输入，apply验证输入哈希。

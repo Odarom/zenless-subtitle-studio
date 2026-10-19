@@ -25,8 +25,10 @@ export function protectDeepLTerms(text, glossary, sourceLanguage, targetLanguage
   return `<text>${output}${escapeXml(text.slice(offset))}</text>`;
 }
 export function deepLRequestBody(payload) {
-  const target = { ko: 'KO', en: 'EN', ja: 'JA', 'zh-CN': 'ZH-HANS' }[payload.targetLanguage];
-  const source = payload.sourceLanguage === 'auto' ? null : { ko: 'KO', en: 'EN', ja: 'JA', 'zh-CN': 'ZH' }[payload.sourceLanguage];
+  const targets = { ko: 'KO', en: 'EN', ja: 'JA', 'zh-CN': 'ZH-HANS', 'zh-Hant': 'ZH-HANT', de: 'DE', fr: 'FR', es: 'ES', pt: 'PT-BR', ru: 'RU', th: 'TH', vi: 'VI', id: 'ID' };
+  const target = targets[payload.targetLanguage];
+  const source = payload.sourceLanguage === 'auto' ? null : payload.sourceLanguage?.startsWith('zh-') ? 'ZH' : payload.sourceLanguage === 'pt' ? 'PT' : targets[payload.sourceLanguage];
+  if (!target || payload.sourceLanguage !== 'auto' && !source) throw new Error('DeepL 번역 언어를 확인하세요.');
   const protectedText = cue => protectDeepLTerms(cue.text, payload.glossary, payload.sourceLanguage, payload.targetLanguage);
   const text = payload.wholeDocument ? [`<doc>${payload.cues.map(cue => `<c id="${encodeURIComponent(cue.id)}">${protectedText(cue)}</c>`).join('')}</doc>`] : payload.cues.map(protectedText);
   return { text, target_lang: target, ...(source ? { source_lang: source } : {}), tag_handling: 'xml', ignore_tags: ['keep'], ...(payload.wholeDocument ? { outline_detection: false, splitting_tags: ['c'] } : {}), preserve_formatting: true, split_sentences: 'nonewlines', show_billed_characters: true, context: [...payload.before, ...payload.after].join('\n').slice(0, 20000) };

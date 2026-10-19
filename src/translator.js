@@ -5,6 +5,7 @@ import { geminiTranslation } from './gemini.js';
 import { protectEmojis } from './emoji.js';
 import { protectLayout } from './layout.js';
 import { validateCombatAttributes } from './attributes.js';
+import { localizedNames, EXTRA_LANGUAGES } from './languages.js';
 
 export function loadGlossary(path) {
   const data = JSON.parse(readFileSync(path, 'utf8'));
@@ -13,6 +14,8 @@ export function loadGlossary(path) {
   for (const e of data.entries) {
     if (!e.id || ids.has(e.id) || !Array.isArray(e.aliases) || !e.aliases.every(a => typeof a === 'string' && a.length) || !e.meaning || !e.rule) throw new UserError('용어집 항목의 id/aliases/meaning/rule을 확인하세요.');
     ids.add(e.id);
+    if (e.localizedNames !== undefined && (!e.localizedNames || Array.isArray(e.localizedNames) || typeof e.localizedNames !== 'object'
+      || Object.entries(e.localizedNames).some(([lang, value]) => !EXTRA_LANGUAGES.includes(lang) || typeof value !== 'string' || !value.trim()))) throw new UserError('용어집의 추가 언어 명칭을 확인하세요.');
     if (e.communityPreferred !== undefined && (!e.communityPreferred || Array.isArray(e.communityPreferred)
       || typeof e.communityPreferred !== 'object' || Object.entries(e.communityPreferred).some(([lang, value]) => !Object.hasOwn(LANGUAGES, lang) || typeof value !== 'string' || !value.trim()))) {
       throw new UserError('용어집의 언어별 커뮤니티 출력 표현을 확인하세요.');
@@ -48,7 +51,7 @@ export function validateTranslationLanguages(text, translations) {
   const prose = value => value.replace(/```[\s\S]*?```|`[^`]*`|https?:\/\/\S+|<[^>]*>/g, ' ').trim();
   const source = prose(text);
   if (/[\p{Script=Hangul}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u.test(source) || (source.match(/[A-Za-z]+/g) || []).length < 5) return;
-  const scripts = { ko: /\p{Script=Hangul}/u, ja: /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u, 'zh-CN': /\p{Script=Han}/u };
+  const scripts = { ko: /\p{Script=Hangul}/u, ja: /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u, 'zh-CN': /\p{Script=Han}/u, 'zh-Hant': /\p{Script=Han}/u, ru: /\p{Script=Cyrillic}/u, th: /\p{Script=Thai}/u };
   for (const [target, output] of Object.entries(translations)) {
     const translated = prose(output);
     if (scripts[target] && !scripts[target].test(translated) && (translated.match(/[A-Za-z]+/g) || []).length >= 5) {
@@ -68,6 +71,7 @@ export class Translator {
     const direct = relevantTerms(entries, text);
     const indirect = relevantTerms(entries, [reply?.text ?? '', ...context.map(c => c.text)].join('\n'));
     const terms = [...new Map([...direct, ...indirect].map(e => [e.id, e])).values()].slice(0, 30)
+      .map(entry => ({ ...entry, preferred: localizedNames(entry) }))
       .map(({ id, preferred, communityPreferred, aliases, category, meaning, rule, communityRule, relatedSkills, characterId, characterName, releaseStatus, releaseVersion, sourceVersion }) => ({
         id, preferred, outputPreferred: this.config.style === 'community' ? { ...preferred, ...communityPreferred } : preferred,
         aliases, category, meaning, rule, communityRule, relatedSkills, characterId, characterName, releaseStatus, releaseVersion, sourceVersion,
