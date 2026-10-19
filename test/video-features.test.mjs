@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, copyFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, copyFileSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import vm from 'node:vm';
@@ -113,7 +113,22 @@ test('glossary updates verify hashes, retain baseline on failure and recheck act
   corrupt = true; await assert.rejects(updates.apply(), /체크섬/); assert.equal(updates.currentPath(), join(root, 'glossary/zzz.json'));
   corrupt = false; race = true; await assert.rejects(updates.apply(), /진행 중/); assert.equal(updates.currentPath(), join(root, 'glossary/zzz.json'));
   race = false; busy = false; await updates.apply(); assert.equal(updates.public().current.sha256, sha256); assert(updates.currentPath().endsWith(`${sha256}.json`));
+  assert.equal(updates.public().current.languages.length, 13);
+  assert.equal(updates.public().current.coverage.es, 1862);
   busy = true; await assert.rejects(updates.apply(), /진행 중/);
+});
+
+test('glossary language counts reflect actual installed names rather than declared metadata', t => {
+  const root = temp(t); mkdirSync(join(root, 'glossary'));
+  const path = join(root, 'glossary/zzz.json');
+  const entries = [{ preferred: { en: 'Name', ko: '이름', ja: ' ' }, localizedNames: { fr: 'Nom', es: '' } }];
+  writeFileSync(path, JSON.stringify({ textLanguages: ['ko', 'en', 'ja', 'zh-CN'], localizationCoverage: { ja: 100 }, entries }));
+  const updates = new GlossaryUpdates({ root, dataDir: join(root, 'data') });
+  assert.deepEqual(updates.public().current.languages, ['ko', 'en', 'fr']);
+  assert.deepEqual(updates.public().current.coverage, { ko: 1, en: 1, fr: 1 });
+  entries[0].localizedNames.ru = 'Имя';
+  writeFileSync(path, JSON.stringify({ entries }));
+  assert.deepEqual(updates.public().current.languages, ['ko', 'en', 'fr', 'ru']);
 });
 test('video reports omit private paths and import untrusted GitHub data into the shared schema', async t => {
   const store = new VideoReports({ dataDir: temp(t), repository: () => 'Odarom/zenless-translation-database', jobs: { get: () => ({ status: 'completed', title: 'PRIVATE-PATH', input: { fileId: 'PRIVATE' }, options: { sourceLanguage: 'en', targetLanguage: 'ko' }, cues: [screen] }) }, now: () => 1792281600000 });
@@ -169,6 +184,7 @@ test('screen-only jobs validate options and export positioned VTT and metadata-o
   assert.throws(() => app.jobs.create({ ...input, options: { ...input.options, screenText: false } }));
   assert.throws(() => app.jobs.create({ ...input, options: { ...input.options, screenIntervalMs: 10 } }));
   const job = app.jobs.create(input);
+  assert.equal(job.options.forceAsr, true);
   for (let i = 0; i < 100 && app.jobs.get(job.id).status !== 'completed'; i++) await new Promise(resolve => setTimeout(resolve, 10));
   assert.equal(app.jobs.get(job.id).status, 'completed');
   app.server.listen(0, '127.0.0.1'); await once(app.server, 'listening');

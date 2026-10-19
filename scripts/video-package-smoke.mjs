@@ -59,6 +59,27 @@ try {
     await new Promise(resolveWait => setTimeout(resolveWait, 100));
   }
   if (!health || health.version !== release.version) throw new Error('배포 프로그램의 시작 상태를 확인하지 못했습니다.');
+  // Load the browser's dependency graph from the extracted release, not the
+  // checkout. Missing named exports prevent every UI event handler from loading.
+  const modules = new Map();
+  async function browserModule(url) {
+    if (modules.has(url)) return modules.get(url);
+    const response = await fetch(url), source = await response.text();
+    if (!response.ok || !source.trim() || !response.headers.get('content-type')?.startsWith('text/javascript')) throw new Error(`Browser module unavailable: ${new URL(url).pathname}`);
+    let rewritten = source;
+    for (const match of source.matchAll(/import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"]/g)) {
+      const dependency = new URL(match[2], url);
+      if (dependency.origin !== base) throw new Error('Unexpected external browser dependency.');
+      const loaded = await browserModule(dependency.href);
+      for (const name of match[1].split(',').map(value => value.trim().split(/\s+as\s+/)[0]).filter(Boolean)) if (!Object.hasOwn(loaded.exports, name)) throw new Error(`Missing browser export ${name}: ${dependency.pathname}`);
+      rewritten = rewritten.replace(match[0], match[0].replace(match[2], loaded.dataUrl));
+    }
+    const dataUrl = 'data:text/javascript;base64,' + Buffer.from(rewritten).toString('base64');
+    const value = { dataUrl, exports: url.endsWith('/app.js') ? null : await import(dataUrl) };
+    modules.set(url, value); return value;
+  }
+  await browserModule(`${base}/app.js`);
+  console.log(`배포본의 화면 모듈 ${modules.size}개와 연결된 내보내기를 확인했습니다.`);
   const session = await (await fetch(`${base}/api/session`, { headers: { 'X-ZZZ-Local': '1' } })).json();
   const headers = { Authorization: `Bearer ${session.token}` };
   const api = async (path, method = 'GET', body) => {

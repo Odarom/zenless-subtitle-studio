@@ -60,7 +60,8 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
       const url = new URL(req.url, origin);
       if (req.method === 'GET' && url.pathname === '/api/health') return send(res, 200, { app: 'zenless-subtitle-studio', version: VIDEO_VERSION });
       if (req.method === 'GET' && publicFiles.has(url.pathname)) {
-        const [file, type] = publicFiles.get(url.pathname); res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` }); return res.end(readFileSync(join(root, 'video', 'public', file)));
+        const [file, type] = publicFiles.get(url.pathname), content = readFileSync(join(root, 'video', 'public', file));
+        res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` }); return res.end(content);
       }
       if (req.method === 'GET' && url.pathname === '/api/session') {
         if (req.headers['x-zzz-local'] !== '1' || (requestOrigin && requestOrigin !== origin) || (req.headers['sec-fetch-site'] && req.headers['sec-fetch-site'] !== 'same-origin' && req.headers['sec-fetch-site'] !== 'none')) return send(res, 403, { error: '로컬 설정 화면에서 연결하세요.' });

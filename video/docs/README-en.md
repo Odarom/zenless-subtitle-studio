@@ -1,4 +1,6 @@
-# ZZZ Subtitle Studio 0.6.0
+# ZZZ Subtitle Studio 0.6.1
+
+The glossary card counts languages from the currently installed DB. Menu text has four languages; video source and translation choices have 13. Fresh YouTube audio transcription is on by default. Turn it off to prefer existing source-language captions, including auto-generated ones, with speech recognition as fallback. “Save source subtitles without translating” is off by default. Enabling it saves the original text without translation API calls or charges; selected speech/screen recognition still runs.
 
 Translation supports 13 languages: Korean, English, Japanese, Simplified/Traditional Chinese, German, French, Spanish, Portuguese, Russian, Thai, Vietnamese and Indonesian. Interface text and guides remain in four languages. Another 16,802 localized names extend 1,868 existing concepts across nine additional languages. Ten placeholder values are excluded; missing names are not invented. New/unreleased terms require confirmed live availability before review. After installing this program update, additions and corrections within these 13 languages can arrive through DB updates. Adding a new language code still requires a program update.
 

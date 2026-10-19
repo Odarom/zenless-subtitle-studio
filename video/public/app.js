@@ -274,6 +274,9 @@ async function loadGlossary() {
 function renderGlossary() {
   const info = state.glossary; if (!info) return;
   $('glossaryCount').textContent = info.current.count.toLocaleString(i18n.locale);
+  const languageCount = info.current.languages.length.toLocaleString(i18n.locale);
+  $('glossaryLanguageCount').textContent = languageCount;
+  $('glossaryDescription').textContent = t('{count}개 언어 명칭을 연결한 ZZZ 용어집을', { count: languageCount });
   $('glossaryStatus').textContent = t('사용 중: {version} · {count}개 항목', { version: info.current.version, count: info.current.count.toLocaleString(i18n.locale) });
   if (info.available) $('glossaryStatus').textContent += info.available.sha256 === info.current.sha256 ? ` · ${t('최신 용어집입니다.')}` : ` · ${t('새 용어집: {version}', { version: info.available.version })}`;
   $('glossaryError').textContent = i18n.message(info.error);

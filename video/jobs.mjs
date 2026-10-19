@@ -33,7 +33,7 @@ export class Jobs {
   get(id) { const job = this.jobs.get(id); if (!job) throw Object.assign(new Error('작업을 찾지 못했습니다.'), { statusCode: 404 }); return job; }
   create(input) {
     if (!input || typeof input !== 'object' || !input.input || !input.options) throw new Error('영상과 번역 설정을 확인하세요.');
-    const { sourceLanguage = 'en', targetLanguage = 'ko', style = 'official', forceAsr = false, transcribeOnly = false, speech = true, screenText = false, screenLanguage = OCR_LANGUAGES.includes(sourceLanguage) ? sourceLanguage : 'en', screenIntervalMs = 1000, screenStartMs = 0, screenEndMs = null } = input.options;
+    const { sourceLanguage = 'en', targetLanguage = 'ko', style = 'official', forceAsr = true, transcribeOnly = false, speech = true, screenText = false, screenLanguage = OCR_LANGUAGES.includes(sourceLanguage) ? sourceLanguage : 'en', screenIntervalMs = 1000, screenStartMs = 0, screenEndMs = null } = input.options;
     const translationMode = input.options.translationMode || 'single';
     const glossaryMode = input.options.glossaryMode || 'full';
     if (!['full', 'relevant'].includes(glossaryMode)) throw new Error('용어집 전송 범위를 확인하세요.');

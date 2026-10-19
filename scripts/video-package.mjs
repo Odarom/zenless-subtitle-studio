@@ -53,7 +53,8 @@ export async function buildExternalPackage(root = ROOT) {
   const staging = mkdtempSync(join(stageBase, 'release-'));
   const name = `Zenless-Subtitle-Studio-${VIDEO_VERSION}-win-x64`;
   const folder = join(staging, name), app = join(folder, 'app'); mkdirSync(app, { recursive: true });
-  const code = moduleFiles(root, ['video/server.mjs', 'scripts/video-launch.mjs', 'scripts/video-setup.mjs', 'scripts/video-update-apply.mjs']);
+  // These modules are served to the browser and are not imported by the server.
+  const code = moduleFiles(root, ['video/server.mjs', 'video/geometry.mjs', 'video/review.mjs', 'scripts/video-launch.mjs', 'scripts/video-setup.mjs', 'scripts/video-update-apply.mjs']);
   for (const file of code) copy(join(root, file), join(app, file));
   for (const file of filesIn(join(root, 'video', 'public'))) copy(file, join(app, 'video', 'public', relative(join(root, 'video', 'public'), file)));
   for (const file of ['zzz.json', 'sources.json', 'README.md']) copy(join(root, 'glossary', file), join(app, 'glossary', file));

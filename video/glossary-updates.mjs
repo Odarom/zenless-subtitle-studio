@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { loadGlossary } from '../src/translator.js';
 import { readJson, saveJson } from './state.mjs';
 import { DEFAULT_GLOSSARY_REPOSITORY } from './distribution.mjs';
-import { EXTRA_LANGUAGES } from '../src/languages.js';
+import { EXTRA_LANGUAGES, TEXT_LANGUAGES, localizedNames } from '../src/languages.js';
 
 export const glossaryHash = bytes => createHash('sha256').update(bytes).digest('hex');
 export function githubRepository(value, { optional = false } = {}) {
@@ -44,8 +44,15 @@ export class GlossaryUpdates {
   }
   public() {
     const bytes = readFileSync(this.currentPath()), catalog = JSON.parse(bytes);
+    const coverage = Object.fromEntries(Object.keys(TEXT_LANGUAGES).map(language => [language, 0]));
+    for (const entry of catalog.entries) {
+      for (const [language, name] of Object.entries(localizedNames(entry))) {
+        if (Object.hasOwn(coverage, language) && typeof name === 'string' && name.trim()) coverage[language]++;
+      }
+    }
+    const languages = Object.keys(coverage).filter(language => coverage[language] > 0);
     return { repository: this.state.repository, autoCheck: this.state.autoCheck, lastCheckedAt: this.state.lastCheckedAt, error: this.state.error || null,
-      current: { version: this.state.installed?.version || `${catalog.retrievedAt || 'bundled'}-${glossaryHash(bytes).slice(0, 12)}`, sha256: glossaryHash(bytes), count: catalog.entries.length, sourceVersion: catalog.sourceVersion || null },
+      current: { version: this.state.installed?.version || `${catalog.retrievedAt || 'bundled'}-${glossaryHash(bytes).slice(0, 12)}`, sha256: glossaryHash(bytes), count: catalog.entries.length, languages, coverage: Object.fromEntries(languages.map(language => [language, coverage[language]])), sourceVersion: catalog.sourceVersion || null },
       available: this.pending ? { version: this.pending.version, count: this.pending.count, sha256: this.pending.sha256 } : null };
   }
   configure(input) {
