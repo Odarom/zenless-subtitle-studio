@@ -103,8 +103,8 @@ test('clicking YouTube screen subtitles opens a localized menu, stops player cli
   chrome:{runtime:{id:extensionId,onMessage:{addListener:fn=>{listener=fn;}},sendMessage:async message=>{messages.push(message);return message.action==='exclude'?{ok:true,excluded:message.excluded}:{ok:true,reportId:'V-20261019-123456abcdef',receiptId:'A-20261019-123456abcdef'};}}}};
  vm.runInNewContext(fs.readFileSync('video/extension/content.js','utf8'),context);
  let response;listener({type:'ZZZ_SUBTITLES_LOAD',jobId:'a'.repeat(36),videoId,cues:[{...input[1],id:'53',translatedText:'<img src=x onerror=alert(1)>'}],settings:{uiLanguage:'en'}},{id:extensionId},value=>{response=value;});assert(response.ok);frame(0);
- const host=player.children[0],screen=host.shadow.children[2],caption=screen.children[0];let prevented=0,stopped=0;const event={preventDefault:()=>{prevented++;},stopPropagation:()=>{stopped++;}};
- caption.onclick(event);assert.equal(prevented,1);assert.equal(stopped,1);assert.equal(video.paused,true);
+ const host=player.children[0],screen=host.shadow.children[2],caption=screen.children[0].children[1];let prevented=0,stopped=0;const event={preventDefault:()=>{prevented++;},stopPropagation:()=>{stopped++;}};
+ assert.equal(caption.tagName,'BUTTON');assert.equal(caption.style.pointerEvents,'auto');caption.onclick(event);assert.equal(prevented,1);assert.equal(stopped,1);assert.equal(video.paused,true);
  const dialog=host.shadow.children.at(-1),buttons=dialog.children.find(el=>el.tagName==='DIV'),form=dialog.children.find(el=>el.tagName==='FORM');
  assert.equal(buttons.children[1].textContent,'Delete subtitle');assert.equal(dialog.children[2].textContent,'<img src=x onerror=alert(1)>');
  await buttons.children[1].onclick();frame(10);assert.equal(screen.children.length,0);assert.equal(messages[0].cueId,'53');assert.equal(buttons.children[1].textContent,'Restore subtitle');

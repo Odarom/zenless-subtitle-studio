@@ -78,8 +78,11 @@ test('YouTube speech dragging does not open the report menu or pause playback, w
  const host=player.children[0],speech=host.shadow.children[1],screen=host.shadow.children[2],label=speech.children[0],handle=speech.children[1],top=parseFloat(speech.style.top),ocrTop=screen.children[0].style.top;
  handle.onpointerdown(event());handle.onpointermove(event({clientY:300}));handle.onpointerup(event());handle.onclick(event());frame(2);await Promise.resolve();
  assert(parseFloat(speech.style.top)<top);assert.equal(video.paused,false);assert.equal(host.shadow.children.length,3);assert.equal(screen.children[0].style.top,ocrTop);assert.equal(JSON.stringify(cues),before);
- assert.equal(parseFloat(ocrTop),720*.78);assert(Math.abs(parseFloat(screen.children[0].style['--zzz-hit-cut'])-54.6)<.001);
- controlsHidden=true;frame(2.5);assert.equal(screen.children[0].style.top,ocrTop);assert.equal(screen.children[0].style['--zzz-hit-cut'],'0px');
+ const ocr=screen.children[0],hit=ocr.children[1];assert.equal(hit.tagName,'BUTTON');assert.equal(hit.style.pointerEvents,'auto');
+ assert.equal(parseFloat(ocrTop),720*.78);assert(Math.abs(parseFloat(hit.style.height)-30.4)<.001);assert.equal(hit.hidden,false);
+ controlsHidden=true;frame(2.5);assert.equal(ocr.style.top,ocrTop);assert.equal(hit.style.height,'85px');
+ send({type:'ZZZ_SUBTITLES_SETTINGS',settings:{maskSpeech:false,maskScreen:true}});frame(2.51);assert.equal(label.style.background,'transparent');assert.notEqual(ocr.style.background,'transparent');
+ send({type:'ZZZ_SUBTITLES_SETTINGS',settings:{maskSpeech:true,maskScreen:false}});frame(2.52);assert.notEqual(label.style.background,'transparent');assert.equal(ocr.style.background,'transparent');
  const movedTop=speech.style.top;video.currentTime=6;frame(2.6);assert.equal(label.textContent,'다음 음성 자막');assert.equal(speech.style.top,movedTop);
  video.currentTime=1;frame(2.7);
  assert.equal(messages.length,1);assert.equal(messages[0].type,'ZZZ_SPEECH_POSITION');assert(!JSON.stringify(messages).includes('음성'));

@@ -11,6 +11,7 @@ const $ = id => document.getElementById(id);
 const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), videoSaves: new Map(), uploadController: null, actions: new Set(), refreshSerial: 0 };
 state.speechHeight = DEFAULT_SPEECH_HEIGHT;
 state.positionDrafts = new Map(); state.positionSaves = new Map();
+try { const saved = JSON.parse(localStorage.getItem('zzz-preview-backgrounds') || '{}'); for (const key of ['previewMaskSpeech','previewMaskScreen']) if (typeof saved[key] === 'boolean') state[key] = saved[key]; } catch {}
 const statusLabel = (status, cancelling = false) => cancelling ? t('중단 중') : ({ queued: t('대기 중'), running: t('처리 중'), completed: t('완료'), failed: t('실패'), cancelled: t('중단됨'), interrupted: t('이어하기 가능') })[status] || status;
 function node(tag, attrs = {}, ...children) {
   const element = document.createElement(tag);
@@ -216,6 +217,9 @@ function renderPreview(job) {
   let previewHover = false;
   const speechToggle = node('input', { type: 'checkbox', checked: state.previewSpeech !== false, onchange: () => { state.previewSpeech = speechToggle.checked; update(); } });
   const screenToggle = node('input', { type: 'checkbox', checked: state.previewScreen !== false, onchange: () => { state.previewScreen = screenToggle.checked; update(); } });
+  const saveBackgrounds = () => { try {localStorage.setItem('zzz-preview-backgrounds',JSON.stringify({previewMaskSpeech:state.previewMaskSpeech !== false,previewMaskScreen:state.previewMaskScreen !== false}));} catch {} update(); };
+  const speechBackground = node('input',{type:'checkbox',checked:state.previewMaskSpeech !== false,onchange:() => {state.previewMaskSpeech=speechBackground.checked;saveBackgrounds();}});
+  const screenBackground = node('input',{type:'checkbox',checked:state.previewMaskScreen !== false,onchange:() => {state.previewMaskScreen=screenBackground.checked;saveBackgrounds();}});
   const speechIndex = buildCueIndex(job.cues.filter(cue => !cue.excluded && cue.kind !== 'screen'));
   const screenIndex = buildCueIndex(job.cues.filter(cue => !cue.excluded && cue.kind === 'screen'));
   const offset = node('input', { id: 'previewOffset', type: 'number', value: '0', step: '0.1', min: '-3600', max: '3600', 'aria-label': t('자막 지연 초') });
@@ -224,19 +228,22 @@ function renderPreview(job) {
     const mode = $('downloadMode')?.value || 'translated';
     const text = cue => { const translated = state.drafts.get(job.id)?.get(cue.id) ?? cue.translatedText ?? cue.sourceText; return mode === 'source' || job.options.transcribeOnly ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${translated}` : translated; };
     label.textContent = speechToggle.checked ? activeCuesAt(speechIndex, now).map(text).join('\n') : '';
+    label.style.background = speechBackground.checked ? 'rgba(0,0,0,.76)' : 'transparent';
     caption.hidden = !label.textContent;
     speech.hidden = caption.hidden; if (speech.hidden) stopDrag();
     placeSpeech();
     const outer = video.parentElement.getBoundingClientRect(), rect = videoContentRect(video.getBoundingClientRect(), video.videoWidth, video.videoHeight);
     screen.replaceChildren(...(screenToggle.checked ? activeCuesAt(screenIndex, now) : []).map(cue => {
-      const region = cueRegionAt(cue, now), block = node('button', { type: 'button', class: 'screen-caption', text: text(cue), title: t('자막 메뉴'), onclick: () => { video.pause(); openCueActions(job, cue); } });
+      const region = cueRegionAt(cue, now), hit = node('button',{type:'button',class:'screen-hit','aria-label':t('자막 메뉴'),title:t('자막 메뉴'),onclick:event=>{event.preventDefault();event.stopPropagation();video.pause();openCueActions(job,cue);}});
+      const block = node('div', {class:'screen-caption'},node('span',{text:text(cue)}),hit);
       Object.assign(block.style, { left: `${rect.left - outer.left + region.x * rect.width}px`, top: `${rect.top - outer.top + region.y * rect.height}px`, width: `${region.w * rect.width}px`, minHeight: `${region.h * rect.height}px`, fontSize: `${Math.max(10, Math.min(28, region.h * rect.height * 0.7))}px` });
+      block.style.background = screenBackground.checked ? 'rgba(8,10,15,.92)' : 'transparent';
       return block;
     }));
     for (const block of screen.children) {
       const height = block.getBoundingClientRect().height, controlsTop = outer.height - Math.min(64,outer.height * 0.45);
       const cut = previewHover || video.paused ? Math.min(height, Math.max(0,parseFloat(block.style.top) + height - controlsTop)) : 0;
-      block.style.setProperty('--zzz-hit-cut',`${cut}px`);
+      const hit=block.querySelector('.screen-hit');hit.style.height=`${Math.max(0,height-cut)}px`;hit.hidden=height-cut<1;
     }
   };
   video.addEventListener('timeupdate', update); video.addEventListener('seeked', update); offset.addEventListener('input', update);
@@ -247,6 +254,7 @@ function renderPreview(job) {
   state.previewCleanup = () => { stopDrag(); resize.disconnect(); }; state.previewUpdate = update;
   video.addEventListener('error', () => toast(t('이 파일 형식은 브라우저에서 재생하지 못할 수 있습니다. 자막 파일을 외부 플레이어에서 적용할 수 있습니다.'), true));
   container.append(node('div', { class: 'video-preview', onpointerenter:() => {previewHover=true;update();},onpointerleave:() => {previewHover=false;update();} }, video, screen, speech), node('div', { class: 'preview-tools' }, node('label', {}, speechToggle, t('음성 자막 표시')), node('label', {}, screenToggle, t('화면 번역 표시')), node('label', { htmlFor: 'previewOffset', text: t('자막 지연 (초)') }), offset, node('span', { class: 'hint', text: t('양수는 자막을 늦게 표시합니다.') })),
+    node('div',{class:'preview-tools'},node('label',{},speechBackground,t('음성 자막 뒤에 배경 표시')),node('label',{},screenBackground,t('화면 글자 뒤에 배경 표시'))),
     node('div',{class:'preview-tools speech-position-tools'},node('label',{},t('음성 자막 높이'),height),resetPosition),node('p',{class:'hint',text:t('자막 클릭: 신고·삭제 / ↕ 이동 손잡이: 모든 음성 자막 높이 조절. 위치는 자동 저장되며 VTT·프로젝트 JSON 다운로드에 반영됩니다.')}));
   state.previewVideo = video; return container;
 }

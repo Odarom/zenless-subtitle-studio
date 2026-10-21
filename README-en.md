@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.6.9](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.9/zenless-subtitle-studio-0.6.9-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 
@@ -36,6 +36,8 @@ The YouTube extension is not needed to preview your own file. If the browser can
 
 ## Save and edit
 
+Switch speech and screen subtitle backgrounds on or off separately in extension settings and preview. These viewing preferences do not change the style of downloaded files.
+
 - Hover over speech subtitles and drag the **↕ Move** handle up or down to move all speech cues together. Clicking the subtitle still opens report/delete. **Speech subtitle height / Reset position** is also available in extension settings and the preview. Height is automatically saved to the connected job. VTT and project JSON preserve the adjusted position; SRT stores text and timing only. Text edits are also saved before downloading. When player controls are visible, only the overlapping portion of screen captions lets clicks pass through to the controls. The rest of each caption remains clickable.
 
 - The default selection is **Speech + screen subtitles**; you can also choose **Speech only / Screen only**. SRT/VTT are ordinary subtitle files; project JSON preserves screen positions for importing into the extension.
@@ -51,6 +53,7 @@ Change and save your key under **Left menu → API & connection**. Keys stay on 
 
 **The extension needs a manual reload.** After an in-app program update, open `chrome://extensions` in Chrome or `edge://extensions` in Edge. Click **Reload ↻** on the ZZZ extension card, then refresh the YouTube page with **F5** and click **Apply selected subtitles** again in the extension. If you extract a new ZIP into **a different folder**, disable the extension using the old folder, **Load unpacked** from the new **video-extension** folder, and register the **PC connection code** again.
 
+If you updated the same folder, fully quitting and reopening the browser or restarting your PC also reloads the extension files. Then refresh YouTube and reapply subtitles.
 ## More help
 
 [Features, hardware, limits and subtitle formats](https://github.com/Odarom/zenless-subtitle-studio/blob/main/FEATURES.md#english) · [Release history](https://github.com/Odarom/zenless-subtitle-studio/blob/main/CHANGELOG.md#english) · [Browse the glossary](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/BROWSE.md) · [Open source and licenses](THIRD-PARTY-NOTICES.md#english)

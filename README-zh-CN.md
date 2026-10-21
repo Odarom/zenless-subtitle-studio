@@ -4,7 +4,7 @@
 
 选择YouTube视频或本地文件，完成识别和翻译后，再使用生成的字幕观看。适用于Windows电脑。
 
-**[下载Windows x64版 · 0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[下载Windows x64版 · 0.6.9](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.9/zenless-subtitle-studio-0.6.9-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 安装并制作字幕
 
@@ -36,6 +36,8 @@
 
 ## 保存与编辑
 
+可在扩展设置和预览中分别开关语音字幕和屏幕字幕背景。这些观看设置不会改变下载文件的样式。
+
 - 将鼠标移到语音字幕附近，拖动出现的 **↕ 移动** 手柄可同时调整所有语音字幕的高度。点击字幕仍会打开举报和删除菜单。扩展设置和预览中的 **语音字幕高度 / 重置位置** 也可调整。高度会自动保存到已连接的任务中。VTT和项目JSON会保留调整的位置，SRT仅保存内容和时间。下载前也会保存文字修改。播放器控件显示时，屏幕字幕仅在重叠区域让点击穿透到播放控件，其余部分仍可点击。
 
 - 默认保存**语音字幕 + 屏幕字幕**，也可选择**仅语音 / 仅屏幕**。SRT/VTT用于普通字幕；项目JSON保留屏幕位置，可在扩展中导入。
@@ -51,6 +53,7 @@
 
 **扩展需要手动重新加载。** 在应用内完成程序更新后，Chrome请打开 `chrome://extensions`，Edge请打开 `edge://extensions`，点击ZZZ扩展卡片的 **↻ 重新加载**，然后按 **F5 刷新YouTube页面**，并在扩展中再次点击**应用所选字幕**。如果将新ZIP解压到**不同的文件夹**，请停用使用旧文件夹的扩展，通过**加载已解压的扩展程序**选择新目录内的 **video-extension**，并重新登记**本机连接码**。
 
+若更新至同一文件夹，也可完全退出并重新打开浏览器，或重启电脑，以加载新的扩展文件。之后请刷新YouTube页面并重新应用字幕。
 ## 详细说明
 
 [功能、设备要求、容量和字幕格式](https://github.com/Odarom/zenless-subtitle-studio/blob/main/FEATURES.md#简体中文) · [更新记录](https://github.com/Odarom/zenless-subtitle-studio/blob/main/CHANGELOG.md#简体中文) · [浏览术语库](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/BROWSE.md) · [开源组件与许可证](THIRD-PARTY-NOTICES.md#简体中文)

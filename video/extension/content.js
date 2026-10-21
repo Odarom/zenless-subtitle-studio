@@ -6,7 +6,7 @@
   let speech, moveHandle, cancelDrag;
   let cues = [], speechIndex, screenIndex, videoId = null, jobId = null, host, label, screenLayer, menuRoot, lastText = null, nextCheck = 0, player, video, menu, visibleSpeech = [];
   const screenNodes = new Map();
-  const settings = { mode: 'translated', offsetMs: 0, fontSize: 28, showSpeech: true, showScreen: true, maskScreen: true, uiLanguage: 'ko', speechHeight: 0.11 };
+  const settings = { mode: 'translated', offsetMs: 0, fontSize: 28, showSpeech: true, showScreen: true, maskSpeech: true, maskScreen: true, uiLanguage: 'ko', speechHeight: 0.11 };
   const t = (key, values = {}) => (globalThis.__zzzOverlayI18n?.[settings.uiLanguage]?.[key] || key).replace(/\{(\w+)\}/g, (match,name) => values[name] ?? match);
   const currentId = () => { const url = new URL(location.href); return url.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([^/]+)/.exec(url.pathname)?.[1]; };
   const cueText = cue => settings.mode === 'source' ? cue.sourceText : settings.mode === 'bilingual' && cue.translatedText !== cue.sourceText ? `${cue.sourceText}\n${cue.translatedText || ''}` : cue.translatedText || cue.sourceText;
@@ -63,9 +63,9 @@
     if (['source', 'translated', 'bilingual'].includes(input.mode)) settings.mode = input.mode;
     if (Number.isFinite(input.offsetMs) && Math.abs(input.offsetMs) <= 3600000) settings.offsetMs = input.offsetMs;
     if (Number.isFinite(input.fontSize) && input.fontSize >= 16 && input.fontSize <= 48) settings.fontSize = input.fontSize;
-    for (const key of ['showSpeech', 'showScreen', 'maskScreen']) if (typeof input[key] === 'boolean') settings[key] = input[key];
+    for (const key of ['showSpeech', 'showScreen', 'maskSpeech', 'maskScreen']) if (typeof input[key] === 'boolean') settings[key] = input[key];
     if(['ko','en','ja','zh-CN'].includes(input.uiLanguage))settings.uiLanguage=input.uiLanguage;
-    if (label) label.style.fontSize = `${settings.fontSize}px`; lastText = null;
+    if (label) { label.style.fontSize = `${settings.fontSize}px`; label.style.background = settings.maskSpeech ? 'rgba(0,0,0,.76)' : 'transparent'; } lastText = null;
     if (moveHandle) { moveHandle.textContent = t('↕ 이동'); moveHandle.title = t('끌어서 음성 자막 높이 조절 · ↑↓ 키로 이동 · Home 키로 초기화'); moveHandle.setAttribute('aria-label', moveHandle.title); }
   }
   async function savePosition() {
@@ -110,7 +110,7 @@
       });
     }
     style.textContent += 'dialog{pointer-events:auto;box-sizing:border-box;position:fixed;inset:0;margin:auto;max-width:580px;width:calc(100vw - 40px);max-height:85vh;overflow:auto;background:#171c18;color:#f2f5ec;border:1px solid #a6c938;border-radius:14px;padding:24px;font:14px/1.5 system-ui,sans-serif}dialog::backdrop{background:#0008}dialog p{white-space:pre-wrap;overflow-wrap:anywhere}dialog button{cursor:pointer;background:#d9fd68;color:#14200c;border:0;border-radius:6px;padding:10px;margin:4px}dialog select,dialog textarea{box-sizing:border-box;display:block;width:100%;background:#252d27;color:#fff;border:1px solid #728365;padding:8px;margin:5px 0 12px}dialog textarea{min-height:70px}dialog label{display:block}dialog input[type=checkbox]{margin:8px}dialog [role=status]{color:#d9fd68}.speech span,.screen-text{cursor:pointer}';
-    style.textContent += '.screen-text{pointer-events:none!important}.screen-text::after{content:"";position:absolute;inset:0;pointer-events:auto;clip-path:inset(0 0 var(--zzz-hit-cut,0px) 0)}';
+    style.textContent += '.screen-text{pointer-events:none}.screen-hit{position:absolute;top:0;left:0;width:100%;padding:0;margin:0;border:0;border-radius:2px;background:transparent;pointer-events:auto;cursor:pointer}.screen-hit:focus-visible{outline:2px solid #d9fd68;outline-offset:0}';
     menuRoot=shadow;screenLayer = document.createElement('div'); screenLayer.className = 'screen'; shadow.append(style, speech, screenLayer); player.append(host);
     clickable(label,()=>openMenu(visibleSpeech));
     setSettings(); lastText = null;
@@ -122,23 +122,28 @@
       const fit = typeof getComputedStyle === 'function' ? getComputedStyle(video).objectFit : 'contain';
       const content = geometry.videoContentRect(rect, video.videoWidth, video.videoHeight, fit);
       for (const cue of active) {
-        keep.add(cue.id); let element = screenNodes.get(cue.id);
-        if (!element) { element = document.createElement('div'); element.className = 'screen-text'; clickable(element,()=>openMenu([cue])); screenLayer.append(element); screenNodes.set(cue.id, element); }
+        keep.add(cue.id); let entry = screenNodes.get(cue.id);
+        if (!entry) {
+          const element = document.createElement('div'), text = document.createElement('span'), hit = document.createElement('button');
+          element.className = 'screen-text'; hit.className = 'screen-hit'; hit.type = 'button'; clickable(hit,()=>openMenu([cue]));
+          element.append(text,hit); screenLayer.append(element); entry = {element,text,hit}; screenNodes.set(cue.id,entry);
+        }
+        const {element} = entry;
         const region = geometry.cueRegionAt(cue, time), text = cueText(cue), width = region.w * content.width, height = region.h * content.height;
-        element.textContent = text;
+        entry.text.textContent = text;
         const lines = text.split('\n'), units = Math.max(...lines.map(line => [...line].reduce((sum, char) => sum + (/[\x20-\x7e]/.test(char) ? 0.6 : 1), 0)), 1);
         const font = Math.max(10, Math.min(settings.fontSize, height / (lines.length * 1.2), width / units));
         element.style.left = `${content.left - playerRect.left + region.x * content.width}px`;
         element.style.top = `${content.top - playerRect.top + region.y * content.height}px`;
         element.style.width = `${Math.max(width, 15)}px`; element.style.minHeight = `${height}px`;
-        element.style.fontSize = `${font}px`; element.style.background = settings.maskScreen ? 'rgba(12,14,12,.95)' : 'rgba(0,0,0,.35)';
+        element.style.fontSize = `${font}px`; element.style.background = settings.maskScreen ? 'rgba(12,14,12,.95)' : 'transparent';
       }
     }
-    for (const [id, element] of screenNodes) if (!keep.has(id)) { element.remove(); screenNodes.delete(id); }
-    for (const element of screenNodes.values()) {
+    for (const [id, entry] of screenNodes) if (!keep.has(id)) { entry.element.remove(); screenNodes.delete(id); }
+    for (const {element,hit} of screenNodes.values()) {
       const height = element.getBoundingClientRect().height, controlsTop = safe?.outer.height - safe?.controlsHeight;
       const cut = safe?.controlsVisible ? Math.min(height, Math.max(0, parseFloat(element.style.top) + height - controlsTop)) : 0;
-      element.style.setProperty?.('--zzz-hit-cut', `${cut}px`);
+      hit.style.height = `${Math.max(0,height-cut)}px`; hit.hidden = height-cut < 1;
     }
     return active.length;
   }
@@ -156,8 +161,8 @@
         if (!text) cancelDrag?.();
         const safe = geometry ? visibleRect() : null;
         const screenCount = ads ? 0 : drawScreen(time, safe);
-        if (ads) for (const element of screenNodes.values()) element.hidden = true;
-        else for (const element of screenNodes.values()) element.hidden = false;
+        if (ads) for (const {element} of screenNodes.values()) element.hidden = true;
+        else for (const {element} of screenNodes.values()) element.hidden = false;
         host.hidden = ads || !text && !screenCount && !menu;
         if (!host.hidden) placeSpeech();
       }

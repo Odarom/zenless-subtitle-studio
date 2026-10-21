@@ -6,6 +6,10 @@
 
 ## 한국어
 
+### 0.6.9
+
+화면 번역 자막을 눌러 신고·삭제 메뉴를 열 수 없던 문제를 수정했습니다. 재생바와 겹친 부분은 재생바를 조작할 수 있도록 두고, 나머지 영역에서 자막을 클릭할 수 있습니다. 확장 설정과 로컬 영상 미리보기에서 음성·화면 자막의 배경을 각각 켜고 끌 수 있으며 설정을 기억합니다. 업데이트 버튼 아래에 확장 새로고침·브라우저 재시작 안내를 짧게 표시합니다. 자동 팝업은 띄우지 않습니다.
+
 ### 0.6.8
 
 음성 자막에 마우스를 올리면 나타나는 **↕ 이동** 손잡이를 위아래로 끌면 모든 음성 자막의 높이가 함께 바뀝니다. 클릭하면 기존 신고·삭제 메뉴가 열립니다. 확장 설정이나 미리보기의 **음성 자막 높이 / 기본 위치**로도 조절할 수 있습니다. 높이는 연결된 작업에 자동 저장됩니다. VTT·프로젝트 JSON에는 조절한 위치가, SRT에는 내용·시간만 반영됩니다. 문구 수정도 다운로드 전에 저장됩니다. 재생바가 보일 때에는 겹친 화면 번역의 해당 부분만 클릭을 통과시켜 재생 조작을 우선합니다. 자막의 나머지 부분은 계속 클릭할 수 있습니다.
@@ -33,6 +37,10 @@
 ---
 
 ## English
+
+### 0.6.9
+
+Fixed screen captions that did not open the report/delete menu when clicked. Areas overlapping playback controls continue to pass clicks through, while the rest of each caption remains clickable. Speech and screen subtitle backgrounds can be switched on or off separately in extension settings and local video preview, with preferences remembered. A short note below the update buttons explains extension reload or browser restart; there is no automatic popup.
 
 ### 0.6.8
 
@@ -62,6 +70,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 
 ## 日本語
 
+### 0.6.9
+
+画面字幕をクリックしても報告・削除メニューが開かない問題を修正しました。再生コントロールと重なる部分ではクリックを通し、それ以外の字幕領域は引き続きクリックできます。拡張設定とローカル動画のプレビューで音声・画面字幕の背景を個別に切り替え、設定を保持します。更新ボタンの下に拡張の再読み込み・ブラウザ再起動の短い案内を表示します。自動ポップアップは表示しません。
+
 ### 0.6.8
 
 音声字幕にマウスを重ねて表示される **↕ 移動** ハンドルを上下にドラッグすると、すべての音声字幕の高さが変わります。字幕のクリックでは従来どおり報告・削除メニューが開きます。拡張設定とプレビューの **音声字幕の高さ / 位置をリセット** でも調整できます。高さは接続した作業に自動保存されます。VTTとプロジェクトJSONには調整した位置が、SRTには内容と時間のみが反映されます。文章の修正もダウンロード前に保存されます。再生コントロールの表示中は、画面字幕の重なった部分だけクリックを再生バーに通し、字幕の残りの部分は引き続きクリックできます。
@@ -89,6 +101,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 ---
 
 ## 简体中文
+
+### 0.6.9
+
+修复了点击屏幕字幕无法打开举报和删除菜单的问题。与播放控件重叠的部分仍允许点击穿透，其余字幕区域可以点击。在扩展设置和本地视频预览中，可分别开关语音字幕和屏幕字幕的背景，并记住设置。更新按钮下方简要说明扩展重新加载或浏览器重启方式，不自动弹窗。
 
 ### 0.6.8
 

@@ -1,5 +1,7 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ["음성 자막 뒤에 배경 표시","Show a background behind speech subtitles","音声字幕の背景を表示","显示语音字幕背景"],
+  ["유튜브 확장 사용 시: 업데이트 후 확장 관리에서 ZZZ 확장을 ↻ 새로고침하거나 브라우저를 완전히 종료 후 다시 여세요. 컴퓨터 재시작도 가능합니다. 유튜브 페이지를 새로고침하고 자막을 다시 적용하세요.","YouTube extension: after updating, reload ZZZ in extension management or fully quit and reopen your browser. Restarting your PC also works. Refresh YouTube and reapply subtitles.","YouTube拡張を使う場合：更新後、拡張管理でZZZを↻再読み込みするか、ブラウザを完全に終了して再起動してください。PCの再起動でも反映されます。YouTubeページを更新し、字幕を再適用してください。","使用YouTube扩展时：更新后，在扩展管理中↻重新加载ZZZ，或完全退出并重新打开浏览器。重启电脑也可生效。请刷新YouTube页面并重新应用字幕。"],
   ["자막 위치를 확인하세요.","Check the subtitle position.","字幕の位置を確認してください。","请检查字幕位置。"],
   ["PC에 자막 위치를 저장하지 못했습니다.","Could not save the subtitle position to the PC.","PCに字幕の位置を保存できませんでした。","无法将字幕位置保存到PC。"],
   ["↕ 이동","↕ Move","↕ 移動","↕ 移动"],

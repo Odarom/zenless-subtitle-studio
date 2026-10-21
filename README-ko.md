@@ -4,7 +4,7 @@
 
 유튜브 주소나 영상 파일을 넣고 인식·번역을 마친 뒤, 완성된 자막을 감상하는 Windows PC 프로그램입니다.
 
-**[Windows x64 다운로드 · 0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64 다운로드 · 0.6.9](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.9/zenless-subtitle-studio-0.6.9-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 설치하고 자막 만들기
 
@@ -36,6 +36,8 @@
 
 ## 자막·영상 저장과 수정
 
+음성·화면 자막의 배경은 확장 설정과 미리보기에서 각각 켜고 끌 수 있습니다. 배경 설정은 감상용이며 다운로드 파일의 스타일을 바꾸지 않습니다.
+
 - 음성 자막에 마우스를 올리면 나타나는 **↕ 이동** 손잡이를 위아래로 끌면 모든 음성 자막의 높이가 함께 바뀝니다. 클릭하면 기존 신고·삭제 메뉴가 열립니다. 확장 설정이나 미리보기의 **음성 자막 높이 / 기본 위치**로도 조절할 수 있습니다. 높이는 연결된 작업에 자동 저장됩니다. VTT·프로젝트 JSON에는 조절한 위치가, SRT에는 내용·시간만 반영됩니다. 문구 수정도 다운로드 전에 저장됩니다. 재생바가 보일 때에는 겹친 화면 번역의 해당 부분만 클릭을 통과시켜 재생 조작을 우선합니다. 자막의 나머지 부분은 계속 클릭할 수 있습니다.
 
 - 저장 대상의 기본값은 **음성 자막 + 화면 자막**입니다. **음성 자막만 / 화면 자막만**도 선택할 수 있습니다. SRT·VTT는 일반 자막용, 프로젝트 JSON은 화면 위치까지 보존해 확장에서 불러올 때 사용합니다.
@@ -51,6 +53,7 @@ Gemini·OpenAI·DeepL API Free/Pro·Ollama를 지원합니다. **2026-10-19 한�
 
 **확장 업데이트는 수동 새로고침이 필요합니다.** 앱 안에서 프로그램 업데이트를 마친 뒤, Chrome은 주소창에 `chrome://extensions`, Edge는 `edge://extensions`를 입력합니다. ZZZ 확장 카드의 **↻ 새로고침**을 누르고 유튜브 페이지에서 **F5로 새로고침**한 뒤, 확장을 열어 **선택한 자막 적용**을 다시 누르세요. ZIP을 **다른 폴더에 새로 풀었다면** 이전 폴더를 보는 확장을 끄고, 새 폴더 안의 **video-extension**을 **압축해제된 확장 프로그램 로드**로 불러온 뒤 **PC 연결 코드**를 다시 등록하세요.
 
+같은 폴더에 업데이트했다면 브라우저를 완전히 종료 후 다시 열거나 컴퓨터를 재시작해도 새 확장 파일을 불러옵니다. 이후 유튜브 페이지를 새로고침하고 자막을 다시 적용하세요.
 ## 자세한 안내
 
 [기능·지원 기기·용량·자막 형식](https://github.com/Odarom/zenless-subtitle-studio/blob/main/FEATURES.md#한국어) · [업데이트 내역](https://github.com/Odarom/zenless-subtitle-studio/blob/main/CHANGELOG.md#한국어) · [용어집 둘러보기](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/BROWSE.md) · [오픈소스·라이선스](THIRD-PARTY-NOTICES.md#한국어)

@@ -23,7 +23,7 @@ async function send(message) {
   try { result = await chrome.tabs.sendMessage(tab.id, message); } catch { throw new Error(t('유튜브 페이지를 새로고침한 뒤 다시 적용하세요.')); }
   if (result?.error) throw new Error(result.error); return result;
 }
-const display = () => ({ mode: $('mode').value, offsetMs: Math.round(Number($('offset').value || 0) * 1000), fontSize: Number($('fontSize').value), showSpeech: $('showSpeech').checked, showScreen: $('showScreen').checked, maskScreen: $('maskScreen').checked, uiLanguage:i18n.locale, speechHeight:speechHeight(Number($('speechHeight').value) / 100) });
+const display = () => ({ mode: $('mode').value, offsetMs: Math.round(Number($('offset').value || 0) * 1000), fontSize: Number($('fontSize').value), showSpeech: $('showSpeech').checked, showScreen: $('showScreen').checked, maskSpeech: $('maskSpeech').checked, maskScreen: $('maskScreen').checked, uiLanguage:i18n.locale, speechHeight:speechHeight(Number($('speechHeight').value) / 100) });
 async function refresh() {
   loadedJobs = await api('/api/jobs'); renderJobs();
 }
@@ -86,7 +86,7 @@ try {
   applyStaticLanguage(); $('uiLanguage').value = i18n.locale;
   token = saved.connectionToken || ''; $('token').value = token;
   if (saved.displaySettings) { $('mode').value = saved.displaySettings.mode; $('offset').value = saved.displaySettings.offsetMs / 1000; $('fontSize').value = saved.displaySettings.fontSize; }
-  for (const key of ['showSpeech', 'showScreen', 'maskScreen']) $(key).checked = saved.displaySettings?.[key] !== false;
+  for (const key of ['showSpeech', 'showScreen', 'maskSpeech', 'maskScreen']) $(key).checked = saved.displaySettings?.[key] !== false;
   $('speechHeight').value = String(Math.round(speechHeight(saved.displaySettings?.speechHeight) * 100));
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   try { videoId = youtubeVideoId(tab?.url || ''); } catch {}

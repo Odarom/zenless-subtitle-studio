@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.6.9](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.9/zenless-subtitle-studio-0.6.9-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
@@ -36,6 +36,8 @@ YouTube以外の**自分の動画ファイルも翻訳し、プレビューを�
 
 ## 保存・編集
 
+音声・画面字幕の背景は拡張設定とプレビューで個別に切り替えられます。視聴用の設定で、ダウンロードファイルのスタイルは変わりません。
+
 - 音声字幕にマウスを重ねて表示される **↕ 移動** ハンドルを上下にドラッグすると、すべての音声字幕の高さが変わります。字幕のクリックでは従来どおり報告・削除メニューが開きます。拡張設定とプレビューの **音声字幕の高さ / 位置をリセット** でも調整できます。高さは接続した作業に自動保存されます。VTTとプロジェクトJSONには調整した位置が、SRTには内容と時間のみが反映されます。文章の修正もダウンロード前に保存されます。再生コントロールの表示中は、画面字幕の重なった部分だけクリックを再生バーに通し、字幕の残りの部分は引き続きクリックできます。
 
 - 保存対象の標準は**音声字幕 + 画面字幕**で、**音声のみ / 画面のみ**も選べます。SRT/VTTは通常の字幕用、プロジェクトJSONは画面位置を保持して拡張機能へ読み込む用途です。
@@ -51,6 +53,7 @@ Gemini・OpenAI・DeepL API Free/Pro・Ollamaに対応します。**2026-10-19�
 
 **拡張機能は手動で再読み込みが必要です。** アプリ内のプログラム更新後、Chromeでは `chrome://extensions`、Edgeでは `edge://extensions` を開きます。ZZZ拡張機能の **↻ 再読み込み**を押し、YouTubeページを **F5で再読み込み**してから、拡張機能で**選択した字幕を適用**をもう一度押してください。ZIPを**別のフォルダーに新しく展開した場合**は、古いフォルダーの拡張機能を無効にし、新しい **video-extension** を**展開済み拡張機能を読み込む**で指定して、**PC接続コード**を再登録します。
 
+同じフォルダに更新した場合は、ブラウザを完全に終了して再起動するか、PCを再起動しても拡張の新しいファイルが反映されます。その後YouTubeページを更新し、字幕を再適用してください。
 ## 詳しい説明
 
 [機能・対応機器・容量・字幕形式](https://github.com/Odarom/zenless-subtitle-studio/blob/main/FEATURES.md#日本語) · [更新履歴](https://github.com/Odarom/zenless-subtitle-studio/blob/main/CHANGELOG.md#日本語) · [用語集を見る](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/BROWSE.md) · [オープンソースとライセンス](THIRD-PARTY-NOTICES.md#日本語)
