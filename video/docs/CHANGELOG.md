@@ -6,6 +6,10 @@
 
 ## 한국어
 
+### 0.6.10
+
+음성 자막과 화면 번역 자막이 겹칠 때 음성 자막이 앞에 보이도록 표시 순서를 고정했습니다. 화면 번역 글자는 인식된 상자의 가로·세로 중앙에 정렬합니다. 유튜브 확장과 로컬 영상 미리보기에 적용됩니다. 인식된 상자의 위치·내용·시간은 변경하지 않습니다.
+
 ### 0.6.9
 
 화면 번역 자막을 눌러 신고·삭제 메뉴를 열 수 없던 문제를 수정했습니다. 재생바와 겹친 부분은 재생바를 조작할 수 있도록 두고, 나머지 영역에서 자막을 클릭할 수 있습니다. 확장 설정과 로컬 영상 미리보기에서 음성·화면 자막의 배경을 각각 켜고 끌 수 있으며 설정을 기억합니다. 업데이트 버튼 아래에 확장 새로고침·브라우저 재시작 안내를 짧게 표시합니다. 자동 팝업은 띄우지 않습니다.
@@ -37,6 +41,10 @@
 ---
 
 ## English
+
+### 0.6.10
+
+Speech subtitles now appear in front of screen translations when they overlap, in both the YouTube extension and local video preview. Screen translation text is centered horizontally and vertically inside its detected box. Detected box positions, text and timing are unchanged.
 
 ### 0.6.9
 
@@ -70,6 +78,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 
 ## 日本語
 
+### 0.6.10
+
+音声字幕と画面翻訳が重なるとき、音声字幕が前面に表示されるよう表示順序を固定しました。YouTube拡張とローカル動画プレビューに適用されます。画面翻訳の文字は検出された枠内で上下左右の中央に配置します。検出枠の位置・内容・時刻は変更しません。
+
 ### 0.6.9
 
 画面字幕をクリックしても報告・削除メニューが開かない問題を修正しました。再生コントロールと重なる部分ではクリックを通し、それ以外の字幕領域は引き続きクリックできます。拡張設定とローカル動画のプレビューで音声・画面字幕の背景を個別に切り替え、設定を保持します。更新ボタンの下に拡張の再読み込み・ブラウザ再起動の短い案内を表示します。自動ポップアップは表示しません。
@@ -101,6 +113,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 ---
 
 ## 简体中文
+
+### 0.6.10
+
+语音字幕与屏幕翻译重叠时，语音字幕将显示在前面。适用于YouTube扩展和本地视频预览。屏幕翻译文字在识别框内水平和垂直居中显示。识别框位置、内容和时间保持不变。
 
 ### 0.6.9
 

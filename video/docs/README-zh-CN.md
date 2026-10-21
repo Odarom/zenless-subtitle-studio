@@ -4,7 +4,7 @@
 
 选择YouTube视频或本地文件，完成识别和翻译后，再使用生成的字幕观看。适用于Windows电脑。
 
-**[下载Windows x64版 · 0.6.9](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.9/zenless-subtitle-studio-0.6.9-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[下载Windows x64版 · 0.6.10](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.10/zenless-subtitle-studio-0.6.10-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 安装并制作字幕
 

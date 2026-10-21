@@ -4,6 +4,8 @@
 
 ## 한국어
 
+음성 자막과 화면 번역 자막이 겹칠 때 음성 자막이 앞에 보이도록 표시 순서를 고정했습니다. 화면 번역 글자는 인식된 상자의 가로·세로 중앙에 정렬합니다. 유튜브 확장과 로컬 영상 미리보기에 적용됩니다. 인식된 상자의 위치·내용·시간은 변경하지 않습니다.
+
 음성·화면 자막의 배경은 확장 설정과 미리보기에서 각각 켜고 끌 수 있습니다. 배경 설정은 감상용이며 다운로드 파일의 스타일을 바꾸지 않습니다.
 
 본인 영상 파일을 번역한 뒤 **로컬 영상으로 자막 미리보기**에서 같은 원본 파일을 선택하세요. 장면과 함께 확인하며, 자막 클릭으로 삭제·신고하고 미리보기 아래 입력칸에서 문구를 수정하는 방법을 추천합니다. [→ README](README-ko.md#본인-영상-파일-번역과-미리보기)
@@ -76,6 +78,8 @@ Node.js는 배포 ZIP에 포함되며, 라이선스 원문은 `runtime/LICENSE-N
 
 ## English
 
+Speech subtitles now appear in front of screen translations when they overlap, in both the YouTube extension and local video preview. Screen translation text is centered horizontally and vertically inside its detected box. Detected box positions, text and timing are unchanged.
+
 Switch speech and screen subtitle backgrounds on or off separately in extension settings and preview. These viewing preferences do not change the style of downloaded files.
 
 After translating your own file, select the same original in **Preview subtitles with a local video**. We recommend watching the scene while reviewing: click subtitles to delete or report them, and edit wording in the fields below the preview. [→ README](README-en.md#translate-and-preview-your-own-video)
@@ -146,6 +150,8 @@ Node.js is bundled in the ZIP with original notices in `runtime/LICENSE-Node.txt
 
 ## 日本語
 
+音声字幕と画面翻訳が重なるとき、音声字幕が前面に表示されるよう表示順序を固定しました。YouTube拡張とローカル動画プレビューに適用されます。画面翻訳の文字は検出された枠内で上下左右の中央に配置します。検出枠の位置・内容・時刻は変更しません。
+
 音声・画面字幕の背景は拡張設定とプレビューで個別に切り替えられます。視聴用の設定で、ダウンロードファイルのスタイルは変わりません。
 
 自分のファイルを翻訳したら、**ローカル動画で字幕をプレビュー**で同じ元動画を選んでください。場面を見ながら確認し、字幕のクリックで削除・報告、プレビュー下の入力欄で文章を修正する方法をおすすめします。 [→ README](README-ja.md#自分の動画ファイルを翻訳プレビューする)
@@ -215,6 +221,8 @@ Node.jsはZIPに同梱し、ライセンス原文は`runtime/LICENSE-Node.txt`�
 ---
 
 ## 简体中文
+
+语音字幕与屏幕翻译重叠时，语音字幕将显示在前面。适用于YouTube扩展和本地视频预览。屏幕翻译文字在识别框内水平和垂直居中显示。识别框位置、内容和时间保持不变。
 
 可在扩展设置和预览中分别开关语音字幕和屏幕字幕背景。这些观看设置不会改变下载文件的样式。
 

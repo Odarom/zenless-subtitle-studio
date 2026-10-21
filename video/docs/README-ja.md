@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.6.9](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.9/zenless-subtitle-studio-0.6.9-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.6.10](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.10/zenless-subtitle-studio-0.6.10-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
