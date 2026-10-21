@@ -49,7 +49,7 @@ Gemini, OpenAI, DeepL API Free/Pro and Ollama are supported. **Free API recommen
 
 Change and save your key under **Left menu → API & connection**. Keys stay on your PC. Check both program and glossary updates in the same settings page.
 
-**The extension needs a manual reload.** After an in-app program update, open `chrome://extensions` in Chrome or `edge://extensions` in Edge. Click **Reload ↻** on the ZZZ extension card, then refresh YouTube. If you extract a new ZIP into **a different folder**, disable the extension using the old folder, **Load unpacked** from the new **video-extension** folder, and register the **PC connection code** again.
+**The extension needs a manual reload.** After an in-app program update, open `chrome://extensions` in Chrome or `edge://extensions` in Edge. Click **Reload ↻** on the ZZZ extension card, then refresh the YouTube page with **F5** and click **Apply selected subtitles** again in the extension. If you extract a new ZIP into **a different folder**, disable the extension using the old folder, **Load unpacked** from the new **video-extension** folder, and register the **PC connection code** again.
 
 ## More help
 
