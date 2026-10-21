@@ -24,6 +24,7 @@ export function botSource(root) {
   add('HOSTING.md','docs/discord/HOSTING.md');
   add('ARCHITECTURE.md','docs/discord/ARCHITECTURE.md');
   add('RELEASE-NOTES.md','docs/discord/RELEASE-NOTES.md');
+  add('FEATURES.md','docs/discord/FEATURES.md');
   const pkg=JSON.parse(files.get('package.json'));pkg.version=RUNNER_VERSION;for(const name of Object.keys(pkg.scripts))if(name.startsWith('video')||name==='glossary:publish'||name==='reports')delete pkg.scripts[name];pkg.scripts.reports='node scripts/reports-cli.mjs';pkg.scripts['runner:ui']='node scripts/runner-ui.mjs';pkg.scripts['runner:build']='node scripts/runner-build.mjs';files.set('package.json',JSON.stringify(pkg,null,2)+'\n');
   const lock=JSON.parse(files.get('package-lock.json'));lock.version=pkg.version;if(lock.packages?.[''])lock.packages[''].version=pkg.version;files.set('package-lock.json',JSON.stringify(lock,null,2)+'\n');
   files.set('.gitignore','.env\n.env.*\n!.env.example\n!.env.runner.example\n.secrets/\ndata/\nreports/\n.tools/\n.models/\nnode_modules/\ndist/\nglossary/cache/\nglossary/history/\nglossary/candidates/\nglossary/updates/\n');

@@ -1,85 +1,52 @@
-# ZZZ Subtitle Studio 0.6.7
+# ZZZ Subtitle Studio
 
-Deleting a job record also removes all video/audio/uploaded-subtitle copies, generated subtitles and intermediate files stored for that job in the app. Shared copies remain until their last job is deleted. Startup after updating also clears upload copies and metadata left without a job record by older versions. Inputs for retained jobs, original PC files, separate video/subtitle downloads, API keys, settings and reports stay. The history view shows cleanup results or failures. On a completed YouTube job, Save YouTube video ↓ downloads a separate video with audio, up to 1080p. Translated subtitles are not burned into the video; save SRT/VTT separately. The destination follows your browser’s download settings.
+[한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
-Delete individual subtitles from the review list or the menu opened by clicking a subtitle. Deleted items are omitted from playback and saved files; restore them in the Deleted subtitles tab. On YouTube, connect the PC app and apply a completed job, then click speech or screen subtitles to report/delete them. The menu pauses playback and resumes on close only if it was previously playing. Reports go to the existing private report service only after you enter an explanation and submit. After updating the app, reload the extension in the browser’s extension manager and refresh YouTube. Saving defaults to Speech + screen subtitles; Speech subtitles only and Screen subtitles only are also available for SRT, VTT, positioned VTT and project JSON. A low-confidence one-frame OCR spelling flicker between repeated stationary text may be corrected; changed numbers, negations and disappearance gaps are preserved.
+A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-Strengthened translation instructions so screen explanations, headings and UI are explicit translation targets, with target language and speech/screen counts repeated after the glossary. Code groups identical stationary screen text for one translation, then restores every original ID, interval and position. Continuous display may merge; disappearance gaps remain empty. Different words, numbers, case, locations and moving text remain separate, allowing only small OCR-box jitter. No new language detection, blocking or automatic retranslation was added; existing checks remain. Whole-video/full-glossary single-request behavior is unchanged. Saved completed results are not automatically modified. Request construction, reuse, timing and actual release ZIP were checked; actual API translation quality improvement has not yet been verified.
+**[Download for Windows x64 · 0.6.7](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.7/zenless-subtitle-studio-0.6.7-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
-Version 0.6.5 simplifies long-video response constraints that could trigger HTTP 400. The program validates IDs and counts, saves valid translations and manually requests unfinished cues only. History and detail views offer stop and delete controls; stop running jobs first. The current version also removes the job’s app-owned video copies; separately saved files and API settings stay. Progress animation stops on failure or cancellation.
+## Install and create subtitles
 
-Reduced glossary payload size by sharing repeated descriptions without removing entries, meanings or rules. Names, character names and related skills use only the chosen source and target languages. Auto-detected sources use target-language names and aliases actually matching the input. When Gemini provides HTTP 429 quota details, the app distinguishes input tokens/minute, requests/minute, requests/day and zero allocation; missing details stay unidentified. Whole-video single-request defaults and no automatic retries remain. Failed 0.6.1 jobs with no translated results can Resume without repeating transcription. Actual free-tier acceptance and translation quality still require separate verification.
+1. **Extract all** files from the ZIP and run **Start.cmd**. Node.js is included. The first start downloads speech/video tools and a model, so allow time and an internet connection.
+2. On the **ZZZ Subtitle Studio** page opened in your browser, select **API & connection** in the left menu. Enter your provider, model and API key, then save.
+3. Open **Translate video**, enter a YouTube URL or choose a video, audio, SRT or VTT file, and select the source and target languages.
+4. Choose recognition options. **Create new subtitles from audio instead of YouTube captions** is on by default; screen OCR is off by default. **Save source subtitles without translating** makes no translation API calls.
+5. Click **Create subtitles** and wait. Review the finished translation, then save it or apply it to the video.
 
-The glossary card counts languages from the currently installed DB. Menu text has four languages; video source and translation choices have 13. Fresh YouTube audio transcription is on by default. Turn it off to prefer existing source-language captions, including auto-generated ones, with speech recognition as fallback. “Save source subtitles without translating” is off by default. Enabling it saves the original text without translation API calls or charges; selected speech/screen recognition still runs.
+**Studio** means the program page opened by Start.cmd. Keep its execution window open while using it. Processing runs on your PC; no separate video-processing server is needed.
 
-Translation supports 13 languages: Korean, English, Japanese, Simplified/Traditional Chinese, German, French, Spanish, Portuguese, Russian, Thai, Vietnamese and Indonesian. Interface text and guides remain in four languages. Another 16,802 localized names extend 1,868 existing concepts across nine additional languages. Ten placeholder values are excluded; missing names are not invented. New/unreleased terms require confirmed live availability before review. After installing this program update, additions and corrections within these 13 languages can arrive through DB updates. Adding a new language code still requires a program update.
+## Watch on YouTube
 
-Speech recognition and translation language choices now cover 13 languages. Screen OCR supports six: Korean, English, Japanese, Simplified/Traditional Chinese and Russian. Select OCR language independently, including when translating into another language. Video retains every glossary concept while sending needed localized spellings and actually matching aliases. Single-request defaults and no automatic retry after rate limits remain.
+1. In Chrome/Edge extension management, enable **Developer mode → Load unpacked** and select the included **video-extension** folder.
+2. In **Studio's left menu → API & connection → Connect the YouTube extension**, click **Copy PC connection code**.
+3. Open the YouTube video and click the **ZZZ Subtitle Studio extension icon** at the top right of the browser. Paste into **PC connection code**, then click **Connect**. This is not your translation API key.
+4. Under **Finished subtitles**, choose the video's job and click **Apply selected subtitles**.
 
-[한국어](README-ko.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
+Preview local videos in Studio. If your browser cannot play a codec, open the video and subtitle file in an external player.
 
-Valid translations are saved even when a response omits cues. Resume requests unfinished IDs only, retaining completed source cues as context. Response coverage is constrained so repeated screen text is requested for every cue. The full glossary, initial whole-video single request and no automatic retries remain. Unsaved responses from 0.6.3 and earlier cannot be recovered, but existing ASR/OCR is reused.
+## Save and edit
 
-A Windows x64 desktop app that recognizes and translates a selected video before playback. Each user runs the app on their PC with their own translation credentials.
+- The default selection is **Speech + screen subtitles**; you can also choose **Speech only / Screen only**. SRT/VTT are ordinary subtitle files; project JSON preserves screen positions for importing into the extension.
+- Click a review entry or an on-video subtitle to **delete it or report a translation**. Restore removed entries in **Deleted subtitles**. Reports are private and need no GitHub login.
+- A completed YouTube job offers **Save YouTube video ↓**. Save the subtitle file separately.
+- **Deleting a job record** also clears its app-owned video/audio copies and generated/intermediate files. Original PC files and separate video/subtitle downloads stay.
 
-1. Extract the entire ZIP and run `Start.cmd`. Node.js is included. The first start downloads speech/video tools and a model. Internet access is needed for these downloads, YouTube and cloud translation.
-2. Choose Korean, English, Japanese or Simplified Chinese in **Interface language**. The extension has its own language selector.
-3. Open settings and select Gemini, OpenAI, DeepL API Free/Pro or Ollama. Save your API key and model/plan. Check current prices, quotas and availability with the service. A DeepL website subscription differs from a DeepL API plan. For free local translation, install Ollama separately, download a local model and run it; no API key is required. Source-only subtitle mode makes no translation API calls.
-4. Select a YouTube URL or a local video, audio, SRT or VTT file. Enable speech, screen text recognition (OCR), or both. OCR defaults to off; its free CPU tool downloads on first use. Choose English, Japanese, Korean or Simplified Chinese for OCR.
-5. Start and wait for processing. whisper.cpp handles speech and RapidOCR handles screen text without an LLM. Only text translation uses your chosen service. OCR records text, sampled times and positions; frame images are not sent to translation APIs.
+## API settings and updates
 
-## Playback and export
+Gemini, OpenAI, DeepL API Free/Pro and Ollama are supported. **Free API recommendation recorded on 2026-10-19, Korea time:** [Google AI Studio](https://aistudio.google.com/apikey)'s **Gemini 3.1 Flash-Lite** (<code>gemini-3.1-flash-lite</code>), subject to your account/project's [free-tier terms and quotas](https://ai.google.dev/gemini-api/docs/pricing). Ollama requires a separate installation and local model.
 
-Recommended starting point: get a [free Google AI Studio API key](https://aistudio.google.com/apikey) and choose **Gemini 3.1 Flash-Lite** (`gemini-3.1-flash-lite`). A [free tier](https://ai.google.dev/gemini-api/docs/pricing) is available subject to account/region availability, RPM and daily quotas; it is not unlimited.
+Change and save your key under **Left menu → API & connection**. Keys stay on your PC. Check both program and glossary updates in the same settings page. After an app update, reload the extension and refresh YouTube.
 
-The default whole-video mode joins speech fragments into sentences and sends all speech, screen text and the entire glossary in one request. All names, aliases, meanings and translation rules are included; administrative provenance/history is omitted. Select related terms only explicitly for smaller models. DeepL uses the full DB locally for term protection. The AI returns cue IDs and translated text; local code restores timing and positions and creates SRT/VTT. Local token estimates stop oversized requests before sending. Long-video batches require explicit selection. Errors are not retried automatically. The default one-request-per-minute spacing applies across videos and resumed jobs. Other apps using the same key and daily service quotas still count separately.
+## More help
 
-**PC Studio** means the **ZZZ Subtitle Studio** page opened in your browser by `Start.cmd` (`http://127.0.0.1:4318`).
+[Features, hardware, limits and subtitle formats](https://github.com/Odarom/zenless-subtitle-studio/blob/main/FEATURES.md#english) · [Release history](https://github.com/Odarom/zenless-subtitle-studio/blob/main/CHANGELOG.md#english) · [Browse the glossary](https://github.com/Odarom/zenless-translation-database/blob/main/catalog/BROWSE.md) · [Open source and licenses](THIRD-PARTY-NOTICES.md#english)
 
-1. In Chrome/Edge extension management, enable developer mode and load the included `video-extension` folder using **Load unpacked**.
-2. Run **Start.cmd** in the program folder and open the program page that appears in your browser.
-3. Click **API & connection in the left menu**. Scroll to the **Connect the YouTube extension** card and click **Copy PC connection code**.
-4. Open a YouTube video, then open **ZZZ Subtitle Studio** from the browser’s extension icon at the top right. Paste into **PC connection code** and click **Connect**. This code is separate from your translation API key.
-5. Choose the video’s job under **Finished subtitles** and click **Apply selected subtitles**. Keep the `Start.cmd` window open while using it. Processing runs on this PC; no separate video-processing server is needed.
+Translation supports 13 languages; the interface and guides support four. whisper.cpp handles speech and RapidOCR handles optional OCR without an LLM. This fan-made app is not an official game service.
 
-Toggle speech and screen translations independently. Screen placement follows video dimensions, letterboxing and fullscreen changes. Preview local videos in the app; use an external player for codecs the browser cannot play.
-
-- SRT / ordinary VTT: text and timing without screen positions.
-- Positioned VTT: includes screen positions for creator uploads to YouTube CC. Viewer font, size and background settings can change the appearance.
-- Project JSON: preserves source, translation, timing and moving positions. Import it directly into the extension without a PC connection. Projects assigned to another video ID are rejected.
-
-Media uploads and YouTube OCR video downloads allow up to 64GiB (shown as approximately 64GB). SRT/VTT imports allow 8MiB; extension project JSON allows 32MiB. One-hour videos are supported: OCR at one-second intervals processes about 3,600 frames. Choose 0.5, 1 or 2 seconds and a scan range, up to 30,000 frames. Brief text may be missed; timing precision follows the sampling interval. Processing speed depends on hardware. Allow disk space for originals, downloaded video, intermediate audio and models. Resume interrupted jobs to reuse completed recognition and translation batches.
-
-Intel/AMD CPUs are supported. Speech GPU acceleration requires a compatible NVIDIA/AMD Vulkan device and driver. Automatic mode falls back to CPU after a GPU failure. OCR runs on CPU. Acceleration is not guaranteed on every GPU.
-
-## Glossary, reports and privacy
-
-The bundled glossary can be updated from [GitHub](https://github.com/Odarom/zenless-translation-database) using **Check for updates → Update glossary**. Optional daily checks run while the app is open; installation is manual. Updates apply to new translations, are blocked during active jobs, and retain the old glossary on failure.
-
-Choose **Speech subtitles / Screen text / Show all** and search by original text, translation, cue ID or time. The report button above each cue opens the matching source and translation. Clicking a displayed subtitle or screen item in local preview opens the same report form.
-
-Enter an explanation and press **Send report** to submit privately to the maintainer; no GitHub login is needed. The source, translation, explanation and optional video URL are sent, excluding API keys and local paths. Reports, random installation IDs and abuse-prevention IP hashes are retained for up to 90 days. A receipt confirms delivery. Failed reports remain on this PC for retry or file export. The maintainer reviews video and Discord reports together and publishes verified fixes.
-
-## Program updates
-
-Install initially from [GitHub Releases](https://github.com/Odarom/zenless-subtitle-studio/releases/latest). From 0.4.0, use **Check program version → Install and restart** in settings. The app verifies size and SHA-256, blocks installation during active jobs, preserves API keys/models/history and restores previous files on installation failure. Backups stay on your PC. Releases requiring a newer runtime prompt for a full installation.
-
-Users of 0.3.0 or earlier must install the latest version once manually and register the new `video-extension` folder. Future in-place updates also replace the extension files. Reload the extension in Chrome/Edge management and refresh open YouTube pages afterwards.
-
-Keys are encrypted locally. Do not share `app/data`, `app/.secrets`, your connection code or personal app settings. Share the original release ZIP. Cloud translation receives selected text, context and the entire glossary by default. Input size may exceed a free account’s TPM quota. This is a fan project, not an official game product.
-
-The bracket-path installation problem in 0.2.0 was fixed in 0.2.1. Brackets, Korean characters and spaces are supported. Extract a fresh complete release if needed. Run `Setup.cmd` to prepare tools again.
-
-## Open-source components and licenses
-
-| Component | Purpose | License and notices |
-| --- | --- | --- |
-| [Node.js](https://nodejs.org/) | Application runtime | [MIT + third-party notices](https://github.com/nodejs/node/blob/main/LICENSE) |
-| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | Speech transcription | [MIT](https://github.com/ggml-org/whisper.cpp/blob/master/LICENSE) |
-| [Whisper](https://github.com/openai/whisper) | Speech recognition model | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
-| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube media and captions | [Unlicense / Windows executable GPLv3+](https://github.com/yt-dlp/yt-dlp#licensing) |
-| [FFmpeg](https://github.com/yt-dlp/FFmpeg-Builds) | Audio conversion and frame extraction | [GPLv3 build](https://github.com/yt-dlp/FFmpeg-Builds) · [license information](https://ffmpeg.org/legal.html) |
-| [RapidOCR-json](https://github.com/hiroi-sora/RapidOCR-json) | Optional screen OCR | [MIT](https://github.com/hiroi-sora/RapidOCR-json/blob/main/LICENSE) |
-| [7-Zip 7zr](https://github.com/ip7z/7zip/releases/tag/26.04) | OCR archive extraction | [LGPL-2.1-or-later](https://www.7-zip.org/license.txt) · [source](https://github.com/ip7z/7zip/tree/26.04) |
-
-Node.js is bundled in the ZIP with original notices in `runtime/LICENSE-Node.txt`. Other tools/models download directly from their distributors on first use. Distinguish the yt-dlp source Unlicense from its GPLv3+ Windows executable; the downloaded FFmpeg is a GPL build. Additional build libraries and OCR models retain their respective licenses. See [third-party notices](THIRD-PARTY-NOTICES.md) for sources and distribution details. Redistributing components also requires checking their notices, original licenses and any corresponding-source obligations.
+<!-- Existing documentation links -->
+<a id="zzz-subtitle-studio-067"></a>
+<a id="playback-and-export"></a>
+<a id="glossary-reports-and-privacy"></a>
+<a id="program-updates"></a>
+<a id="open-source-components-and-licenses"></a>

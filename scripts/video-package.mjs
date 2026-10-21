@@ -66,6 +66,7 @@ export async function buildExternalPackage(root = ROOT) {
   for (const locale of ['ko', 'en', 'ja', 'zh-CN']) copy(join(root, 'video/docs', 'README-' + locale + '.md'), join(folder, 'README-' + locale + '.md'));
   copy(join(root, 'video/docs/README.md'), join(folder, 'README.md'));
   copy(join(root, 'video/docs/THIRD-PARTY-NOTICES.md'), join(folder, 'THIRD-PARTY-NOTICES.md'));
+  for (const file of ['FEATURES.md', 'CHANGELOG.md']) copy(join(root, 'video/docs', file), join(folder, file));
   const included = filesIn(folder);
   for (const path of included) {
     const local = slash(relative(folder, path));

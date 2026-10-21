@@ -28,6 +28,8 @@ export function publicSource(root) {
   add('README.md', 'video/docs/README.md');
   add('DEVELOPMENT.md', 'video/docs/DEVELOPMENT.md');
   add('THIRD-PARTY-NOTICES.md', 'video/docs/THIRD-PARTY-NOTICES.md');
+  add('FEATURES.md', 'video/docs/FEATURES.md');
+  add('CHANGELOG.md', 'video/docs/CHANGELOG.md');
   result.set('.gitignore', '.env\n.env.*\n!.env.example\n!.env.runner.example\n.secrets/\n.tools/\n.models/\nnode_modules/\ndata/\nreports/\ndist/\nglossary/cache/\nglossary/history/\nglossary/candidates/\nglossary/updates/\n');
   for (const path of result.keys()) if (/(?:^|\/)(?:\.secrets|data|reports|node_modules|\.tools|\.models)(?:\/|$)/i.test(path) || path === '.env') throw new Error('공개 목록에 개인 자료가 포함되었습니다.');
   return result;
