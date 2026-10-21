@@ -6,6 +6,10 @@
 
 ## 한국어
 
+### 0.6.11
+
+오역 신고 방법과 신고가 ZZZ 게임 용어 DB·번역 품질 개선에 도움이 된다는 안내를 강화했습니다. 설치 안내 바로 아래의 README와 번역 완료 화면·확장에 안내를 표시합니다. 신고 접수·공유 방식은 그대로입니다.
+
 ### 0.6.10
 
 음성 자막과 화면 번역 자막이 겹칠 때 음성 자막이 앞에 보이도록 표시 순서를 고정했습니다. 화면 번역 글자는 인식된 상자의 가로·세로 중앙에 정렬합니다. 유튜브 확장과 로컬 영상 미리보기에 적용됩니다. 인식된 상자의 위치·내용·시간은 변경하지 않습니다.
@@ -41,6 +45,10 @@
 ---
 
 ## English
+
+### 0.6.11
+
+Made reporting easier to discover and explained how it helps improve the ZZZ game terminology DB and translation quality. Guidance follows setup in the README and appears in completed video jobs and the extension. Report submission and sharing behavior is unchanged.
 
 ### 0.6.10
 
@@ -78,6 +86,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 
 ## 日本語
 
+### 0.6.11
+
+誤訳報告の見つけやすさと、ZZZゲーム用語DB・翻訳品質の改善に役立つことの案内を強化しました。READMEの導入手順直後と、完了した動画作業・拡張に案内を表示します。報告の受付・共有方法は従来どおりです。
+
 ### 0.6.10
 
 音声字幕と画面翻訳が重なるとき、音声字幕が前面に表示されるよう表示順序を固定しました。YouTube拡張とローカル動画プレビューに適用されます。画面翻訳の文字は検出された枠内で上下左右の中央に配置します。検出枠の位置・内容・時刻は変更しません。
@@ -113,6 +125,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 ---
 
 ## 简体中文
+
+### 0.6.11
+
+加强误译举报入口及其有助于改进ZZZ游戏术语数据库与翻译质量的说明。在README安装步骤后、视频任务完成页面及扩展中显示指南。举报提交与分享方式保持不变。
 
 ### 0.6.10
 

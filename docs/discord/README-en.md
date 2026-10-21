@@ -4,7 +4,7 @@
 
 Translate new messages between language channels. Run the personal runner on your PC or your own server using your own API key.
 
-**[① Install the Discord bot](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② Download the PC runner · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.2/zenless-discord-runner-0.3.2-win-x64.zip)**
+**[① Install the Discord bot](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② Download the PC runner · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
 
 ## Windows PC
 
@@ -20,6 +20,16 @@ Translate new messages between language channels. Run the personal runner on you
 ~~~
 
 Keep the PC runner running while translating. Existing channel history is not translated retroactively.
+
+## Report errors to improve translation quality
+
+Found an incorrect game term, abbreviation or translation? Reports are reviewed to improve the Zenless game terminology DB and translation quality.
+
+1. Reply to a translated message with **!report** and choose **Start report**, or use the message menu’s **Apps → Report translation**.
+2. Check the original, choose **Write report**, describe the problem and submit. You do not need to know the correct translation.
+3. Review the outgoing contents and choose **Agree and send** to submit **directly to the project maintainer**. There is no separate bot-operator intake or sharing step. Cancel to send nothing; a project **receipt ID** confirms delivery.
+
+Without the programs, you can [report official names or abbreviations directly](https://github.com/Odarom/zenless-translation-database/issues/new/choose). This GitHub route requires an account and creates a public report.
 
 ## Reopen settings and change a key
 

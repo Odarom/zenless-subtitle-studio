@@ -4,7 +4,7 @@
 
 유튜브 주소나 영상 파일을 넣고 인식·번역을 마친 뒤, 완성된 자막을 감상하는 Windows PC 프로그램입니다.
 
-**[Windows x64 다운로드 · 0.6.10](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.10/zenless-subtitle-studio-0.6.10-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64 다운로드 · 0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 설치하고 자막 만들기
 
@@ -15,6 +15,18 @@
 5. **자막 만들기**를 누르고 완료를 기다립니다. 완료 후 원문·번역을 확인하고 자막을 저장하거나 영상에 적용하세요.
 
 여기서 **작업실**은 Start.cmd 실행 후 브라우저에 열리는 프로그램 화면입니다. 사용하는 동안 실행 창을 켜 두세요. 처리는 각자 PC에서 하며 별도 영상 처리 서버는 필요 없습니다.
+
+## 오역 신고로 번역 품질 개선하기
+
+게임 용어·약어·번역 오류를 알려주세요. 신고를 검토해 젠레스 게임 용어 DB와 번역 품질을 개선합니다.
+
+1. **유튜브·로컬 영상 미리보기:** 음성 자막이나 화면 번역을 클릭하고 **오역 신고**를 선택합니다. 유튜브에서는 PC 작업실에 연결해 완료된 작업을 적용하세요.
+2. **자막 목록:** 완료된 작업의 **자막 확인 및 수정**에서 **음성 자막 / 화면 글자**를 고르고 해당 구간의 **오역 신고**를 누릅니다.
+3. 잘못된 부분을 설명하고 **신고 보내기**를 누릅니다. 수정 제안은 아는 경우에만 적어도 됩니다. **접수 번호**가 표시되면 전송이 완료된 것입니다.
+
+올바른 번역을 몰라도 잘못된 부분만 알려주세요. GitHub 로그인 없이 비공개로 접수됩니다.
+
+프로그램을 사용하지 않아도 [공식 명칭·약어를 직접 신고](https://github.com/Odarom/zenless-translation-database/issues/new/choose)할 수 있습니다. 이 GitHub 신고는 계정이 필요하며 내용이 공개됩니다.
 
 ## 본인 영상 파일 번역과 미리보기
 

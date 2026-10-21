@@ -4,7 +4,7 @@
 
 选择YouTube视频或本地文件，完成识别和翻译后，再使用生成的字幕观看。适用于Windows电脑。
 
-**[下载Windows x64版 · 0.6.10](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.10/zenless-subtitle-studio-0.6.10-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[下载Windows x64版 · 0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 安装并制作字幕
 
@@ -15,6 +15,18 @@
 5. 点击**生成字幕**并等待完成，检查译文后保存或应用到视频。
 
 **工作室**指运行Start.cmd后在浏览器打开的程序页面。使用期间请保持程序运行窗口开启。处理在自己的电脑上进行，无需另外的视频处理服务器。
+
+## 举报误译，帮助改进翻译质量
+
+发现游戏术语、缩写或翻译错误？我们会审核举报，用于改进绝区零游戏术语数据库和翻译质量。
+
+1. **YouTube或本地视频预览：** 点击语音字幕或屏幕翻译，选择**举报误译**。YouTube需先连接PC工作室并应用已完成的任务。
+2. **字幕列表：** 在已完成任务的**检查并编辑字幕**中选择**语音字幕 / 画面文字**，点击对应片段的**举报误译**。
+3. 说明错误并点击**发送举报**。正确译法建议为选填。显示**接收编号**表示发送成功。
+
+不知道正确译法也可以指出错误部分。举报为非公开，无需登录GitHub。
+
+不使用程序也可[直接举报官方名称或缩写错误](https://github.com/Odarom/zenless-translation-database/issues/new/choose)。此GitHub举报方式需要账号，内容会公开。
 
 ## 翻译并预览自己的视频文件
 

@@ -4,7 +4,7 @@
 
 ## 한국어
 
-시행·최종 수정: 2026-10-19 한국시간 / Effective and updated: 2026-10-19 KST
+시행·최종 수정: 2026-10-22 한국시간 / Effective and updated: 2026-10-22 KST
 
 이 도구는 팬 제작 젠레스 번역 도구이며 게임 제작사 또는 Discord의 공식 서비스가 아닙니다. 프로젝트 관리자: [Odarom](https://github.com/Odarom/zenless-discord-translator/issues). 공개 이슈에는 키·토큰·개인정보를 작성하지 마세요.
 
@@ -20,7 +20,7 @@
 
 ## English
 
-Effective and updated: 2026-10-19 KST.
+Effective and updated: 2026-10-22 KST.
 
 This fan tool is not an official game or Discord service. Maintainer: [Odarom](https://github.com/Odarom/zenless-discord-translator/issues). Never put keys, tokens or personal information in public issues.
 
@@ -36,7 +36,7 @@ Independent installations have their own operator. Legacy API_MODE=server allows
 
 ## 日本語
 
-施行・最終更新：2026-10-19（韓国時間）。
+施行・最終更新：2026-10-22（韓国時間）。
 
 このツールはファン制作のゼンレス翻訳ツールであり、ゲーム制作会社またはDiscordの公式サービスではありません。管理者：[Odarom](https://github.com/Odarom/zenless-discord-translator/issues)。公開Issueにキー・トークン・個人情報を書かないでください。
 
@@ -52,7 +52,7 @@ Independent installations have their own operator. Legacy API_MODE=server allows
 
 ## 简体中文
 
-生效及最后更新：2026-10-19（韩国时间）。
+生效及最后更新：2026-10-22（韩国时间）。
 
 本工具是粉丝制作的绝区零翻译工具，并非游戏制作方或Discord的官方服务。维护者：[Odarom](https://github.com/Odarom/zenless-discord-translator/issues)。请勿在公开Issue填写密钥、令牌或个人信息。
 

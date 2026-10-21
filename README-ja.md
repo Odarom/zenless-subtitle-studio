@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.6.10](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.10/zenless-subtitle-studio-0.6.10-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
@@ -15,6 +15,18 @@ YouTubeやローカル動画の認識・翻訳が完了してから、できあ�
 5. **字幕を作成**して完了を待ち、訳文を確認して保存または動画に適用します。
 
 **作業室**とはStart.cmdでブラウザーに開くアプリの画面です。利用中は実行ウィンドウを開いたままにしてください。処理は自分のPCで行い、別の動画処理サーバーは不要です。
+
+## 誤訳を報告して翻訳品質を改善する
+
+ゲーム用語・略語・翻訳の誤りをお知らせください。報告を確認し、ゼンレスのゲーム用語DBと翻訳品質の改善に役立てます。
+
+1. **YouTube・ローカル動画のプレビュー：** 音声字幕または画面翻訳をクリックし、**誤訳を報告**を選びます。YouTubeでは先にPC作業室に接続し、完了した作業を適用してください。
+2. **字幕一覧：** 完了した作業の**字幕の確認・編集**で**音声字幕 / 画面の文字**を選び、該当区間の**誤訳を報告**を押します。
+3. 誤っている部分を説明し、**報告を送信**します。修正案は分かる場合のみで構いません。**受付番号**が表示されたら送信完了です。
+
+正しい訳が分からなくても、誤っている部分をお知らせください。GitHubへのログインは不要で、非公開で受け付けます。
+
+プログラムを使わなくても、[正式名称・略語を直接報告](https://github.com/Odarom/zenless-translation-database/issues/new/choose)できます。このGitHub経由の報告にはアカウントが必要で、内容は公開されます。
 
 ## 自分の動画ファイルを翻訳・プレビューする
 

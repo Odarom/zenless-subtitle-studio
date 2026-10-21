@@ -23,7 +23,7 @@ function safeMetadata(value = {}) {
   if (Number.isSafeInteger(value.translatedAt)) out.translatedAt = value.translatedAt;
   return out;
 }
-function snapshot(input) {
+export function reportSnapshot(input) {
   const source = input.source ?? {}, target = input.target ?? {}, issue = input.issue ?? {};
   if (!snowflake(target.channelId) || !snowflake(target.messageId)
     || (source.channelId != null && !snowflake(source.channelId)) || (source.messageId != null && !snowflake(source.messageId))) throw new UserError('신고 메시지 연결 정보를 확인하세요.');
@@ -107,9 +107,10 @@ export class ReportStore {
     if (this.db.prepare('SELECT COUNT(*) AS n FROM reports').get().n >= 2000
       || this.db.prepare('SELECT COUNT(*) AS n FROM reports WHERE guild_id = ?').get(guildId).n >= 500) throw new UserError('신고 저장 한도에 도달했습니다. 운영자에게 확인하세요.');
   }
-  create(guildId, reporterId, input) {
+  create(guildId, reporterId, input, { id: preparedId } = {}) {
     if (this.readOnly) throw new UserError('읽기 전용 신고 저장소입니다.');
-    const payload = snapshot(input), hash = textHash(payload.target.text);
+    const payload = reportSnapshot(input), hash = textHash(payload.target.text);
+    if (preparedId !== undefined && !REPORT_ID.test(preparedId)) throw new UserError('신고 번호를 확인하세요.');
     this.db.exec('BEGIN IMMEDIATE');
     try {
       this.prune();
@@ -117,7 +118,7 @@ export class ReportStore {
         .get(guildId, reporterId, payload.target.messageId, hash);
       if (existing) { this.db.exec('COMMIT'); return { report: this.decode(existing), duplicate: true }; }
       this.checkCapacity(guildId, reporterId);
-      const id = `R-${seoulDay(new Date(this.now())).replaceAll('-', '')}-${randomBytes(6).toString('hex')}`;
+      const id = preparedId ?? `R-${seoulDay(new Date(this.now())).replaceAll('-', '')}-${randomBytes(6).toString('hex')}`;
       const time = this.now();
       this.db.prepare('INSERT INTO reports (id, guild_id, reporter_id, target_id, target_hash, created_at, updated_at, payload) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
         .run(id, guildId, reporterId, payload.target.messageId, hash, time, time, JSON.stringify(payload));

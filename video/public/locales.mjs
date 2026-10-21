@@ -1,5 +1,10 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ["오역 신고로 ZZZ 용어 DB를 함께 개선해요","Help improve the ZZZ terminology DB by reporting errors","誤訳報告でZZZ用語DBを一緒に改善しましょう","通过误译举报一起改进ZZZ术语数据库"],
+  ["게임 용어·약어·번역 오류를 알려주세요. 신고를 검토해 젠레스 게임 용어 DB와 번역 품질을 개선합니다.","Found an incorrect game term, abbreviation or translation? Reports are reviewed to improve the Zenless game terminology DB and translation quality.","ゲーム用語・略語・翻訳の誤りをお知らせください。報告を確認し、ゼンレスのゲーム用語DBと翻訳品質の改善に役立てます。","发现游戏术语、缩写或翻译错误？我们会审核举报，用于改进绝区零游戏术语数据库和翻译质量。"],
+  ["영상의 자막 클릭 → 오역 신고 → 설명 작성 → 신고 보내기. 아래 자막 목록에서도 신고할 수 있습니다.","Click a subtitle in the video → Report a translation → describe the problem → Send report. You can also report from the subtitle list below.","動画上の字幕をクリック → 誤訳を報告 → 問題を記入 → 報告を送信。下の字幕一覧からも報告できます。","点击视频字幕 → 举报误译 → 填写说明 → 发送举报。也可从下方字幕列表举报。"],
+  ["PC의 완료 작업을 적용한 뒤, 영상의 자막 클릭 → 오역 신고 → 설명 작성 → 신고 보내기.","Apply a completed PC job, then click a video subtitle → Report a translation → describe the problem → Send report.","PCの完了した作業を適用し、動画上の字幕をクリック → 誤訳を報告 → 問題を記入 → 報告を送信。","应用PC中已完成的任务后，点击视频字幕 → 举报误译 → 填写说明 → 发送举报。"],
+  ["올바른 번역을 몰라도 잘못된 부분만 알려주세요. GitHub 로그인 없이 비공개로 접수됩니다.","You can report the incorrect part even without knowing the right translation. Reports are private and need no GitHub login.","正しい訳が分からなくても、誤っている部分をお知らせください。GitHubへのログインは不要で、非公開で受け付けます。","不知道正确译法也可以指出错误部分。举报为非公开，无需登录GitHub。"],
   ["음성 자막 뒤에 배경 표시","Show a background behind speech subtitles","音声字幕の背景を表示","显示语音字幕背景"],
   ["유튜브 확장 사용 시: 업데이트 후 확장 관리에서 ZZZ 확장을 ↻ 새로고침하거나 브라우저를 완전히 종료 후 다시 여세요. 컴퓨터 재시작도 가능합니다. 유튜브 페이지를 새로고침하고 자막을 다시 적용하세요.","YouTube extension: after updating, reload ZZZ in extension management or fully quit and reopen your browser. Restarting your PC also works. Refresh YouTube and reapply subtitles.","YouTube拡張を使う場合：更新後、拡張管理でZZZを↻再読み込みするか、ブラウザを完全に終了して再起動してください。PCの再起動でも反映されます。YouTubeページを更新し、字幕を再適用してください。","使用YouTube扩展时：更新后，在扩展管理中↻重新加载ZZZ，或完全退出并重新打开浏览器。重启电脑也可生效。请刷新YouTube页面并重新应用字幕。"],
   ["자막 위치를 확인하세요.","Check the subtitle position.","字幕の位置を確認してください。","请检查字幕位置。"],

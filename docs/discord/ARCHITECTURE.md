@@ -36,7 +36,7 @@ flowchart TD
 
 공용 봇은 원문과 번역문을 읽고 중계합니다. 다른 사용자의 API 키는 각자의 연결 프로그램에 보관합니다. 대화 내용을 운영자에게 숨기는 종단간 암호화는 아닙니다. 운영자 자신의 연결 프로그램은 같은 Oracle 서버의 별도 프로세스로 실행할 수 있습니다.
 
-독립 설치 봇의 신고는 별도 미리보기·동의 후 프로젝트 관리자에게 공유합니다. 공용 봇의 신고와 영상 신고는 같은 비공개 검토 흐름으로 관리합니다. 신고만으로 DB를 자동 수정하지 않습니다.
+공용 봇과 독립 설치본 모두 신고 작성 → 전송 미리보기 → 동의 후 프로젝트 관리자 직접 접수로 진행합니다. 별도 운영자 접수 단계는 없습니다. 영상 신고와 같은 비공개 검토 흐름으로 관리하며 DB에 자동 반영하지 않습니다.
 
 ### 영상 번역
 
@@ -90,7 +90,7 @@ flowchart TD
 
 The public broker reads and relays source text and results. Other users keep API keys on their own runners. This is not end-to-end encryption that hides conversations from the bot operator. The maintainer may run their own runner as a separate process on the same Oracle host.
 
-Independently operated bots share reports with the project only after a separate preview and consent. Public-bot and video reports join the same private review process. Reporting never automatically changes the DB.
+Public brokers and independent bots both use report drafting → outgoing preview → consent → direct project intake. There is no separate bot-operator intake. Reports join the same private review process as video reports and never automatically change the DB.
 
 ### Video translation
 
@@ -144,7 +144,7 @@ flowchart TD
 
 公開ボットは原文と翻訳結果を読み、中継します。他の利用者のAPIキーは各自の接続プログラムに保存します。ボット運営者に会話を隠すエンドツーエンド暗号化ではありません。運営者自身の接続プログラムは、同じOracle上の別プロセスでも実行できます。
 
-独立ボットからの報告共有には別途プレビューと同意が必要です。公開ボットと動画の報告は同じ非公開の確認手順で管理し、報告だけでDBを自動修正しません。
+公開ボットと独立版の双方で、報告作成 → 送信プレビュー → 同意 → プロジェクト管理者への直接受付となります。別途運営者受付はありません。動画報告と同じ非公開の確認手順で管理し、DBに自動反映しません。
 
 ### 動画の翻訳
 
@@ -198,7 +198,7 @@ flowchart TD
 
 公开机器人能够读取并中转原文和译文。其他用户的API密钥保留在各自的连接程序中。这不是向机器人运营者隐藏聊天内容的端到端加密。维护者自己的连接程序可以作为同一Oracle主机上的独立进程运行。
 
-独立机器人只有经过单独预览和同意才向项目共享举报。公开机器人与视频举报纳入同一私密审核流程，不会仅因提交举报就自动修改数据库。
+公开机器人和独立安装均使用：填写举报 → 确认发送预览 → 同意 → 项目维护者直接接收。不设独立的机器人运营者接收步骤。举报与视频举报统一私下审核，不自动修改数据库。
 
 ### 视频翻译
 

@@ -323,6 +323,9 @@ function renderDetail() {
   element.append(node('p', { class: 'meta-line', text: `${job.origin?.includes('auto') ? t('유튜브 자동 자막 기반 · 원문 오류를 확인하세요.') : job.origin === 'whisper' ? t('음성 인식 기반 · {runtime}', { runtime: i18n.message(job.runtime) || t('로컬 처리') }) : t('기존 원어 자막 기반')}${job.translationConfig ? ` · ${job.translationConfig.provider} / ${job.translationConfig.model}` : ''} · ${t('확인 표시 {count}개 구간', { count: job.cues.filter(cue => cue.warnings?.length).length })}` }));
   if (job.videoId) element.append(node('p', { class: 'hint', text: t('유튜브 영상에서 확장 프로그램을 열고 이 작업의 자막을 적용하세요.') }));
   element.append(node('p', { class: 'hint', text: t('화면 위치는 프로젝트 JSON 또는 위치 포함 VTT로 저장하세요. YouTube CC의 모양은 시청자 설정에 따라 달라집니다.') }));
+  element.append(node('aside', {class:'report-help',role:'note','aria-label':t('오역 신고')},
+    node('strong',{text:t("오역 신고로 ZZZ 용어 DB를 함께 개선해요")}),node('p',{text:t("게임 용어·약어·번역 오류를 알려주세요. 신고를 검토해 젠레스 게임 용어 DB와 번역 품질을 개선합니다.")}),
+    node('p',{text:t("영상의 자막 클릭 → 오역 신고 → 설명 작성 → 신고 보내기. 아래 자막 목록에서도 신고할 수 있습니다.")}),node('p',{class:'hint',text:t("올바른 번역을 몰라도 잘못된 부분만 알려주세요. GitHub 로그인 없이 비공개로 접수됩니다.")})));
   element.append(renderPreview(job));
   const drafts = state.drafts.get(job.id) || new Map(); state.drafts.set(job.id, drafts);
   const save = node('button', { class: 'secondary', type: 'button', text: t('수정 내용 저장'), onclick: async () => {

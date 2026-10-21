@@ -55,7 +55,7 @@ function harness(clock = () => at) {
       return { id, channelId: SOURCE, content: originalText, fetchReference: () => assert.fail('no unrelated source history') };
     } } };
   } } };
-  const flow = new ReportFlow({ store, reports: h.reports, client, now: clock });
+  const flow = new ReportFlow({ store, reports: h.reports, client, sharing:{send:async()=>'A-20261022-abcdef123456'}, now: clock });
   const opening = { ...interaction(), commandName: REPORT_MENU_NAME, isMessageContextMenuCommand: () => true,
     targetMessage: { id: COPY, channelId: TARGET, webhookId: HOOK, content: translatedText } };
   return { ...h, store, flow, opening, fetches, client };
@@ -76,32 +76,51 @@ function submission(button, overrides = {}) {
     ]) };
 }
 
-test('sharing is opt-in with an exact preview, reporter isolation, persisted receipt and manual failure retry', async () => {
-  const h = harness(); let calls = 0, fail = true;
-  h.flow.sharing = { async send(report) { calls++; assert.equal(report.source.text, originalText); if (fail) throw new Error('offline'); return 'A-20261019-abcdef123456'; } };
-  const button = await openModal(h), submit = submission(button); await h.flow.submit(submit);
-  assert.equal(calls, 0);
-  const customId = submit.responses.at(-1).components[0].toJSON().components[0].custom_id;
-  const stranger = { ...interaction(V), customId }; await assert.rejects(h.flow.share(stranger));
-  const preview = { ...interaction(), customId }; await h.flow.share(preview);
-  assert.equal(calls, 0); assert.equal(preview.responses.at(-1).files.length, 1);
-  assert.equal(preview.responses.at(-1).files[0].name, 'report-preview.json');
-  const confirmId = preview.responses.at(-1).components[0].toJSON().components[0].custom_id;
-  const send = { ...interaction(), customId: confirmId }; await h.flow.share(send);
-  assert.equal(calls, 1); assert.match(send.responses.at(-1).content, /실패/);
-  fail = false; await h.flow.share({ ...interaction(), customId: confirmId });
-  const report = h.reports.list()[0]; assert.equal(h.reports.shareReceipt(report.id), 'A-20261019-abcdef123456');
-  assert.deepEqual(h.flow.shareOffer(report, interaction()), []);
-  h.reports.close();
+async function consent(h, submitted) {
+ const sent={...interaction(),locale:submitted.locale,channelId:submitted.channelId,customId:submitted.responses.at(-1).components[0].toJSON().components[0].custom_id};
+ await h.flow.share(sent);return sent;
+}
+async function submitAndConsent(h, submitted) {await h.flow.submit(submitted);return consent(h,submitted);}
+
+test('direct reporting previews before any storage or delivery, isolates reporters and retries the same consented payload', async()=>{
+ const h=harness();let calls=0,fail=true,wire;
+ h.flow.sharing={async send(report){calls++;wire=report;if(fail)throw Error('offline');return 'A-20261022-abcdef123456';}};
+ const button=await openModal(h),submit=submission(button);await h.flow.submit(submit);
+ assert.equal(calls,0);assert.equal(h.reports.list().length,0);
+ const response=submit.responses.at(-1);assert.equal(response.files[0].name,'report-preview.json');
+ const preview=JSON.parse(response.files[0].attachment.toString());
+ assert.equal(preview.source.text,originalText);assert(!JSON.stringify(preview).includes(TARGET));assert(!JSON.stringify(preview).includes(U));
+ const customId=response.components[0].toJSON().components[0].custom_id;
+ await assert.rejects(h.flow.share({...interaction(V),customId}));assert.equal(calls,0);
+ const sent=await consent(h,submit);assert.equal(calls,1);assert.match(sent.responses.at(-1).content,/확인하지 못/);assert.deepEqual(wire,preview);
+ assert.equal(h.reports.list().length,1);fail=false;await consent(h,submit);assert.equal(calls,2);assert.deepEqual(wire,preview);
+ const report=h.reports.list()[0];assert.equal(report.id,preview.id);assert.equal(h.reports.shareReceipt(report.id),'A-20261022-abcdef123456');
+ await assert.rejects(consent(h,submit));assert.equal(calls,2);h.reports.close();
 });
-test('cancelled project sharing keeps the local report and never sends', async () => {
-  const h = harness(); h.flow.sharing = { send() { assert.fail('cancel must not send'); } };
-  const button = await openModal(h), submit = submission(button); await h.flow.submit(submit);
-  const customId = submit.responses.at(-1).components[0].toJSON().components[0].custom_id;
-  const preview = { ...interaction(), customId }; await h.flow.share(preview);
-  const cancel = preview.responses.at(-1).components[0].toJSON().components[1].custom_id;
-  await h.flow.share({ ...interaction(), customId: cancel });
-  assert.equal(h.reports.list().length, 1); h.reports.close();
+test('cancelled direct reporting stores no report and never contacts the project',async()=>{
+ const h=harness();h.flow.sharing={send(){assert.fail('cancel must not send');}};
+ const submit=submission(await openModal(h));await h.flow.submit(submit);
+ const customId=submit.responses.at(-1).components[0].toJSON().components[1].custom_id;
+ await h.flow.share({...interaction(),customId});assert.equal(h.reports.list().length,0);h.reports.close();
+});
+test('direct reporting without a receiver has no fallback bot-operator intake',async()=>{
+ const h=harness();h.flow.sharing=undefined;await assert.rejects(h.flow.begin(h.opening),/전송이 꺼져/);
+ assert.equal(h.fetches.length,0);assert.equal(h.reports.list().length,0);h.reports.close();
+});
+test('expired confirmation and relinked channels cannot send or store a draft',async()=>{
+ let time=at;const h=harness(()=>time);let calls=0;h.flow.sharing={send(){calls++;}};
+ const submit=submission(await openModal(h));await h.flow.submit(submit);time+=600001;
+ await assert.rejects(consent(h,submit),/만료/);assert.equal(calls,0);assert.equal(h.reports.list().length,0);h.reports.close();
+ const next=harness();const draft=submission(await openModal(next));await next.flow.submit(draft);
+ next.store.unlink(TARGET);await assert.rejects(consent(next,draft),/채널 연결/);assert.equal(next.reports.list().length,0);next.reports.close();
+});
+test('double confirmation does not send twice, and an existing receipt is reused',async()=>{
+ const h=harness();let calls=0,release;const delivered=new Promise(resolve=>release=resolve);
+ h.flow.sharing={async send(){calls++;await delivered;return 'A-20261022-abcdef123456';}};
+ const submit=submission(await openModal(h));await h.flow.submit(submit);
+ const first=consent(h,submit);await assert.rejects(consent(h,submit));release();await first;assert.equal(calls,1);
+ h.flow.opened.clear();const duplicate=submission(await openModal(h));await h.flow.submit(duplicate);await consent(h,duplicate);
+ assert.equal(calls,1);assert.equal(h.reports.list().length,1);h.reports.close();
 });
 
 test('reports persist only whitelisted snapshot data and are isolated by guild and reporter', () => {
@@ -160,15 +179,15 @@ test('message-menu preview fetches only the tracked original and opens a five-fi
   assert.deepEqual(h.fetches, [{ channelId: SOURCE }, { messageId: ORIGINAL }]);
   assert.equal(h.opening.responses[0].flags, MessageFlags.Ephemeral);
   const preview = h.opening.responses.at(-1).embeds[0].toJSON();
-  assert(preview.description.includes('운영자')); assert(preview.description.includes('90일'));
+  assert(preview.description.includes('프로젝트 관리자')); assert(preview.description.includes('DB'));
   assert.equal(button.modal.components.length, 5);
   const source = button.modal.components.map(c => c.component).find(c => c.custom_id === 'source');
   assert.equal(source.value, originalText);
-  const submit = submission(button); await h.flow.submit(submit);
+  const submit = submission(button); await submitAndConsent(h,submit);
   const report = h.reports.list()[0];
   assert.equal(report.source.provenance, 'discord-verified'); assert.equal(report.source.matchesTranslationSource, true);
   assert.equal(report.metadata.model, metadata.model); assert.equal(report.target.text, translatedText);
-  assert(submit.responses.at(-1).content.includes(report.id)); h.reports.close();
+  assert.equal(JSON.parse(submit.responses.at(-1).files[0].attachment.toString()).id,report.id); h.reports.close();
 });
 test('forged sessions, other users and expired modals cannot submit reports', async () => {
   let time = at; const h = harness(() => time); const button = await openModal(h);
@@ -194,14 +213,14 @@ test('missing or edited originals remain reportable with explicit user provenanc
   const h = harness(); h.client.channels.fetch = async () => { throw new Error('Deleted'); };
   const button = await openModal(h);
   assert.equal(button.modal.components.map(c => c.component).find(c => c.custom_id === 'source').value, undefined);
-  await h.flow.submit(submission(button, { source: 'The original was edited.' }));
+  await submitAndConsent(h,submission(button, { source: 'The original was edited.' }));
   const report = h.reports.list()[0];
   assert.equal(report.source.provenance, 'user-provided'); assert.equal(report.source.matchesTranslationSource, false);
   h.reports.close();
 });
 test('a changed translated message does not falsely inherit the old model and source verification', async () => {
   const h = harness(); h.opening.targetMessage.content = '아스트랄 효과?';
-  const button = await openModal(h); await h.flow.submit(submission(button));
+  const button = await openModal(h); await submitAndConsent(h,submission(button));
   const report = h.reports.list()[0];
   assert.deepEqual(report.metadata, {}); assert.equal(report.source.provenance, 'discord-unverified');
   assert.equal(report.source.matchesTranslationSource, null); h.reports.close();
@@ -213,7 +232,7 @@ test('forward reports read the shared snapshot without fetching its original pri
     messageSnapshots: new Collection([['private', { content: originalText, fetch: () => assert.fail('no private snapshot fetch') }]]),
     fetchReference: () => assert.fail('no private original fetch'),
   }) } });
-  const button = await openModal(h); await h.flow.submit(submission(button));
+  const button = await openModal(h); await submitAndConsent(h,submission(button));
   assert.equal(h.reports.list()[0].source.text, originalText); h.reports.close();
 });
 test('public report status is ephemeral and reveals only the viewer’s own guild reports', async () => {
@@ -259,7 +278,7 @@ test('slash submit resolves just the linked translation and its tracked original
   assert.deepEqual(h.fetches, [{ channelId: TARGET }, { messageId: COPY }, { channelId: SOURCE }, { messageId: ORIGINAL }]);
   assert.equal(h.slash.responses.filter(value => value.flags === MessageFlags.Ephemeral).length, 1);
   const button = { ...interaction(), customId: h.slash.responses.at(-1).components[0].toJSON().components[0].custom_id };
-  await h.flow.openModal(button); await h.flow.submit(submission(button));
+  await h.flow.openModal(button); await submitAndConsent(h,submission(button));
   assert.equal(h.reports.list()[0].target.messageId, COPY); assert.equal(h.reports.list()[0].source.provenance, 'discord-verified');
   h.reports.close();
 });
@@ -303,8 +322,8 @@ test('registration upserts global commands then deletes only matching guild copi
 });
 
 test('report preview, modal, acknowledgement and status follow each reporter’s Discord locale without translating snapshots', async () => {
-  const expected = [['ko', '오역 신고', '오역 신고를 접수', '접수'], ['en-US', 'Report translation', 'Your report has been received', 'Received'],
-    ['ja', '誤訳を報告', '報告を受け付け', '受付済み'], ['zh-CN', '举报误译', '已收到', '已接收']];
+  const expected = [['ko', '오역 신고', '프로젝트 신고 접수번호', '접수'], ['en-US', 'Report translation', 'Project report receipt', 'Received'],
+    ['ja', '誤訳を報告', 'プロジェクト報告受付番号', '受付済み'], ['zh-CN', '举报误译', '项目举报接收编号', '已接收']];
   for (const [locale, title, ack, status] of expected) {
     const h = harness(); h.opening.locale = locale;
     await h.flow.begin(h.opening);
@@ -313,8 +332,8 @@ test('report preview, modal, acknowledgement and status follow each reporter’s
     const button = { ...interaction(), locale, customId: h.opening.responses.at(-1).components[0].toJSON().components[0].custom_id };
     await h.flow.openModal(button); assert.equal(button.modal.title, title);
     assert.equal(button.modal.components.map(c => c.component).find(c => c.custom_id === 'source').value, originalText);
-    const submitted = { ...submission(button), locale }; await h.flow.submit(submitted);
-    assert(submitted.responses.at(-1).content.includes(ack));
+    const submitted = { ...submission(button), locale }; const sent=await submitAndConsent(h,submitted);
+    assert(sent.responses.at(-1).content.includes(ack));
     const mine = { ...interaction(), locale, options: { getSubcommand: () => 'mine' } };
     await h.flow.status(mine); assert(mine.responses.at(-1).content.includes(status));
     assert.equal(h.reports.list()[0].issue.explanation, '고요 속의 별과 극한 회피가 맞음'); h.reports.close();
@@ -352,7 +371,7 @@ test('plain reply reporting needs no app command, publishes no snapshot, and ope
   assert.equal(start.responses[0].flags, MessageFlags.Ephemeral);
   assert.equal(start.responses.at(-1).embeds[0].toJSON().title, 'Check before reporting');
   const button = { ...interaction(), locale: 'en-US', customId: start.responses.at(-1).components[0].toJSON().components[0].custom_id };
-  await h.flow.openModal(button); await h.flow.submit(submission(button));
+  await h.flow.openModal(button); await submitAndConsent(h,submission(button));
   assert.equal(h.reports.list().length, 1);
   await respondToReportMessage(message, { reportFlow: h.flow }); assert.equal(replies.length, 1, 'public acknowledgement is rate limited');
   h.reports.close();
@@ -385,7 +404,7 @@ test('relay stores hashes and whitelisted versions without persisting message bo
   assert.equal(saved.sourceTextHash, textHash(originalText)); assert.equal(saved.textHashes[0], textHash(translatedText));
   const bytes = readFileSync(h.store.path, 'utf8');
   assert(!bytes.includes(originalText)); assert(!bytes.includes(translatedText)); assert(!bytes.includes('NEVER-STORE'));
-  const button = await openModal(h); await h.flow.submit(submission(button));
+  const button = await openModal(h); await submitAndConsent(h,submission(button));
   assert.equal(aiCalls, 1, 'reporting must not invoke translation AI'); h.reports.close();
 });
 test('CLI exports snapshots read-only and Markdown renders untrusted instructions as literal data', () => {

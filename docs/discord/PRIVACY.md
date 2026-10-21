@@ -4,7 +4,7 @@
 
 ## 한국어
 
-시행·최종 수정: 2026-10-19 한국시간 / Effective and updated: 2026-10-19 KST
+시행·최종 수정: 2026-10-22 한국시간 / Effective and updated: 2026-10-22 KST
 
 ## 운영 구분
 
@@ -26,9 +26,9 @@ API 제공사의 저장·학습·인적 검토·국외 처리 조건은 각 서�
 
 ## 오역 신고
 
-사용자가 안내를 확인하고 제출한 원문·번역문·언어·오류 설명·수정 제안, 모델·용어집/번역 규칙 버전 해시를 최대 90일 보관합니다. 공개 봇에 제출한 신고에는 본인 조회·스팸 제한을 위한 Discord 서버·신고자·메시지 식별자가 포함되며 프로젝트 운영자만 검토합니다. 독립 설치본에서 프로젝트 공유를 선택하면 별도 미리보기와 동의를 받은 뒤 Discord 사용자/서버/채널 ID 및 API 키 설정을 제외한 사본을 HTTPS 접수 서버에 보냅니다. 임의 설치 식별자와 접속 IP의 HMAC 해시를 중복·남용 방지에 사용하며 일반 공개 목록은 제공하지 않습니다. 본문에 직접 쓴 개인정보는 자동으로 모두 제거할 수 없으므로 제출하지 마세요.
+신고 작성 중에는 미리보기·동의를 위해 최대 10분 동안 메모리에서만 보관합니다. 전송 내용 확인 후 동의하면 프로젝트 관리자에게 HTTPS로 바로 전송하며, 별도 봇 운영자 접수 단계는 없습니다. 원문·번역문·언어·설명·제안·모델·용어집/번역 규칙 해시와 임의 설치 식별자를 최대 90일 보관합니다. 프로젝트 수신 사본에는 Discord 사용자·서버·채널 ID 및 API 키 설정을 포함하지 않습니다. 동의 후 봇에는 본인 조회·중복 방지·재시도를 위한 신고 내용과 Discord 서버·신고자·메시지 식별자가 포함된 전송 기록을 최대 90일 보관합니다. 해당 봇 관리자와 호스팅 관리자는 이 기록에 접근할 수 있습니다. 접수 서버는 접속 IP의 HMAC 해시를 남용 방지에 사용하며 일반 공개 목록은 제공하지 않습니다. 본문에 직접 쓴 개인정보는 자동으로 모두 제거할 수 없으므로 제출하지 마세요.
 
-보고서는 비공개로 검토하고 필요 시 AI에 대조시킬 수 있습니다. 검토된 일반 용어와 번역 규칙만 공개 DB에 반영하며, 신고 원문·식별자는 공개하지 않습니다. 신고자가 볼 수 있는 상태는 해당 봇의 로컬 검토 상태입니다. 별도 공유 접수번호는 프로젝트 관리자에게 문의할 때 사용할 수 있습니다. 영상 앱의 비공개 신고도 같은 관리자 검토 흐름으로 관리합니다.
+보고서는 비공개로 검토하고 필요 시 AI에 대조시킬 수 있습니다. 검토된 일반 용어와 번역 규칙만 공개 DB에 반영하며, 신고 원문·식별자는 공개하지 않습니다. 봇의 조회 명령은 해당 봇의 전송 기록이며 프로젝트 검토 상태를 실시간 조회하지 않습니다. 프로젝트 접수번호는 프로젝트 관리자에게 문의할 때 사용할 수 있습니다. 영상 앱의 비공개 신고도 같은 관리자 검토 흐름으로 관리합니다.
 
 ## 삭제·보안·문의
 
@@ -38,7 +38,7 @@ API 제공사의 저장·학습·인적 검토·국외 처리 조건은 각 서�
 
 ## English
 
-Effective and updated: 2026-10-19 KST.
+Effective and updated: 2026-10-22 KST.
 
 Maintainer of the public broker and project report intake: [Odarom](https://github.com/Odarom/zenless-discord-translator/issues). Shared services run on Oracle Cloud in Tokyo, Japan. Personal runners and independent installations are managed by their respective users.
 
@@ -48,7 +48,9 @@ The broker still reads and relays translation text. It sends the original, targe
 
 Provider retention, training, human review and cross-border processing depend on the chosen service. Google free-tier inputs/outputs may be used for product improvement; consult provider terms. The project's lack of a model-training feature does not override provider data use.
 
-User-submitted reports include source/translation, language, issue, suggestion and model/glossary/prompt metadata for up to 90 days. Reports submitted to the public bot include Discord identifiers for ownership and abuse prevention and are privately reviewed. Independent bots forward a separate copy only after an explicit preview and consent, omitting Discord user/guild/channel IDs and API-key settings. The HTTPS receiver uses a random installation ID and HMAC-hashed peer/installation values for deduplication and abuse prevention; no public report listing exists. Personal information typed into report text cannot be comprehensively removed automatically. Reports may be compared with AI; only reviewed general terms/rules without personal details reach the public DB. Video reports join the same private review process. Local status commands show the originating bot's review status; a shared receipt identifies a project submission.
+Drafts remain in memory for preview and consent for up to ten minutes. After reviewing and consenting, the author sends directly to the project maintainer over HTTPS, with no separate bot-operator intake. Source, translation, languages, issue, suggestion, model/glossary/prompt hashes and a random installation ID are retained for up to 90 days. The project copy excludes Discord user/guild/channel IDs and API-key settings. After consent, the bot keeps the report and Discord guild/reporter/message identifiers as delivery records for ownership, deduplication and retries for up to 90 days; that bot’s administrator and hosting administrator can access them. The receiver uses HMAC-hashed peer IPs for abuse prevention and offers no public listing. Do not enter personal information into report text; it cannot all be removed automatically.
+
+Reports are reviewed privately and may be compared with AI. Only reviewed general terms and translation rules without personal details enter the public DB; report texts and identifiers are not published. Status commands show this bot’s delivery records, not live project-review status. Use the project receipt when contacting the maintainer. Video reports join the same private review process.
 
 Expired reports are pruned after 90 days. Bot removal deletes the guild's local pairing and reports. Users manage local key deletion and provider-side revocation. To request deletion of a shared report, contact the maintainer with its receipt ID; never post the report text or credentials publicly. Any legally required exceptional retention must have its basis and scope identified. Permissions and HTTPS reduce risk but do not guarantee absolute security.
 
@@ -56,7 +58,7 @@ Expired reports are pruned after 90 days. Bot removal deletes the guild's local 
 
 ## 日本語
 
-施行・最終更新：2026-10-19（韓国時間）。
+施行・最終更新：2026-10-22（韓国時間）。
 
 ### 運営の区分
 
@@ -78,9 +80,9 @@ API提供元の保存・学習・人による確認・国外処理条件は選�
 
 ### 誤訳報告
 
-案内を確認して投稿した原文・訳文・言語・問題説明・修正案・モデル・用語集/翻訳規則の版ハッシュを最大90日保存します。公開ボットへの報告には、本人照会と不正防止用のDiscordサーバー・報告者・メッセージ識別子が含まれ、プロジェクト管理者が非公開で確認します。独立インストールから共有する場合は別途プレビューと同意を行い、Discordユーザー・サーバー・チャンネルIDとAPIキー設定を除いたコピーをHTTPS受付へ送信します。ランダムなインストールID、および接続IPとインストール値のHMACハッシュを重複・不正防止に利用し、一般公開一覧は提供しません。本文へ直接入力した個人情報はすべて自動除去できないため、記入しないでください。
+作成中の報告はプレビュー・同意のため最大10分間メモリにのみ保持します。内容を確認して同意するとHTTPSでプロジェクト管理者へ直接送信し、ボット運営者への別途受付は行いません。原文・訳文・言語・説明・修正案・モデル/用語集/規則ハッシュと匿名インストールIDを最大90日保存します。プロジェクト側のコピーにはDiscordのユーザー・サーバー・チャンネルIDとAPIキー設定を含めません。同意後、ボットには本人照会・重複防止・再試行用に報告内容とDiscordサーバー・投稿者・メッセージIDを含む送信記録を最大90日保存し、そのボットとホスティングの管理者はアクセスできます。受付側は接続IPのHMACハッシュを不正防止に使用し、公開一覧は提供しません。本文の個人情報はすべて自動除去できないため入力しないでください。
 
-報告は非公開で確認し、必要に応じてAIで照合することがあります。確認済みの一般用語・翻訳ルールのみ公開DBへ反映し、報告原文や識別子は公開しません。状態コマンドは投稿先ボットのローカル確認状態を表示します。共有受付番号はプロジェクト管理者への問い合わせに使えます。動画アプリの非公開報告も同じ確認の流れで管理します。
+報告は非公開で確認し、必要に応じてAIで照合することがあります。確認済みの一般用語・翻訳ルールのみ公開DBへ反映し、報告原文や識別子は公開しません。状態コマンドはボットの送信記録であり、プロジェクトの確認状態をリアルタイム照会するものではありません。プロジェクト受付番号はプロジェクト管理者への問い合わせに使えます。動画アプリの非公開報告も同じ確認の流れで管理します。
 
 ### 削除・安全対策・問い合わせ
 
@@ -90,7 +92,7 @@ API提供元の保存・学習・人による確認・国外処理条件は選�
 
 ## 简体中文
 
-生效及最后更新：2026-10-19（韩国时间）。
+生效及最后更新：2026-10-22（韩国时间）。
 
 ### 运营范围
 
@@ -112,9 +114,9 @@ API提供商的存储、训练、人工审查和跨境处理取决于所选服�
 
 ### 误译举报
 
-用户阅读提示后提交的原文、译文、语言、问题说明、修改建议及模型、术语表/翻译规则版本哈希最多保存90天。提交给公开机器人的举报包含用于本人查询和防滥用的Discord服务器、举报者、消息标识，由项目维护者私下审核。独立安装选择项目共享时，另行预览和同意后才通过HTTPS发送副本，移除Discord用户/服务器/频道ID与API密钥设置。接收端用随机安装ID以及连接IP、安装值的HMAC哈希进行去重及防滥用，不提供公开列表。用户直接写在本文中的个人信息无法全部自动删除，请勿填写。
+举报草稿仅为预览和确认同意而在内存中保留，最长10分钟。确认内容并同意后通过HTTPS直接交给项目维护者，不设机器人运营者的独立接收步骤。原文、译文、语言、说明、建议、模型/术语表/规则哈希及匿名安装标识最多保存90天。项目接收副本不含Discord用户、服务器、频道ID及API密钥设置。同意后，机器人保存用于本人查询、去重和重试的举报及Discord服务器、举报者、消息标识，最多90天，相应机器人管理员和托管管理员可访问这些发送记录。接收端使用连接IP的HMAC哈希防滥用，不提供公开列表。请勿在正文填写个人信息，无法自动全部移除。
 
-举报私下审核，必要时可能使用AI辅助比对。只有经审核的一般术语与翻译规则进入公开数据库，不公开举报原文或标识。状态命令显示提交目标机器人的本地审核状态；共享接收编号可用于向项目维护者查询。视频程序的私密举报也纳入同一审核流程。
+举报私下审核，必要时可能使用AI辅助比对。只有经审核的一般术语与翻译规则进入公开数据库，不公开举报原文或标识。状态命令显示机器人的发送记录，不实时查询项目审核状态；项目接收编号可用于向项目维护者查询。视频程序的私密举报也纳入同一审核流程。
 
 ### 删除、安全与联系
 

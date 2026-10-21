@@ -6,6 +6,10 @@
 
 [README](README-ko.md)
 
+### 이미지 전달
+
+이미지는 메시지당 최대 10개, 합계 20MB까지 원본 그대로 전달합니다. 해상도를 줄이거나 자동 압축하지 않습니다. 서버에서는 잠깐 메모리에 보관해 전송하고 이미지 파일을 디스크에 저장하지 않습니다. 이미지·GIF만 있는 메시지는 번역 API를 호출하지 않습니다. Discord에서 파일 자체를 허용하지 않거나 원본이 삭제된 경우에는 전달하지 못할 수 있습니다.
+
 ### 현시점 무료 API 추천
 
 **2026-10-19 한국시간 기준**, [Google AI Studio에서 무료 키 발급](https://aistudio.google.com/apikey) 후 **Gemini 3.1 Flash-Lite** / **gemini-3.1-flash-lite**를 추천합니다. [공식 요금표](https://ai.google.dev/gemini-api/docs/pricing)에 무료 구간이 있으며 해당 계정·프로젝트의 제공 조건과 RPM·TPM·일일 한도 안에서 무료로 사용할 수 있습니다. 모델 접근 권한·결제 설정·데이터 처리 조건은 [공식 약관](https://ai.google.dev/gemini-api/terms)과 계정 화면을 확인하세요. 무료가 무제한이나 영구 제공을 뜻하지는 않습니다. OpenAI API 또는 본인 기기의 Ollama 로컬 모델도 선택할 수 있습니다.
@@ -31,7 +35,7 @@ pair에서 Discord의 /zzz connect 코드를 입력합니다. [HOSTING.md](HOSTI
 - PC와 개인 서버 모두 실행 시와 **6시간마다** [공용 번역 DB](https://github.com/Odarom/zenless-translation-database)를 자동 갱신합니다. 해시·크기·형식 확인 후 교체하며, 실패하면 마지막 정상 DB를 유지합니다. DB 갱신과 프로그램 코드 업데이트는 별도입니다.
 - 채팅은 본문·답장·최근 문맥에서 명칭과 별칭을 검색해 관련 후보 최대 30개를 같은 번역 요청에 넣습니다. 후보 검색에 별도 LLM 요청을 쓰지 않습니다. 긴 표기·약어·동음이의어의 구분 규칙도 함께 제공합니다.
 - 번역 메시지에 답장으로 **!신고** 또는 **!report** → **신고 시작**, 또는 메시지의 **앱 → 오역 신고**를 선택합니다. 신고 전 안내를 확인하고 원문·번역·설명을 제출하면 프로젝트 관리자가 비공개로 검토합니다. GitHub 로그인은 필요 없습니다.
-- 본인 신고: **/zzz-report mine**, **/zzz-report status id:접수번호**. 별도로 자기 봇을 설치한 경우에는 로컬 접수 후 **프로젝트 관리자에게도 공유**를 선택하고 전송 미리보기에 동의해야 공용 프로젝트로 전달됩니다.
+- 신고 작성 후 전송 미리보기를 확인하고 **동의하고 보내기**를 누르면 프로젝트 관리자에게 바로 전달됩니다. 별도 봇 운영자 접수 단계는 없습니다. 취소하면 전송하지 않습니다. **/zzz-report mine**, **/zzz-report status**는 이 봇의 전송 기록을 보여주며 프로젝트 접수번호도 표시합니다.
 - 신고에 개인정보·키·일반 대화 전체를 넣지 마세요. 보관 기간은 최대 90일이며, 관리자 검토 후 공용 DB를 수정합니다. 제출만으로 자동 수정하거나 AI를 자동 호출하지 않습니다.
 
 연결 확인은 /zzz api-status, 해제는 /zzz disconnect, 그룹 일시 정지는 /zzz pause 및 /zzz resume을 사용합니다. 사용량은 PC 화면이나 개인 서버의 node --env-file=.env.runner scripts/discord-runner.mjs usage로 확인합니다. 실패한 API 요청도 사용량에 포함됩니다. 중계 연결이 끊겨도 이미 시작된 번역을 자동 재호출하지 않습니다.
@@ -61,6 +65,10 @@ PC에서는 압축을 풀었던 폴더의 **Start.cmd**를 다시 실행하면 �
 
 [README](README-en.md)
 
+### Image sharing
+
+Share up to 10 images per message, totaling 20MB, without resizing or recompression. The server holds the data temporarily in memory for delivery and does not save image files to disk. Image/GIF-only messages make no translation API calls. Delivery can still fail if Discord rejects the attachment or its source was deleted.
+
 ### Current free API recommendation
 
 **As of 2026-10-19 KST**, get a [Google AI Studio API key](https://aistudio.google.com/apikey) and use **Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite)**. The [official pricing page](https://ai.google.dev/gemini-api/docs/pricing) lists a free tier. Use can be free within your account/project eligibility and RPM, TPM and daily quotas. Check billing, model access and [data-use terms](https://ai.google.dev/gemini-api/terms); free does not mean unlimited or permanent. OpenAI API and locally installed Ollama models are alternatives.
@@ -86,7 +94,7 @@ Enter the code from /zzz connect when pairing. [HOSTING.md](HOSTING.md) includes
 - Both PC and server check the [shared database](https://github.com/Odarom/zenless-translation-database) at startup and every **6 hours**, verifying hash/size/format before replacing the cache. Failures retain the last working version. Database updates are separate from program-code updates.
 - Chat uses deterministic name/alias matching on the message, reply and recent context, with up to 30 relevant candidates in the same translation call. No separate LLM call selects terms.
 - Reply to a translated message with **!report**, then **Start report**, or use its **Apps → Report translation** menu. Read the notice before submitting. The project maintainer privately reviews submitted source, translation and explanation. No GitHub login is needed.
-- View local reports with **/zzz-report mine** and **/zzz-report status**. Independently self-hosted bots offer a separate **Share with project maintainer** preview and confirmation before forwarding.
+- After writing a report, review the outgoing contents and choose **Agree and send** to send directly to the project maintainer. There is no separate bot-operator intake. Cancelling sends nothing. **/zzz-report mine** and **/zzz-report status** show this bot’s delivery records and the project receipt.
 - Exclude credentials, personal information and unrelated conversation. Reports are kept up to 90 days. Only reviewed corrections reach the shared DB; reporting does not call AI or change translations automatically.
 
 Use /zzz api-status to check pairing, /zzz disconnect to revoke it, and /zzz pause or resume for channel groups. Usage is shown in the PC app or with node --env-file=.env.runner scripts/discord-runner.mjs usage. Failed API calls count. A lost broker connection never automatically repeats an already-started translation.
@@ -114,6 +122,10 @@ Translation supports 13 languages: Korean, English, Japanese, Simplified/Traditi
 
 [README](README-ja.md)
 
+### 画像の共有
+
+1メッセージにつき最大10枚、合計20MBまで、縮小・再圧縮せず元の画像を共有します。サーバーでは送信中だけメモリーに保持し、画像ファイルをディスクに保存しません。画像・GIFのみの投稿では翻訳APIを呼び出しません。Discordが添付を許可しない場合や元画像が削除された場合は送信できないことがあります。
+
 ### 現時点の無料APIの推奨
 
 **2026-10-19韓国時間時点**では、[Google AI Studioでキーを発行](https://aistudio.google.com/apikey)し、**Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite)**を推奨します。[公式料金表](https://ai.google.dev/gemini-api/docs/pricing)に無料枠があります。アカウント・プロジェクトの条件とRPM・TPM・日次上限内なら無料利用できます。[データ処理条件](https://ai.google.dev/gemini-api/terms)・課金設定・モデルの利用権限を確認してください。無制限・永続的な無料提供ではありません。OpenAI APIや自分の端末のOllamaも選べます。
@@ -139,7 +151,7 @@ pairでは/zzz connectのコードを入力します。再起動後の自動実�
 - PC・サーバーとも、起動時と**6時間ごと**に[共通DB](https://github.com/Odarom/zenless-translation-database)を更新します。サイズ・ハッシュ・形式を確認してから置換し、失敗時は最後の正常なDBを維持します。プログラム本体の更新とは別です。
 - チャットでは本文・返信・直近の文脈から名称・別名を検索し、最大30候補を同じ翻訳リクエストに含めます。検索用の追加LLMリクエストはありません。
 - 訳文に**!report**と返信し**報告を開始**、または**アプリ → 誤訳を報告**を選択します。案内を確認して送信すると、原文・訳文・説明をプロジェクト管理者が非公開で確認します。GitHubログインは不要です。
-- 自分の報告は**/zzz-report mine**と**/zzz-report status**で確認します。独立した自己ホスト版では、ローカル受付後に**プロジェクト管理者にも共有**を選択し、プレビューに同意した場合のみ転送します。
+- 報告作成後に送信内容を確認し、**同意して送信**を押すとプロジェクト管理者へ直接届きます。ボット運営者への別途受付はありません。キャンセル時は送信しません。**/zzz-report mine**と**/zzz-report status**はこのボットの送信記録とプロジェクト受付番号を表示します。
 - キー・個人情報・無関係な会話を含めないでください。報告は最大90日保存し、管理者確認後にDBへ反映します。報告だけで自動修正・AI呼び出しはしません。
 
 接続確認は/zzz api-status、解除は/zzz disconnect、グループ停止・再開は/zzz pause・resumeです。使用量はPC画面かnode --env-file=.env.runner scripts/discord-runner.mjs usageで確認します。失敗したAPI呼び出しも含みます。中継接続が切れても開始済みの翻訳を自動で繰り返しません。
@@ -167,6 +179,10 @@ PCでは展開先の**Start.cmd**をもう一度実行します。起動済み�
 
 [README](README-zh-CN.md)
 
+### 图片分享
+
+每条消息最多分享10张图片，合计20MB，不缩小或重新压缩。服务器仅在转发期间临时保留内存数据，不将图片文件保存到磁盘。只有图片或GIF的消息不会调用翻译API。如果Discord拒绝附件或原图已被删除，仍可能无法转发。
+
 ### 当前可免费使用的API推荐
 
 **截至韩国时间2026-10-19**，推荐在[Google AI Studio申请密钥](https://aistudio.google.com/apikey)并使用**Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite)**。[官方价格表](https://ai.google.dev/gemini-api/docs/pricing)列有免费层。在账户、项目的适用条件及RPM、TPM、每日配额内可以免费使用。请确认模型权限、结算设置和[数据处理条款](https://ai.google.dev/gemini-api/terms)，免费不等于无限或永久。也可选择OpenAI API或自己设备上的Ollama本地模型。
@@ -192,7 +208,7 @@ pair时输入/zzz connect的连接码。重启后自动运行请参见[HOSTING.m
 - 电脑和服务器均在启动时及**每6小时**自动更新[共享数据库](https://github.com/Odarom/zenless-translation-database)。校验哈希、大小和格式后才替换缓存，失败时保留上次可用版本。数据库更新与程序代码更新不同。
 - 聊天通过规则匹配正文、回复和近期上下文中的名称及别名，在同一次翻译请求中附带最多30个相关候选。检索术语不会额外调用LLM。
 - 回复译文并发送**!report**，点击**开始举报**，或选择消息菜单的**应用 → 举报误译**。阅读提示后提交原文、译文及说明，由项目维护者私下审核，无需GitHub登录。
-- 使用**/zzz-report mine**和**/zzz-report status**查看自己的举报。独立自托管版本会先本地保存，只有选择**也分享给项目维护者**并同意预览后才转发。
+- 填写举报后确认发送内容，点击**同意并发送**即可直接交给项目维护者，无需先交给机器人运营者。取消则不发送。**/zzz-report mine**与**/zzz-report status**显示本机器人的发送记录及项目接收编号。
 - 请勿提交密钥、个人信息或无关完整对话。最多保留90天，经维护者审核后更新共享数据库，不会因举报而自动修改译文或调用AI。
 
 使用/zzz api-status确认连接、/zzz disconnect断开、/zzz pause及resume暂停或恢复分组。用量可在PC界面或运行node --env-file=.env.runner scripts/discord-runner.mjs usage查看，包含失败的API请求。中转连接中断后不会自动重复已启动的翻译。

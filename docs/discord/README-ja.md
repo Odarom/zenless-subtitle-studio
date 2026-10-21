@@ -4,7 +4,7 @@
 
 言語別チャンネルの新規メッセージを翻訳します。自分のPCまたは個人サーバーで接続プログラムを実行し、自分のAPIキーを使います。
 
-**[① Discordにボットを導入](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② PC接続プログラムをダウンロード・Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.2/zenless-discord-runner-0.3.2-win-x64.zip)**
+**[① Discordにボットを導入](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② PC接続プログラムをダウンロード・Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
 
 ## Windows PC
 
@@ -20,6 +20,16 @@
 ~~~
 
 翻訳中はPC接続プログラムを起動したままにしてください。過去の投稿はさかのぼって翻訳しません。
+
+## 誤訳を報告して翻訳品質を改善する
+
+ゲーム用語・略語・翻訳の誤りをお知らせください。報告を確認し、ゼンレスのゲーム用語DBと翻訳品質の改善に役立てます。
+
+1. 訳文に **!report** と返信して**報告を開始**を押すか、メッセージメニューの**アプリ → 誤訳を報告**を使います。
+2. 原文を確認し、**報告を作成**で誤訳箇所と説明を記入して送信します。正しい訳が分からなくても構いません。
+3. 送信内容を確認し、**同意して送信**を押すと**プロジェクト管理者へ直接届きます**。ボット運営者への別途受付・共有は不要です。キャンセル時は送信せず、プロジェクトの**受付番号**で送信完了を確認できます。
+
+プログラムを使わなくても、[正式名称・略語を直接報告](https://github.com/Odarom/zenless-translation-database/issues/new/choose)できます。このGitHub経由の報告にはアカウントが必要で、内容は公開されます。
 
 ## 設定画面を開き直す・キー変更
 

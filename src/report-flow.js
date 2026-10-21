@@ -4,7 +4,8 @@ import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedB
 import { UserError } from './config.js';
 import { messageText } from './relay.js';
 import { REPORT_MENU_NAME } from './report-commands.js';
-import { REPORT_TYPES, textHash } from './report-store.js';
+import { REPORT_TYPES, textHash, reportSnapshot } from './report-store.js';
+import { seoulDay } from './store.js';
 import { reportText as t, reportStatus, reportType, reportError } from './report-i18n.js';
 import { normalizeSharedDiscordReport } from './shared-report.js';
 
@@ -51,6 +52,7 @@ export class ReportFlow {
   }
   checkOpening(interaction) {
     requireGuild(interaction); this.prune();
+    if (!this.sharing) throw new UserError(t(interaction, 'projectUnavailable'));
     this.reports.checkCapacity(interaction.guildId, interaction.user.id);
     const key = `${interaction.guildId}:${interaction.user.id}`;
     if (this.opened.has(key)) throw new UserError('신고 창은 3초에 한 번 열 수 있습니다. 잠시 후 다시 시도하세요.');
@@ -179,45 +181,57 @@ export class ReportFlow {
         explanation: interaction.fields.getTextInputValue('explanation'), suggestion: interaction.fields.getTextInputValue('suggestion') },
     };
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    const { report, duplicate } = this.reports.create(session.guildId, session.userId, input);
-    const components = this.shareOffer(report, interaction);
-    await interaction.editReply({ content: `${t(interaction, duplicate ? 'duplicate' : 'received')}\n${t(interaction, 'id')}: **${report.id}**\n${t(interaction, 'state')}: ${reportStatus(interaction, report.status)}\n${t(interaction, 'statusHelp', { id: report.id })}\n${t(interaction, 'noAuto')}\n${components.length ? t(interaction, 'shareOptional') : ''}`, components, allowedMentions: { parse: [] } });
+    if (!this.sharing) throw new UserError(t(interaction, 'projectUnavailable'));
+    if (this.shares.size >= 500) throw new UserError('신고 작성 요청이 많습니다. 잠시 후 다시 시도하세요.');
+    const report = { id: `R-${seoulDay(new Date(this.now())).replaceAll('-', '')}-${randomBytes(6).toString('hex')}`, ...reportSnapshot(input) };
+    let preview;
+    try { preview = normalizeSharedDiscordReport({ ...report, platform: 'discord' }); }
+    catch { throw new UserError(t(interaction, 'projectPreviewInvalid')); }
+    const item = { report, preview, groupKey:session.groupKey, guildId:session.guildId, userId:session.userId, expires:this.now()+SESSION_MS };
+    this.shares.set(nonce,item);
+    await this.showProjectPreview(interaction,nonce,item);
   }
-  shareOffer(report, interaction) {
-    this.prune();
-    if (!this.sharing || this.reports.shareReceipt(report.id) || this.shares.size >= 500) return [];
-    const nonce = randomBytes(16).toString('hex');
-    this.shares.set(nonce, { reportId: report.id, guildId: interaction.guildId, userId: interaction.user.id, expires: this.now() + SESSION_MS });
-    return [new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`${PREFIX}share:${nonce}`).setLabel(t(interaction, 'share')).setStyle(ButtonStyle.Secondary))];
+  projectButtons(interaction,nonce) {
+    return [new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setCustomId(`${PREFIX}send:${nonce}`).setLabel(t(interaction,'shareConfirm')).setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId(`${PREFIX}cancel:${nonce}`).setLabel(t(interaction,'shareCancel')).setStyle(ButtonStyle.Secondary))];
+  }
+  async showProjectPreview(interaction,nonce,item) {
+    item.confirmedPreview=true;
+    await interaction.editReply({content:t(interaction,'shareNotice'),components:this.projectButtons(interaction,nonce),
+      files:[new AttachmentBuilder(Buffer.from(JSON.stringify(item.preview,null,2)),{name:'report-preview.json'})],allowedMentions:{parse:[]}});
   }
   async share(interaction) {
     requireGuild(interaction); this.prune();
     const [, stage, nonce] = /^zzz:report:(share|send|cancel):([a-f0-9]{32})$/.exec(interaction.customId) || [];
     const item = this.shares.get(nonce);
     if (!item || item.guildId !== interaction.guildId || item.userId !== interaction.user.id || item.sending) throw new UserError(t(interaction, 'shareExpired'));
-    const report = this.reports.forViewer(item.reportId, interaction.guildId, interaction.user.id);
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    if (stage === 'cancel') { this.shares.delete(nonce); return interaction.editReply({ content: t(interaction, 'shareCancelled'), components: [] }); }
-    const receipt = this.reports.shareReceipt(report.id);
-    if (receipt) return interaction.editReply({ content: t(interaction, 'shareDone', { id: receipt }), components: [] });
-    const buttons = [new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId(`${PREFIX}send:${nonce}`).setLabel(t(interaction, 'shareConfirm')).setStyle(ButtonStyle.Primary),
-      new ButtonBuilder().setCustomId(`${PREFIX}cancel:${nonce}`).setLabel(t(interaction, 'shareCancel')).setStyle(ButtonStyle.Secondary),
-    )];
-    if (stage === 'share') {
-      const payload = normalizeSharedDiscordReport({ ...report, platform: 'discord' });
-      item.confirmedPreview = true;
-      return interaction.editReply({ content: t(interaction, 'shareNotice'), components: buttons,
-        files: [new AttachmentBuilder(Buffer.from(JSON.stringify(payload, null, 2)), { name: 'report-preview.json' })], allowedMentions: { parse: [] } });
-    }
+    if (stage === 'cancel') { this.shares.delete(nonce); await interaction.deferReply({ flags: MessageFlags.Ephemeral }); return interaction.editReply({ content:t(interaction,item.attempted?'projectRetryCancelled':'shareCancelled'), components:[] }); }
+    if (!this.sharing) throw new UserError(t(interaction,'projectUnavailable'));
+    const route=this.store.route(item.report.target.channelId);
+    if (!route || route.group.key!==item.groupKey || route.group.guildId!==interaction.guildId) throw new UserError('이 메시지의 채널 연결이 변경되었습니다. 오역 신고를 다시 선택하세요.');
+    if (item.report.target.channelId!==interaction.channelId && !this.client.channels.cache?.get(item.report.target.channelId)?.permissionsFor(interaction.user.id)?.has(PermissionFlagsBits.ViewChannel|PermissionFlagsBits.ReadMessageHistory)) throw new UserError('해당 번역 채널을 볼 수 있고 메시지 기록을 읽을 수 있어야 신고할 수 있습니다.');
+    if (stage==='share') { await interaction.deferReply({flags:MessageFlags.Ephemeral}); return this.showProjectPreview(interaction,nonce,item); }
     if (!item.confirmedPreview) throw new UserError(t(interaction, 'shareExpired'));
     item.sending = true;
     try {
-      const id = await this.sharing.send(report); this.reports.recordShare(report.id, id); this.shares.delete(nonce);
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+      // Persist only after explicit consent, as a retry/delivery record. There
+      // is no separate submission to the bot operator before this step.
+      const {report}=this.reports.create(item.guildId,item.userId,item.report,{id:item.report.id});
+      const receipt=this.reports.shareReceipt(report.id);
+      if(receipt){this.shares.delete(nonce);return interaction.editReply({content:t(interaction,'shareDone',{id:receipt}),components:[],allowedMentions:{parse:[]}});}
+      const preview=normalizeSharedDiscordReport({...report,platform:'discord'});
+      if(JSON.stringify(preview)!==JSON.stringify(item.preview)){
+        item.report=report;item.preview=preview;item.sending=false;
+        return this.showProjectPreview(interaction,nonce,item);
+      }
+      item.attempted=true;
+      const id = await this.sharing.send(item.preview); this.reports.recordShare(report.id, id); this.shares.delete(nonce);
       await interaction.editReply({ content: t(interaction, 'shareDone', { id }), components: [], allowedMentions: { parse: [] } });
     } catch {
       item.sending = false;
-      await interaction.editReply({ content: t(interaction, 'shareFailed'), components: buttons, allowedMentions: { parse: [] } });
+      await interaction.editReply({ content: t(interaction, 'shareFailed'), components:this.projectButtons(interaction,nonce), allowedMentions: { parse: [] } });
     }
   }
   async status(interaction) {

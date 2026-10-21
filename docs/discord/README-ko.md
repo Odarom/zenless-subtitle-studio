@@ -4,7 +4,7 @@
 
 언어별 Discord 채널의 새 메시지를 번역합니다. 각자 PC 또는 개인 서버에서 연결 프로그램을 실행하고 본인 API 키를 사용합니다.
 
-**[① Discord 서버에 봇 설치](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② PC 연결 프로그램 다운로드 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.2/zenless-discord-runner-0.3.2-win-x64.zip)**
+**[① Discord 서버에 봇 설치](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② PC 연결 프로그램 다운로드 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
 
 ## PC에서 사용하기
 
@@ -20,6 +20,16 @@
 ~~~
 
 번역하는 동안 PC 연결 프로그램을 켜 두세요. 과거 글은 소급 번역하지 않습니다.
+
+## 오역 신고로 번역 품질 개선하기
+
+게임 용어·약어·번역 오류를 알려주세요. 신고를 검토해 젠레스 게임 용어 DB와 번역 품질을 개선합니다.
+
+1. 번역 메시지에 **!신고** 또는 **!report**로 답장하고 **신고 시작**을 누릅니다. 메시지 메뉴의 **앱 → 오역 신고**로도 열 수 있습니다.
+2. 원문을 확인하고 **신고 작성**에서 잘못된 부분과 설명을 적어 제출합니다. 올바른 번역을 몰라도 괜찮습니다.
+3. 전송 미리보기에서 내용을 확인하고 **동의하고 보내기**를 누르면 **프로젝트 관리자에게 바로 접수**됩니다. 별도의 봇 운영자 접수·공유 단계는 없습니다. 취소하면 전송하지 않으며, 프로젝트 **접수번호**로 전송 완료를 확인합니다.
+
+프로그램을 사용하지 않아도 [공식 명칭·약어를 직접 신고](https://github.com/Odarom/zenless-translation-database/issues/new/choose)할 수 있습니다. 이 GitHub 신고는 계정이 필요하며 내용이 공개됩니다.
 
 ## 설정 화면 다시 열기 · 키 변경
 

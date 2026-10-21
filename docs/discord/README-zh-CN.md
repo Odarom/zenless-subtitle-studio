@@ -4,7 +4,7 @@
 
 翻译不同语言频道中的新消息。在自己的电脑或个人服务器运行连接程序，并使用自己的API密钥。
 
-**[① 将机器人安装到Discord](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② 下载PC连接程序 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.2/zenless-discord-runner-0.3.2-win-x64.zip)**
+**[① 将机器人安装到Discord](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② 下载PC连接程序 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
 
 ## Windows电脑
 
@@ -20,6 +20,16 @@
 ~~~
 
 翻译时需保持PC连接程序运行，不会补译历史消息。
+
+## 举报误译，帮助改进翻译质量
+
+发现游戏术语、缩写或翻译错误？我们会审核举报，用于改进绝区零游戏术语数据库和翻译质量。
+
+1. 回复译文并发送 **!report**，点击**开始举报**；也可使用消息菜单的**应用 → 举报误译**。
+2. 确认原文，在**填写举报**中说明错误并提交。不知道正确译法也可以举报。
+3. 确认发送内容后点击**同意并发送**，即可**直接提交给项目维护者**。无需先交给机器人运营者或另行分享。取消则不发送，显示项目**接收编号**表示发送完成。
+
+不使用程序也可[直接举报官方名称或缩写错误](https://github.com/Odarom/zenless-translation-database/issues/new/choose)。此GitHub举报方式需要账号，内容会公开。
 
 ## 重新打开设置及更换密钥
 

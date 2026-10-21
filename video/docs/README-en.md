@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.6.10](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.10/zenless-subtitle-studio-0.6.10-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 
@@ -15,6 +15,18 @@ A Windows app that recognizes and translates a YouTube video or local file, then
 5. Click **Create subtitles** and wait. Review the finished translation, then save it or apply it to the video.
 
 **Studio** means the program page opened by Start.cmd. Keep its execution window open while using it. Processing runs on your PC; no separate video-processing server is needed.
+
+## Report errors to improve translation quality
+
+Found an incorrect game term, abbreviation or translation? Reports are reviewed to improve the Zenless game terminology DB and translation quality.
+
+1. **YouTube or local video preview:** click a speech or screen subtitle and choose **Report a translation**. On YouTube, connect the PC studio and apply a completed job first.
+2. **Subtitle list:** in a completed job, open **Review and edit subtitles**, select **Speech subtitles / Screen text**, and use the cue’s **Report a translation** button.
+3. Describe the incorrect part and choose **Send report**. A suggested correction is optional. A **receipt ID** confirms delivery.
+
+You can report the incorrect part even without knowing the right translation. Reports are private and need no GitHub login.
+
+Without the programs, you can [report official names or abbreviations directly](https://github.com/Odarom/zenless-translation-database/issues/new/choose). This GitHub route requires an account and creates a public report.
 
 ## Translate and preview your own video
 

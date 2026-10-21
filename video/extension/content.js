@@ -47,7 +47,7 @@
     const explanation=field('문제 설명',el('textarea',undefined,{required:true,maxLength:1000})),suggestion=field('수정 제안',el('textarea',undefined,{maxLength:2000}));
     const includeUrl=field('유튜브 영상 주소 포함',el('input',undefined,{type:'checkbox',checked:false}));
     const privacy=el('p',t('원문·번역문·설명과 선택한 영상 주소를 운영자 서버로 비공개 전송합니다. API 키·로컬 경로는 제외하며, 신고와 남용 방지용 임의 식별자는 최대 90일 보관합니다.'));
-    form.append(privacy);const submit=el('button',t('신고 보내기'),{type:'submit'});form.append(submit);
+    form.append(el('p',t("게임 용어·약어·번역 오류를 알려주세요. 신고를 검토해 젠레스 게임 용어 DB와 번역 품질을 개선합니다.")),privacy);const submit=el('button',t('신고 보내기'),{type:'submit'});form.append(submit);
     report.onclick=()=>{form.hidden=false;explanation.focus();};
     form.onsubmit=async event=>{block(event);if(submit.disabled)return;submit.disabled=true;if(select)select.disabled=true;status.textContent=t('신고를 전송하고 있습니다.');
       try{const issue={type:type.value,explanation:explanation.value,suggestion:suggestion.value,includeVideoUrl:includeUrl.checked};const current=JSON.stringify(issue);if(current!==fingerprint){reportId=null;fingerprint=current;}
