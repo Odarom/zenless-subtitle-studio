@@ -1,4 +1,25 @@
 const BASE = 'http://127.0.0.1:4318';
+export async function saveSpeechPosition(message, sender, { extensionId, storage, getToken, fetcher = fetch } = {}) {
+  let url; try { url = new URL(sender.tab?.url || sender.url); } catch {}
+  const videoId = url?.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([\w-]{11})$/.exec(url?.pathname || '')?.[1];
+  if (sender.id !== extensionId || !Number.isInteger(sender.tab?.id) || sender.frameId && sender.frameId !== 0
+    || url?.protocol !== 'https:' || url.port || !['www.youtube.com','m.youtube.com'].includes(url.hostname)
+    || !/^[\w-]{11}$/.test(message.videoId || '') || videoId !== message.videoId
+    || !Number.isFinite(message.speechHeight) || message.speechHeight < 0 || message.speechHeight > 0.9
+    || message.jobId !== undefined && !/^[a-f0-9-]{36}$/.test(message.jobId || '')) throw new Error('자막 위치를 확인하세요.');
+  if (message.jobId) {
+    const token = await getToken?.(); if (!/^[a-f0-9]{64}$/.test(token || '')) throw new Error('PC 연결을 확인하세요.');
+    const api = async (method, body) => {
+      const response = await fetcher(`${BASE}/api/jobs/${message.jobId}`,{method,redirect:'error',signal:AbortSignal.timeout(15000),headers:{Authorization:`Bearer ${token}`,...(body ? {'Content-Type':'application/json'} : {})},...(body?{body:JSON.stringify(body)}:{})});
+      if (!response.ok) throw new Error('PC에 자막 위치를 저장하지 못했습니다.'); return response.json();
+    };
+    const job = await api('GET'); if (job.status !== 'completed' || job.videoId !== message.videoId) throw new Error('유튜브 영상과 연결된 자막을 확인하세요.');
+    await api('PATCH',{speechHeight:message.speechHeight});
+  }
+  const saved = await storage.get('displaySettings');
+  await storage.set({ displaySettings: { ...saved.displaySettings, speechHeight:message.speechHeight } });
+  return { ok:true };
+}
 export async function cueAction(message, sender, { extensionId, getToken, fetcher = fetch } = {}) {
   let url; try { url = new URL(sender.tab?.url || sender.url); } catch {}
   const videoId = url?.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([\w-]{11})$/.exec(url?.pathname || '')?.[1];
@@ -36,7 +57,12 @@ export async function cueAction(message, sender, { extensionId, getToken, fetche
 if(typeof chrome!=='undefined' && chrome.runtime?.onMessage && chrome.storage?.local) {
   void chrome.storage.local.setAccessLevel({accessLevel:'TRUSTED_CONTEXTS'}).catch(()=>{});
   const pending=new Set();
+  let positionWrite = Promise.resolve();
   chrome.runtime.onMessage.addListener((message,sender,respond)=>{
+    if (message?.type === 'ZZZ_SPEECH_POSITION') {
+      positionWrite = positionWrite.catch(() => {}).then(() => saveSpeechPosition(message,sender,{extensionId:chrome.runtime.id,storage:chrome.storage.local,getToken:async()=>(await chrome.storage.local.get('connectionToken')).connectionToken}));
+      positionWrite.then(respond, () => respond({error:'자막 위치를 저장하지 못했습니다.'})); return true;
+    }
     if(message?.type!=='ZZZ_CUE_ACTION')return;
     const key=`${sender.tab?.id}:${message.jobId}:${message.cueId}`;
     if(pending.has(key)){respond({error:'이 자막을 처리하고 있습니다.'});return;}

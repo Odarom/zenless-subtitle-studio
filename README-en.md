@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.6.7](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.7/zenless-subtitle-studio-0.6.7-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 
@@ -26,6 +26,8 @@ A Windows app that recognizes and translates a YouTube video or local file, then
 Preview local videos in Studio. If your browser cannot play a codec, open the video and subtitle file in an external player.
 
 ## Save and edit
+
+- Hover over speech subtitles and drag the **↕ Move** handle up or down to move all speech cues together. Clicking the subtitle still opens report/delete. **Speech subtitle height / Reset position** is also available in extension settings and the preview. Height is automatically saved to the connected job. VTT and project JSON preserve the adjusted position; SRT stores text and timing only. Text edits are also saved before downloading. When player controls are visible, only the overlapping portion of screen captions lets clicks pass through to the controls. The rest of each caption remains clickable.
 
 - The default selection is **Speech + screen subtitles**; you can also choose **Speech only / Screen only**. SRT/VTT are ordinary subtitle files; project JSON preserves screen positions for importing into the extension.
 - Click a review entry or an on-video subtitle to **delete it or report a translation**. Restore removed entries in **Deleted subtitles**. Reports are private and need no GitHub login.

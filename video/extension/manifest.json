@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage",
@@ -14,7 +14,10 @@
     "default_title": "__MSG_extensionName__",
     "default_popup": "popup.html"
   },
-  "background": { "service_worker": "background.mjs", "type": "module" },
+  "background": {
+    "service_worker": "background.mjs",
+    "type": "module"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -23,6 +26,7 @@
       ],
       "js": [
         "geometry.js",
+        "speech-position.js",
         "overlay-i18n.js",
         "content.js"
       ],

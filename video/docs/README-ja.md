@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.6.7](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.7/zenless-subtitle-studio-0.6.7-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
@@ -26,6 +26,8 @@ YouTubeやローカル動画の認識・翻訳が完了してから、できあ�
 ローカル動画は作業室のプレビューで確認できます。ブラウザー非対応の形式は、外部プレーヤーで動画と字幕ファイルを開いてください。
 
 ## 保存・編集
+
+- 音声字幕にマウスを重ねて表示される **↕ 移動** ハンドルを上下にドラッグすると、すべての音声字幕の高さが変わります。字幕のクリックでは従来どおり報告・削除メニューが開きます。拡張設定とプレビューの **音声字幕の高さ / 位置をリセット** でも調整できます。高さは接続した作業に自動保存されます。VTTとプロジェクトJSONには調整した位置が、SRTには内容と時間のみが反映されます。文章の修正もダウンロード前に保存されます。再生コントロールの表示中は、画面字幕の重なった部分だけクリックを再生バーに通し、字幕の残りの部分は引き続きクリックできます。
 
 - 保存対象の標準は**音声字幕 + 画面字幕**で、**音声のみ / 画面のみ**も選べます。SRT/VTTは通常の字幕用、プロジェクトJSONは画面位置を保持して拡張機能へ読み込む用途です。
 - 確認一覧や動画上の字幕をクリックして**削除・誤訳報告**できます。削除分は**削除した字幕**から復元できます。報告は非公開で、GitHubログインは不要です。

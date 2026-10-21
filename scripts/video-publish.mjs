@@ -35,7 +35,7 @@ export function publicSource(root) {
   return result;
 }
 
-export async function publishProgram(root = resolve(import.meta.dirname, '..'), { sourceOnly = false } = {}) {
+export async function publishProgram(root = resolve(import.meta.dirname, '..'), { sourceOnly = false, sourcePaths } = {}) {
   const repo = DEFAULT_PROGRAM_REPOSITORY, owner = repo.split('/')[0];
   const executable = process.env.ZZZ_GH_BIN || join(root, '.tools/github-cli/bin/gh.exe');
   const temporary = join(root, '.tools/video-package/program-publish'); mkdirSync(temporary, { recursive: true });
@@ -63,7 +63,9 @@ export async function publishProgram(root = resolve(import.meta.dirname, '..'), 
     const commit = api(`repos/${repo}/git/commits`, 'POST', { message, tree: tree.sha, parents: [head] });
     api(`repos/${repo}/git/refs/heads/main`, 'PATCH', { sha: commit.sha, force: false }); return commit.sha;
   };
-  const files = publicSource(root), servicePath = join(root, 'dist/report-service.json');
+  const allowed = publicSource(root);
+  if (sourcePaths && (!Array.isArray(sourcePaths) || !sourcePaths.length || sourcePaths.some(path => !allowed.has(path)))) throw new Error('공개 소스 허용 목록을 확인하세요.');
+  const files = sourcePaths ? new Map(sourcePaths.map(path => [path,allowed.get(path)])) : allowed, servicePath = join(root, 'dist/report-service.json');
   if (existsSync(servicePath)) {
     const service = JSON.parse(readFileSync(servicePath, 'utf8'));
     const url = new URL(service.reports);

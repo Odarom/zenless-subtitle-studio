@@ -1,4 +1,5 @@
 import { videoContentRect, cueRegionAt, buildCueIndex, activeCuesAt } from './geometry.mjs';
+import { speechHeight, speechPlacement, bindSpeechDrag, DEFAULT_SPEECH_HEIGHT } from './speech-position.mjs';
 import { reviewCues, reviewTime } from './review.mjs';
 import { bindDocument, createI18n, UI_LANGUAGE_STORAGE_KEY } from './i18n.mjs';
 const i18n = createI18n(navigator.languages);
@@ -8,6 +9,8 @@ const applyStaticLanguage = bindDocument(document, i18n);
 applyStaticLanguage();
 const $ = id => document.getElementById(id);
 const state = { token: '', settings: null, mode: 'url', file: null, jobs: [], selected: null, detail: null, shownVersion: null, page: 0, drafts: new Map(), previewUrls: new Map(), videoSaves: new Map(), uploadController: null, actions: new Set(), refreshSerial: 0 };
+state.speechHeight = DEFAULT_SPEECH_HEIGHT;
+state.positionDrafts = new Map(); state.positionSaves = new Map();
 const statusLabel = (status, cancelling = false) => cancelling ? t('중단 중') : ({ queued: t('대기 중'), running: t('처리 중'), completed: t('완료'), failed: t('실패'), cancelled: t('중단됨'), interrupted: t('이어하기 가능') })[status] || status;
 function node(tag, attrs = {}, ...children) {
   const element = document.createElement(tag);
@@ -135,6 +138,12 @@ async function action(name, id = state.selected) {
 }
 async function download(format, positioned = false) {
   try {
+    const id = state.selected;
+    await state.positionSaves.get(id);
+    if (state.positionDrafts.has(id)) await persistSpeechHeight(id,state.positionDrafts.get(id));
+    await saveSubtitleDrafts(id);
+    if (state.selected !== id) throw new Error(t('완료된 자막을 선택하세요.'));
+    renderDetail();
     const mode = $('downloadMode')?.value || 'translated';
     const track = $('downloadTrack')?.value || 'all';
     const response = await api(`/api/jobs/${state.selected}/export?format=${format}&mode=${mode}&track=${track}&positioned=${positioned ? 1 : 0}`);
@@ -142,6 +151,22 @@ async function download(format, positioned = false) {
     const anchor = node('a', { href: url, download: `${(state.detail.title || t('젠레스 자막')).replace(/[<>:"/\\|?*]/g, '_')}.${mode}${track === 'all' ? '' : '.' + track}${positioned ? ".positioned" : ""}.${format}` });
     document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
   } catch (error) { toast(error.message, true); }
+}
+async function persistSpeechHeight(id, value) {
+  const previous = state.positionSaves.get(id);
+  const saving = Promise.resolve(previous).catch(() => {}).then(async () => {
+    const result = await apiJson(`/api/jobs/${id}`,{method:'PATCH',body:{speechHeight:value}});
+    if (state.detail?.id === id) { state.detail.speechHeight = value; state.shownVersion = result.updatedAt; }
+    if (state.positionDrafts.get(id) === value) state.positionDrafts.delete(id);
+  });
+  state.positionSaves.set(id,saving); return saving;
+}
+async function saveSubtitleDrafts(id) {
+  const drafts = state.drafts.get(id); if (!drafts?.size) return;
+  const changes = [...drafts].map(([id,translatedText]) => ({id,translatedText}));
+  const result = await apiJson(`/api/jobs/${id}`,{method:'PATCH',body:{changes}});
+  for (const change of changes) if (drafts.get(change.id) === change.translatedText) drafts.delete(change.id);
+  if (state.detail?.id === id) { state.detail = result; state.shownVersion = result.updatedAt; }
 }
 async function saveVideo(job) {
   if (state.videoSaves.has(job.id)) { state.videoSaves.get(job.id).abort(); return; }
@@ -156,6 +181,8 @@ async function saveVideo(job) {
   finally { state.videoSaves.delete(job.id); try { await refreshJobs(); } catch {} renderJobLists(); if (state.detail) renderDetail(); }
 }
 function renderPreview(job) {
+  state.previewCleanup?.(); state.previewCleanup = null; state.previewUpdate = null;
+  state.speechHeight = speechHeight(state.positionDrafts.get(job.id) ?? job.speechHeight ?? DEFAULT_SPEECH_HEIGHT);
   const fileInput = node('input', { type: 'file', accept: 'video/*,audio/*', hidden: true, onchange: () => {
     const file = fileInput.files[0]; if (!file) return;
     const old = state.previewUrls.get(job.id); if (old) URL.revokeObjectURL(old);
@@ -167,7 +194,26 @@ function renderPreview(job) {
   const label = node('span'); const caption = node('button', { type: 'button', class: 'preview-caption', title: t('자막 메뉴'), onclick: () => {
     const cue = activeCuesAt(speechIndex, video.currentTime * 1000 - Number(offset.value || 0) * 1000)[0]; if (cue) { video.pause(); openCueActions(job, cue); }
   } }, label);
+  const moveHandle = node('button', { type:'button', class:'speech-move', text:t('↕ 이동'), title:t('끌어서 음성 자막 높이 조절 · ↑↓ 키로 이동 · Home 키로 초기화'), 'aria-label':t('음성 자막 높이') });
+  const speech = node('div', { class:'preview-speech', hidden:true }, caption, moveHandle);
+  const placeSpeech = () => {
+    if (speech.hidden || !video.parentElement) return;
+    const outer = video.parentElement.getBoundingClientRect(), rect = videoContentRect(video.getBoundingClientRect(), video.videoWidth, video.videoHeight);
+    const area = speechPlacement(rect, outer, state.speechHeight);
+    Object.assign(speech.style, {left:`${area.left}px`,width:`${area.width}px`,maxHeight:`${area.height}px`});
+    speech.style.top = `${speechPlacement(rect, outer, state.speechHeight, speech.getBoundingClientRect().height).top}px`;
+  };
+  const height = node('input', { type:'range', min:'0', max:'90', value:String(Math.round(state.speechHeight * 100)), 'aria-label':t('음성 자막 높이') });
+  const setHeight = value => { state.speechHeight = speechHeight(value); state.positionDrafts.set(job.id,state.speechHeight); height.value = String(Math.round(state.speechHeight * 100)); placeSpeech(); };
+  const saveHeight = async () => { const value = state.speechHeight; try { await persistSpeechHeight(job.id,value); }
+    catch (error) { toast(t('자막 위치를 저장하지 못했습니다. 다음에 열면 기본 위치로 표시될 수 있습니다.'),true); throw error; } };
+  height.addEventListener('input', () => setHeight(Number(height.value) / 100));
+  height.addEventListener('change', () => { void saveHeight().catch(() => {}); });
+  const stopDrag = bindSpeechDrag(moveHandle, { getHeight:() => state.speechHeight,
+    getRect:() => { const outer = video.parentElement.getBoundingClientRect(), content = videoContentRect(video.getBoundingClientRect(), video.videoWidth, video.videoHeight); return {height:speechPlacement(content,outer,state.speechHeight).travel}; }, setHeight, commit:saveHeight });
+  const resetPosition = node('button', {type:'button',class:'secondary',text:t('기본 위치'),onclick:() => { stopDrag(); setHeight(DEFAULT_SPEECH_HEIGHT); void saveHeight().catch(() => {}); }});
   const screen = node('div', { class: 'screen-preview' });
+  let previewHover = false;
   const speechToggle = node('input', { type: 'checkbox', checked: state.previewSpeech !== false, onchange: () => { state.previewSpeech = speechToggle.checked; update(); } });
   const screenToggle = node('input', { type: 'checkbox', checked: state.previewScreen !== false, onchange: () => { state.previewScreen = screenToggle.checked; update(); } });
   const speechIndex = buildCueIndex(job.cues.filter(cue => !cue.excluded && cue.kind !== 'screen'));
@@ -176,23 +222,32 @@ function renderPreview(job) {
   const update = () => {
     const now = video.currentTime * 1000 - Number(offset.value || 0) * 1000;
     const mode = $('downloadMode')?.value || 'translated';
-    const text = cue => mode === 'source' || job.options.transcribeOnly ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${cue.translatedText || cue.sourceText}` : cue.translatedText || cue.sourceText;
+    const text = cue => { const translated = state.drafts.get(job.id)?.get(cue.id) ?? cue.translatedText ?? cue.sourceText; return mode === 'source' || job.options.transcribeOnly ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${translated}` : translated; };
     label.textContent = speechToggle.checked ? activeCuesAt(speechIndex, now).map(text).join('\n') : '';
     caption.hidden = !label.textContent;
+    speech.hidden = caption.hidden; if (speech.hidden) stopDrag();
+    placeSpeech();
     const outer = video.parentElement.getBoundingClientRect(), rect = videoContentRect(video.getBoundingClientRect(), video.videoWidth, video.videoHeight);
     screen.replaceChildren(...(screenToggle.checked ? activeCuesAt(screenIndex, now) : []).map(cue => {
       const region = cueRegionAt(cue, now), block = node('button', { type: 'button', class: 'screen-caption', text: text(cue), title: t('자막 메뉴'), onclick: () => { video.pause(); openCueActions(job, cue); } });
       Object.assign(block.style, { left: `${rect.left - outer.left + region.x * rect.width}px`, top: `${rect.top - outer.top + region.y * rect.height}px`, width: `${region.w * rect.width}px`, minHeight: `${region.h * rect.height}px`, fontSize: `${Math.max(10, Math.min(28, region.h * rect.height * 0.7))}px` });
       return block;
     }));
+    for (const block of screen.children) {
+      const height = block.getBoundingClientRect().height, controlsTop = outer.height - Math.min(64,outer.height * 0.45);
+      const cut = previewHover || video.paused ? Math.min(height, Math.max(0,parseFloat(block.style.top) + height - controlsTop)) : 0;
+      block.style.setProperty('--zzz-hit-cut',`${cut}px`);
+    }
   };
   video.addEventListener('timeupdate', update); video.addEventListener('seeked', update); offset.addEventListener('input', update);
   $('downloadMode').addEventListener('change', update);
   video.addEventListener('loadedmetadata', update);
+  video.addEventListener('play', update); video.addEventListener('pause', update);
   const resize = new ResizeObserver(update); resize.observe(video);
-  state.previewCleanup?.(); state.previewCleanup = () => resize.disconnect();
+  state.previewCleanup = () => { stopDrag(); resize.disconnect(); }; state.previewUpdate = update;
   video.addEventListener('error', () => toast(t('이 파일 형식은 브라우저에서 재생하지 못할 수 있습니다. 자막 파일을 외부 플레이어에서 적용할 수 있습니다.'), true));
-  container.append(node('div', { class: 'video-preview' }, video, caption, screen), node('div', { class: 'preview-tools' }, node('label', {}, speechToggle, t('음성 자막 표시')), node('label', {}, screenToggle, t('화면 번역 표시')), node('label', { htmlFor: 'previewOffset', text: t('자막 지연 (초)') }), offset, node('span', { class: 'hint', text: t('양수는 자막을 늦게 표시합니다.') })));
+  container.append(node('div', { class: 'video-preview', onpointerenter:() => {previewHover=true;update();},onpointerleave:() => {previewHover=false;update();} }, video, screen, speech), node('div', { class: 'preview-tools' }, node('label', {}, speechToggle, t('음성 자막 표시')), node('label', {}, screenToggle, t('화면 번역 표시')), node('label', { htmlFor: 'previewOffset', text: t('자막 지연 (초)') }), offset, node('span', { class: 'hint', text: t('양수는 자막을 늦게 표시합니다.') })),
+    node('div',{class:'preview-tools speech-position-tools'},node('label',{},t('음성 자막 높이'),height),resetPosition),node('p',{class:'hint',text:t('자막 클릭: 신고·삭제 / ↕ 이동 손잡이: 모든 음성 자막 높이 조절. 위치는 자동 저장되며 VTT·프로젝트 JSON 다운로드에 반영됩니다.')}));
   state.previewVideo = video; return container;
 }
 function renderReview(job, element, drafts) {
@@ -208,7 +263,7 @@ function renderReview(job, element, drafts) {
     const pages = Math.max(1, Math.ceil(filtered.length / 20)); state.page = Math.min(state.page, pages - 1);
     count.textContent = t('검색 결과 {count}개 구간', { count: filtered.length });
     list.replaceChildren(...filtered.slice(state.page * 20, (state.page + 1) * 20).map(cue => {
-      const input = node('textarea', { value: drafts.get(cue.id) ?? cue.translatedText ?? cue.sourceText, disabled: cue.excluded === true, 'aria-label': t('{id}번 자막 수정', { id: cue.id }), oninput: event => drafts.set(cue.id, event.target.value) });
+      const input = node('textarea', { value: drafts.get(cue.id) ?? cue.translatedText ?? cue.sourceText, disabled: cue.excluded === true, 'aria-label': t('{id}번 자막 수정', { id: cue.id }), oninput: event => {if(event.target.value === (cue.translatedText ?? cue.sourceText)) drafts.delete(cue.id); else drafts.set(cue.id, event.target.value);state.previewUpdate?.();} });
       const seek = node('button', { class: 'text-button', type: 'button', text: time(cue.startMs) + ' – ' + time(cue.endMs) + ' · #' + cue.id, onclick: () => { if (state.previewVideo) state.previewVideo.currentTime = cue.startMs / 1000; } });
       return node('article', { class: 'review-cue', 'data-cue-id': cue.id }, node('div', { class: 'review-cue-header' }, node('span', { class: 'track-badge', text: cue.kind === 'screen' ? t('화면 글자') : t('음성 자막') }), seek, node('button', { class: 'report-button', type: 'button', text: t('오역 신고'), onclick: () => openReport(job, cue) }), node('button', { class: 'report-button', type: 'button', text: t(cue.excluded ? '자막 복원' : '자막 삭제'), onclick: () => toggleCue(job, cue, !cue.excluded).catch(error => toast(error.message, true)) })), node('div', { class: 'review-columns' }, node('div', {}, node('small', { text: t('원문') }), node('p', { class: 'cue-source', text: cue.sourceText })), node('div', {}, node('small', { text: t(cue.excluded ? '삭제된 자막' : '번역') }), input)), cue.warnings?.length ? node('p', { class: 'cue-warning', text: t('확인: {warnings}', { warnings: cue.warnings.map(warning => i18n.message(warning)).join(' · ') }) }) : null);
     }));
@@ -254,7 +309,7 @@ function renderDetail() {
   }
   const downloadMode = node('select', { id: 'downloadMode', 'aria-label': t('저장할 자막 내용') }, node('option', { value: 'translated', text: job.options.transcribeOnly ? t('원문 자막') : t('번역 자막') }), ...(!job.options.transcribeOnly ? [node('option', { value: 'bilingual', text: t('원문 + 번역 병기') }), node('option', { value: 'source', text: t('원문 자막') })] : []));
   const downloadTrack = node('select', { id: 'downloadTrack', 'aria-label': t('저장할 자막 종류') }, node('option', { value: 'all', text: t('음성 자막 + 화면 자막') }), node('option', { value: 'speech', text: t('음성 자막만') }), node('option', { value: 'screen', text: t('화면 자막만') }));
-  const buttons = node('div', { class: 'button-row' }, downloadTrack, downloadMode, node('button', { class: 'primary', type: 'button', text: t('SRT 저장 ↓'), onclick: () => download('srt') }), node('button', { class: 'secondary', type: 'button', text: t('VTT 저장 ↓'), onclick: () => download('vtt') }), node('button', { class: 'secondary', type: 'button', text: t('위치 포함 VTT ↓'), onclick: () => download('vtt', true) }), node('button', { class: 'secondary', type: 'button', text: t('프로젝트 JSON ↓'), onclick: () => download('json') }));
+  const buttons = node('div', { class: 'button-row' }, downloadTrack, downloadMode, node('button', { class: 'primary', type: 'button', text: t('SRT 저장 ↓'), onclick: () => download('srt') }), node('button', { class: 'secondary', type: 'button', text: t('VTT 저장 ↓'), onclick: () => download('vtt', true) }), node('button', { class: 'secondary', type: 'button', text: t('프로젝트 JSON ↓'), onclick: () => download('json') }));
   if (job.videoId) buttons.append(node('button', { class: 'secondary', type: 'button', text: t(state.videoSaves.has(job.id) ? '영상 저장 취소' : job.videoSaving ? '영상 저장 중' : '유튜브 영상 저장 ↓'), disabled: job.videoSaving && !state.videoSaves.has(job.id), onclick: () => saveVideo(job) }), node('a', { class: 'secondary', href: `https://www.youtube.com/watch?v=${job.videoId}`, target: '_blank', rel: 'noopener', text: t('유튜브에서 열기 ↗') }));
   element.append(node('p', { class: 'progress-message', text: i18n.message(job.message) }), buttons);
   element.append(node('p', { class: 'meta-line', text: `${job.origin?.includes('auto') ? t('유튜브 자동 자막 기반 · 원문 오류를 확인하세요.') : job.origin === 'whisper' ? t('음성 인식 기반 · {runtime}', { runtime: i18n.message(job.runtime) || t('로컬 처리') }) : t('기존 원어 자막 기반')}${job.translationConfig ? ` · ${job.translationConfig.provider} / ${job.translationConfig.model}` : ''} · ${t('확인 표시 {count}개 구간', { count: job.cues.filter(cue => cue.warnings?.length).length })}` }));
@@ -264,7 +319,7 @@ function renderDetail() {
   const drafts = state.drafts.get(job.id) || new Map(); state.drafts.set(job.id, drafts);
   const save = node('button', { class: 'secondary', type: 'button', text: t('수정 내용 저장'), onclick: async () => {
     if (!drafts.size) return toast(t('수정된 내용이 없습니다.'));
-    try { state.detail = await apiJson(`/api/jobs/${job.id}`, { method: 'PATCH', body: { changes: [...drafts].map(([id, translatedText]) => ({ id, translatedText })) } }); drafts.clear(); state.shownVersion = state.detail.updatedAt; renderDetail(); toast(t('수정한 자막 파일을 저장했습니다.')); }
+    try { await saveSubtitleDrafts(job.id); renderDetail(); toast(t('수정한 자막 파일을 저장했습니다.')); }
     catch (error) { toast(error.message, true); }
   } });
   element.append(node('div', { class: 'editor-toolbar' }, node('strong', { text: t('자막 확인 및 수정') }), save));

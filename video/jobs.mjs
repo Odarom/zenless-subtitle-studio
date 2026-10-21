@@ -171,9 +171,10 @@ export class Jobs {
   exportFiles(job) {
     for (const format of ['srt', 'vtt']) for (const mode of ['source', 'translated', 'bilingual']) writeFileSync(join(this.directory(job.id), `${mode}.${format}`), serializeSubtitles(job.cues, { format, mode }), 'utf8');
   }
-  edit(id, changes) {
+  edit(id, changes, speechHeight) {
     const job = this.get(id); if (job.status !== 'completed') throw new Error('완료된 자막만 수정할 수 있습니다.');
     if (!Array.isArray(changes) || changes.length > 50000) throw new Error('수정 내용을 확인하세요.');
+    if (speechHeight !== undefined && (!Number.isFinite(speechHeight) || speechHeight < 0 || speechHeight > 0.9)) throw new Error('음성 자막 높이를 확인하세요.');
     const patches = new Map(changes.map(change => [change.id, change]));
     for (const [id, change] of patches) if (!job.cues.some(cue => cue.id === id)
       || change.excluded !== undefined && typeof change.excluded !== 'boolean'
@@ -183,6 +184,6 @@ export class Jobs {
       const change = patches.get(cue.id); if (!change) return cue;
       return { ...cue, ...(change.translatedText !== undefined ? { translatedText: change.translatedText.trim(), manuallyEdited: true, warnings: [] } : {}), ...(change.excluded !== undefined ? { excluded: change.excluded } : {}) };
     });
-    this.save(job, { cues }); this.exportFiles(job); return job;
+    this.save(job, { cues, ...(speechHeight === undefined ? {} : {speechHeight}) }); if (changes.length) this.exportFiles(job); return job;
   }
 }

@@ -4,7 +4,7 @@
 
 选择YouTube视频或本地文件，完成识别和翻译后，再使用生成的字幕观看。适用于Windows电脑。
 
-**[下载Windows x64版 · 0.6.7](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.7/zenless-subtitle-studio-0.6.7-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[下载Windows x64版 · 0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 安装并制作字幕
 
@@ -26,6 +26,8 @@
 本地视频可在工作室预览。浏览器不支持的编码，请使用外部播放器打开视频和字幕文件。
 
 ## 保存与编辑
+
+- 将鼠标移到语音字幕附近，拖动出现的 **↕ 移动** 手柄可同时调整所有语音字幕的高度。点击字幕仍会打开举报和删除菜单。扩展设置和预览中的 **语音字幕高度 / 重置位置** 也可调整。高度会自动保存到已连接的任务中。VTT和项目JSON会保留调整的位置，SRT仅保存内容和时间。下载前也会保存文字修改。播放器控件显示时，屏幕字幕仅在重叠区域让点击穿透到播放控件，其余部分仍可点击。
 
 - 默认保存**语音字幕 + 屏幕字幕**，也可选择**仅语音 / 仅屏幕**。SRT/VTT用于普通字幕；项目JSON保留屏幕位置，可在扩展中导入。
 - 点击检查列表或视频上的字幕，可以**删除或举报误译**。删除内容可在**已删除字幕**中恢复。举报私下接收，无需GitHub登录。

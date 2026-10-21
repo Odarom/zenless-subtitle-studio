@@ -24,4 +24,7 @@ const geometry = readFileSync(join(root, 'video', 'geometry.mjs'), 'utf8');
 copyFileSync(join(root, 'video', 'geometry.mjs'), join(output, 'geometry.mjs'));
 writeFileSync(join(output, 'geometry.js'), `(() => { ${geometry.replace(/^export /gm, '')}\nglobalThis.__zzzGeometry = { validRegion, videoContentRect, cueRegionAt, buildCueIndex, activeCuesAt }; })();\n`);
 writeFileSync(join(output, 'overlay-i18n.js'), `globalThis.__zzzOverlayI18n = ${JSON.stringify(translations)};\n`);
+const speech = readFileSync(join(root, 'video', 'speech-position.mjs'), 'utf8');
+copyFileSync(join(root, 'video', 'speech-position.mjs'), join(output, 'speech-position.mjs'));
+writeFileSync(join(output, 'speech-position.js'), `(() => { ${speech.replace(/^export /gm, '')}\nglobalThis.__zzzSpeechPosition = { DEFAULT_SPEECH_HEIGHT, speechHeight, speechPlacement, bindSpeechDrag }; })();\n`);
 console.log(`확장 프로그램 빌드 완료: ${output}`);

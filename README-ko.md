@@ -4,7 +4,7 @@
 
 유튜브 주소나 영상 파일을 넣고 인식·번역을 마친 뒤, 완성된 자막을 감상하는 Windows PC 프로그램입니다.
 
-**[Windows x64 다운로드 · 0.6.7](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.7/zenless-subtitle-studio-0.6.7-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64 다운로드 · 0.6.8](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.8/zenless-subtitle-studio-0.6.8-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 설치하고 자막 만들기
 
@@ -26,6 +26,8 @@
 로컬 영상은 작업실의 미리보기에서 확인합니다. 브라우저가 재생하지 못하는 영상은 자막 파일과 함께 외부 플레이어에서 여세요.
 
 ## 자막·영상 저장과 수정
+
+- 음성 자막에 마우스를 올리면 나타나는 **↕ 이동** 손잡이를 위아래로 끌면 모든 음성 자막의 높이가 함께 바뀝니다. 클릭하면 기존 신고·삭제 메뉴가 열립니다. 확장 설정이나 미리보기의 **음성 자막 높이 / 기본 위치**로도 조절할 수 있습니다. 높이는 연결된 작업에 자동 저장됩니다. VTT·프로젝트 JSON에는 조절한 위치가, SRT에는 내용·시간만 반영됩니다. 문구 수정도 다운로드 전에 저장됩니다. 재생바가 보일 때에는 겹친 화면 번역의 해당 부분만 클릭을 통과시켜 재생 조작을 우선합니다. 자막의 나머지 부분은 계속 클릭할 수 있습니다.
 
 - 저장 대상의 기본값은 **음성 자막 + 화면 자막**입니다. **음성 자막만 / 화면 자막만**도 선택할 수 있습니다. SRT·VTT는 일반 자막용, 프로젝트 JSON은 화면 위치까지 보존해 확장에서 불러올 때 사용합니다.
 - 번역 목록이나 영상 위의 자막을 클릭해 **삭제·오역 신고**를 할 수 있습니다. 삭제한 자막은 **삭제한 자막** 탭에서 복원합니다. 신고는 GitHub 로그인 없이 비공개로 접수됩니다.

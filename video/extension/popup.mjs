@@ -4,7 +4,8 @@ const t = (...args) => i18n.t(...args);
 const applyStaticLanguage = bindDocument(document, i18n);
 applyStaticLanguage();
 let loadedJobs = null;
-import { parseSubtitles, validateCues, youtubeVideoId } from './subtitles.mjs';
+import { parseSubtitles, validateCues, youtubeVideoId, subtitleSpeechHeight } from './subtitles.mjs';
+import { speechHeight, DEFAULT_SPEECH_HEIGHT } from './speech-position.mjs';
 const BASE = 'http://127.0.0.1:4318';
 const $ = id => document.getElementById(id);
 let tab, videoId, token = '';
@@ -22,7 +23,7 @@ async function send(message) {
   try { result = await chrome.tabs.sendMessage(tab.id, message); } catch { throw new Error(t('유튜브 페이지를 새로고침한 뒤 다시 적용하세요.')); }
   if (result?.error) throw new Error(result.error); return result;
 }
-const display = () => ({ mode: $('mode').value, offsetMs: Math.round(Number($('offset').value || 0) * 1000), fontSize: Number($('fontSize').value), showSpeech: $('showSpeech').checked, showScreen: $('showScreen').checked, maskScreen: $('maskScreen').checked, uiLanguage:i18n.locale });
+const display = () => ({ mode: $('mode').value, offsetMs: Math.round(Number($('offset').value || 0) * 1000), fontSize: Number($('fontSize').value), showSpeech: $('showSpeech').checked, showScreen: $('showScreen').checked, maskScreen: $('maskScreen').checked, uiLanguage:i18n.locale, speechHeight:speechHeight(Number($('speechHeight').value) / 100) });
 async function refresh() {
   loadedJobs = await api('/api/jobs'); renderJobs();
 }
@@ -44,24 +45,38 @@ handle('apply', async () => {
   const id = $('job').value; if (!id) throw new Error(t('완료된 자막을 선택하세요.'));
   const job = await api(`/api/jobs/${id}`);
   if (job.status !== 'completed') throw new Error(t('자막 처리가 완료되지 않았습니다.'));
-  await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId: job.videoId || videoId, jobId:job.id, cues: job.cues, settings: display() });
+  const settings = {...display(),speechHeight:Number.isFinite(job.speechHeight)?job.speechHeight:DEFAULT_SPEECH_HEIGHT}; $('speechHeight').value = String(Math.round(settings.speechHeight * 100));
+  await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId: job.videoId || videoId, jobId:job.id, cues: job.cues, settings });
   say(t('완성된 자막을 적용했습니다. 영상을 재생하세요.'));
 });
 handle('displaySettings', async () => { await send({ type: 'ZZZ_SUBTITLES_SETTINGS', settings: display() }); await chrome.storage.local.set({ displaySettings: display() }); say(t('표시 설정을 적용했습니다.')); });
 handle('hide', async () => { await send({ type: 'ZZZ_SUBTITLES_HIDE' }); say(t('자막을 숨겼습니다.')); });
+async function applyHeight() {
+  const value = speechHeight(Number($('speechHeight').value) / 100);
+  await send({type:'ZZZ_SUBTITLES_SETTINGS',settings:{speechHeight:value}});
+  const saved = await chrome.storage.local.get('displaySettings');
+  await chrome.storage.local.set({displaySettings:{...saved.displaySettings,speechHeight:value}});
+}
+$('speechHeight').addEventListener('change', async () => { try { await applyHeight(); say(t('표시 설정을 적용했습니다.')); } catch (error) { say(error.message,true); } });
+handle('resetSpeechPosition', async () => { $('speechHeight').value = String(DEFAULT_SPEECH_HEIGHT * 100); await applyHeight(); say(t('음성 자막을 기본 위치로 되돌렸습니다.')); });
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.displaySettings) $('speechHeight').value = String(Math.round(speechHeight(changes.displaySettings.newValue?.speechHeight) * 100));
+});
 $('file').addEventListener('change', async () => {
   try {
     const file = $('file').files[0]; if (!file) return;
     const project = /\.json$/i.test(file.name);
     if (file.size > (project ? 32 : 8) * 1048576) throw new Error(t('SRT/VTT는 8MB, 프로젝트 JSON은 32MB까지 불러올 수 있습니다.'));
     const input = await file.text();
-    let cues;
+    let cues, height;
     if (project) {
       const data = JSON.parse(input);
       if (data.app !== 'zenless-subtitle-studio' || data.version !== 1 || data.videoId && data.videoId !== videoId) throw new Error(t('이 영상에 맞는 자막 프로젝트 파일을 선택하세요.'));
       cues = validateCues(data.cues);
-    } else cues = parseSubtitles(input).map(cue => ({ ...cue, translatedText: cue.sourceText }));
-    await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId, cues, settings: display() }); say(t('{file} · {count}개 구간을 적용했습니다.', { file: file.name, count: cues.length }));
+      height = data.display?.speechHeight;
+    } else { cues = parseSubtitles(input).map(cue => ({ ...cue, translatedText: cue.sourceText })); height = subtitleSpeechHeight(input); }
+    const settings = {...display(),...(Number.isFinite(height)&&height>=0&&height<=.9?{speechHeight:height}:{})}; $('speechHeight').value = String(Math.round(settings.speechHeight * 100));
+    await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId, cues, settings }); say(t('{file} · {count}개 구간을 적용했습니다.', { file: file.name, count: cues.length }));
   } catch (error) { say(error.message, true); }
 });
 try {
@@ -72,6 +87,7 @@ try {
   token = saved.connectionToken || ''; $('token').value = token;
   if (saved.displaySettings) { $('mode').value = saved.displaySettings.mode; $('offset').value = saved.displaySettings.offsetMs / 1000; $('fontSize').value = saved.displaySettings.fontSize; }
   for (const key of ['showSpeech', 'showScreen', 'maskScreen']) $(key).checked = saved.displaySettings?.[key] !== false;
+  $('speechHeight').value = String(Math.round(speechHeight(saved.displaySettings?.speechHeight) * 100));
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   try { videoId = youtubeVideoId(tab?.url || ''); } catch {}
   renderVideoTitle();

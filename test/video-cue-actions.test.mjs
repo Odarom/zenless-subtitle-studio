@@ -5,7 +5,8 @@ import {join,resolve,relative} from 'node:path';
 import {once} from 'node:events';
 import vm from 'node:vm';
 import {createVideoServer} from '../video/server.mjs';
-import {cueAction} from '../video/extension/background.mjs';
+import {cueAction,saveSpeechPosition} from '../video/extension/background.mjs';
+import {parseSubtitles,subtitleSpeechHeight} from '../video/subtitles.mjs';
 import {reviewCues} from '../video/review.mjs';
 import {translations} from '../video/public/locales.mjs';
 import * as geometry from '../video/geometry.mjs';
@@ -49,6 +50,22 @@ test('YouTube action relay validates origin, video and cue before using the loca
  const deps={extensionId,getToken:async()=>{tokenReads++;return token;},fetcher:async()=>{calls++;throw new Error('must not fetch');}};
  for(const [request,origin]of [[message,{...sender,id:'other'}],[message,{...sender,frameId:3}],[message,{...sender,tab:{id:12,url:'https://evil.example/watch?v='+videoId}}],[message,{...sender,tab:{id:12,url:'https://www.youtube.com:444/watch?v='+videoId}}],[{...message,videoId:'abcdefghijk'},sender],[{...message,cueId:'../settings'},sender],[{...message,jobId:'../settings'},sender]])await assert.rejects(cueAction(request,origin,deps));
  assert.equal(tokenReads,0);assert.equal(calls,0);
+});
+
+test('speech position and edits persist into JSON and positioned VTT, leave SRT timing unchanged, and restore when reimported',async t=>{
+ const {app,job,api,base}=await fixture(t),original=JSON.stringify(app.jobs.get(job.id).cues);
+ const store={get:async()=>({displaySettings:{fontSize:28}}),set:async()=>{}};
+ await saveSpeechPosition({videoId,jobId:job.id,speechHeight:.4},sender,{extensionId,storage:store,getToken:async()=>token,fetcher:(url,init)=>fetch(url.replace('http://127.0.0.1:4318',base),init)});
+ assert.equal(JSON.parse(fs.readFileSync(join(app.jobs.directory(job.id),'job.json'))).speechHeight,.4);
+ assert.equal(JSON.stringify(app.jobs.get(job.id).cues),original);
+ const patch=await api(`/api/jobs/${job.id}`,{method:'PATCH',body:JSON.stringify({changes:[{id:'1',translatedText:'수정한 음성 자막'},{id:'2',excluded:true}]})});assert.equal(patch.status,200);
+ const project=await(await api(`/api/jobs/${job.id}/export?format=json`)).json();assert.equal(project.display.speechHeight,.4);assert.equal(project.cues[0].translatedText,'수정한 음성 자막');assert.equal(project.cues.some(c=>c.id==='2'),false);
+ const vtt=await(await api(`/api/jobs/${job.id}/export?format=vtt&positioned=1`)).text();assert(vtt.includes('line:60.00%,end position:50.00%,center'));assert(vtt.includes('position:20.00%,line-left'));assert(vtt.includes('수정한 음성 자막'));assert(!vtt.includes('First screen.'));
+ assert.equal(subtitleSpeechHeight(vtt),.4);assert.equal(parseSubtitles(vtt)[0].kind,undefined);assert.equal(parseSubtitles(vtt)[1].kind,'screen');
+ const srt=await(await api(`/api/jobs/${job.id}/export?format=srt&positioned=1`)).text();assert(!srt.includes('position:'));assert(srt.includes('00:00:00,000 --> 00:00:03,000'));assert(srt.includes('수정한 음성 자막'));
+ for(const speechHeight of [null,'0.5',-1,1])assert.equal((await api(`/api/jobs/${job.id}`,{method:'PATCH',body:JSON.stringify({speechHeight})})).status,400);
+ assert.equal(app.jobs.get(job.id).speechHeight,.4);
+ const calls=[];await assert.rejects(saveSpeechPosition({videoId,jobId:job.id,speechHeight:.6},sender,{extensionId,storage:store,getToken:async()=>token,fetcher:async(_url,init)=>{calls.push(init.method);return new Response(JSON.stringify({status:'completed',videoId:'abcdefghijk'}));}}));assert.deepEqual(calls,['GET']);
 });
 
 test('relay edits only the selected job and retries a saved report without creating it twice or exposing keys',async t=>{

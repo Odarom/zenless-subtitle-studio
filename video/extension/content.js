@@ -2,13 +2,15 @@
   if (globalThis.__zzzSubtitlesInstalled) return;
   globalThis.__zzzSubtitlesInstalled = true;
   const geometry = globalThis.__zzzGeometry;
+  const position = globalThis.__zzzSpeechPosition;
+  let speech, moveHandle, cancelDrag;
   let cues = [], speechIndex, screenIndex, videoId = null, jobId = null, host, label, screenLayer, menuRoot, lastText = null, nextCheck = 0, player, video, menu, visibleSpeech = [];
   const screenNodes = new Map();
-  const settings = { mode: 'translated', offsetMs: 0, fontSize: 28, showSpeech: true, showScreen: true, maskScreen: true, uiLanguage: 'ko' };
+  const settings = { mode: 'translated', offsetMs: 0, fontSize: 28, showSpeech: true, showScreen: true, maskScreen: true, uiLanguage: 'ko', speechHeight: 0.11 };
   const t = (key, values = {}) => (globalThis.__zzzOverlayI18n?.[settings.uiLanguage]?.[key] || key).replace(/\{(\w+)\}/g, (match,name) => values[name] ?? match);
   const currentId = () => { const url = new URL(location.href); return url.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([^/]+)/.exec(url.pathname)?.[1]; };
   const cueText = cue => settings.mode === 'source' ? cue.sourceText : settings.mode === 'bilingual' && cue.translatedText !== cue.sourceText ? `${cue.sourceText}\n${cue.translatedText || ''}` : cue.translatedText || cue.sourceText;
-  function clear() { closeMenu(false); cues = []; videoId = null; jobId = null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; }
+  function clear() { cancelDrag?.(); closeMenu(false); cues = []; videoId = null; jobId = null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; speech = null; }
   function indexCues() { speechIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind !== 'screen')); screenIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind === 'screen')); lastText = null; }
   function block(event) { event.preventDefault(); event.stopPropagation(); }
   function clickable(element, callback) {
@@ -57,26 +59,63 @@
     menuRoot.append(dialog);dialog.showModal();
   }
   function setSettings(input = {}) {
+    if (Number.isFinite(input.speechHeight)) { cancelDrag?.(); settings.speechHeight = position.speechHeight(input.speechHeight); }
     if (['source', 'translated', 'bilingual'].includes(input.mode)) settings.mode = input.mode;
     if (Number.isFinite(input.offsetMs) && Math.abs(input.offsetMs) <= 3600000) settings.offsetMs = input.offsetMs;
     if (Number.isFinite(input.fontSize) && input.fontSize >= 16 && input.fontSize <= 48) settings.fontSize = input.fontSize;
     for (const key of ['showSpeech', 'showScreen', 'maskScreen']) if (typeof input[key] === 'boolean') settings[key] = input[key];
     if(['ko','en','ja','zh-CN'].includes(input.uiLanguage))settings.uiLanguage=input.uiLanguage;
     if (label) label.style.fontSize = `${settings.fontSize}px`; lastText = null;
+    if (moveHandle) { moveHandle.textContent = t('↕ 이동'); moveHandle.title = t('끌어서 음성 자막 높이 조절 · ↑↓ 키로 이동 · Home 키로 초기화'); moveHandle.setAttribute('aria-label', moveHandle.title); }
+  }
+  async function savePosition() {
+    const result = await chrome.runtime.sendMessage({type:'ZZZ_SPEECH_POSITION',videoId,...(jobId ? {jobId} : {}),speechHeight:settings.speechHeight});
+    if (!result?.ok) throw new Error(t('자막 위치를 저장하지 못했습니다. 다음에 열면 기본 위치로 표시될 수 있습니다.'));
+  }
+  function visibleRect() {
+    const rect = video.getBoundingClientRect(), fit = typeof getComputedStyle === 'function' ? getComputedStyle(video).objectFit : 'contain';
+    const content = geometry.videoContentRect(rect, video.videoWidth, video.videoHeight, fit), outer = player.getBoundingClientRect();
+    let controlsHeight = 64, controlsVisible = false;
+    for (const control of player.querySelectorAll?.('.ytp-chrome-bottom, .ytp-progress-bar-container') || []) {
+      const area = control.getBoundingClientRect(), css = getComputedStyle(control);
+      if (!area.height || css.display === 'none' || area.top < outer.top + outer.height * 0.5) continue;
+      controlsHeight = Math.max(controlsHeight, outer.top + outer.height - area.top + 8);
+      if (css.visibility !== 'hidden' && Number(css.opacity) !== 0 && !player.classList.contains('ytp-autohide')) controlsVisible = true;
+    }
+    return { content, outer, controlsHeight, controlsVisible };
+  }
+  function placeSpeech() {
+    if (!position || !speech || speech.hidden) return;
+    const { content, outer, controlsHeight } = visibleRect();
+    const area = position.speechPlacement(content, outer, settings.speechHeight, 0, controlsHeight);
+    speech.style.left = `${area.left}px`; speech.style.width = `${area.width}px`; speech.style.maxHeight = `${area.height}px`;
+    speech.style.top = `${position.speechPlacement(content, outer, settings.speechHeight, speech.getBoundingClientRect().height, controlsHeight).top}px`;
   }
   function attach() {
     player = document.querySelector('#movie_player') || document.querySelector('.html5-video-player'); video = player?.querySelector('video');
     if (!player || !video || host?.parentNode === player) return;
-    closeMenu(false);host?.remove(); screenNodes.clear(); host = document.createElement('div'); host.hidden = true; host.setAttribute('data-zzz-subtitles', '');
+    cancelDrag?.();closeMenu(false);host?.remove(); screenNodes.clear(); host = document.createElement('div'); host.hidden = true; host.setAttribute('data-zzz-subtitles', '');
     const shadow = host.attachShadow({ mode: 'closed' }), style = document.createElement('style');
     style.textContent = ':host{position:absolute;inset:0;z-index:2147483647;pointer-events:none;overflow:hidden}.speech{position:absolute;left:5%;right:5%;bottom:11%;margin:0;text-align:center;line-height:1.5;white-space:pre-line;color:#fff;font-family:system-ui,sans-serif;font-weight:600;text-shadow:0 2px 4px #000}.speech span{background:rgba(0,0,0,.76);padding:3px 9px;box-decoration-break:clone;-webkit-box-decoration-break:clone}.screen{position:absolute;inset:0}.screen-text{position:absolute;color:#fff;line-height:1.15;white-space:pre-wrap;overflow-wrap:anywhere;text-align:left;font-family:system-ui,sans-serif;font-weight:600;padding:2px 3px;box-sizing:border-box;text-shadow:0 1px 2px #000;border-radius:2px}';
-    const speech = document.createElement('p'); speech.className = 'speech'; label = document.createElement('span'); speech.append(label);
+    speech = document.createElement('p'); speech.className = 'speech'; label = document.createElement('span'); speech.append(label);
+    if (position) {
+      style.textContent += '.speech{right:auto;bottom:auto;box-sizing:border-box;padding:27px 0 4px;overflow:auto;overflow-wrap:anywhere;pointer-events:none}.speech .speech-move{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:3px 10px;border:1px solid #76894c;border-radius:5px;background:#18200de6;color:#d9fd68;font:12px/18px system-ui,sans-serif;cursor:ns-resize;pointer-events:auto;touch-action:none;user-select:none}.speech-move:hover,.speech-move:focus-visible,.speech-move[data-dragging]{background:#d9fd68;color:#18200d;outline:2px solid #fff}';
+      moveHandle = document.createElement('button'); moveHandle.type = 'button'; moveHandle.className = 'speech-move'; speech.append(moveHandle);
+      style.textContent += '.speech::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:32px;pointer-events:auto}.speech .speech-move{opacity:0;transition:opacity .12s .25s}.speech:hover .speech-move,.speech .speech-move:focus-visible,.speech .speech-move[data-dragging]{opacity:1;transition-delay:0s}@media(hover:none){.speech .speech-move{opacity:1}}';
+      cancelDrag = position.bindSpeechDrag(moveHandle, { getHeight: () => settings.speechHeight,
+        getRect: () => { const { content, outer, controlsHeight } = visibleRect(); return { height: position.speechPlacement(content, outer, settings.speechHeight, 0, controlsHeight).travel }; },
+        setHeight: value => { settings.speechHeight = value; placeSpeech(); },
+        commit: async () => { try { await savePosition(); }
+          catch { moveHandle.title = t('자막 위치를 저장하지 못했습니다. 다음에 열면 기본 위치로 표시될 수 있습니다.'); } }
+      });
+    }
     style.textContent += 'dialog{pointer-events:auto;box-sizing:border-box;position:fixed;inset:0;margin:auto;max-width:580px;width:calc(100vw - 40px);max-height:85vh;overflow:auto;background:#171c18;color:#f2f5ec;border:1px solid #a6c938;border-radius:14px;padding:24px;font:14px/1.5 system-ui,sans-serif}dialog::backdrop{background:#0008}dialog p{white-space:pre-wrap;overflow-wrap:anywhere}dialog button{cursor:pointer;background:#d9fd68;color:#14200c;border:0;border-radius:6px;padding:10px;margin:4px}dialog select,dialog textarea{box-sizing:border-box;display:block;width:100%;background:#252d27;color:#fff;border:1px solid #728365;padding:8px;margin:5px 0 12px}dialog textarea{min-height:70px}dialog label{display:block}dialog input[type=checkbox]{margin:8px}dialog [role=status]{color:#d9fd68}.speech span,.screen-text{cursor:pointer}';
+    style.textContent += '.screen-text{pointer-events:none!important}.screen-text::after{content:"";position:absolute;inset:0;pointer-events:auto;clip-path:inset(0 0 var(--zzz-hit-cut,0px) 0)}';
     menuRoot=shadow;screenLayer = document.createElement('div'); screenLayer.className = 'screen'; shadow.append(style, speech, screenLayer); player.append(host);
     clickable(label,()=>openMenu(visibleSpeech));
-    label.style.fontSize = `${settings.fontSize}px`; lastText = null;
+    setSettings(); lastText = null;
   }
-  function drawScreen(time) {
+  function drawScreen(time, safe) {
     const active = settings.showScreen && geometry ? geometry.activeCuesAt(screenIndex, time) : [], keep = new Set();
     if (active.length) {
       const playerRect = player.getBoundingClientRect(), rect = video.getBoundingClientRect();
@@ -96,6 +135,11 @@
       }
     }
     for (const [id, element] of screenNodes) if (!keep.has(id)) { element.remove(); screenNodes.delete(id); }
+    for (const element of screenNodes.values()) {
+      const height = element.getBoundingClientRect().height, controlsTop = safe?.outer.height - safe?.controlsHeight;
+      const cut = safe?.controlsVisible ? Math.min(height, Math.max(0, parseFloat(element.style.top) + height - controlsTop)) : 0;
+      element.style.setProperty?.('--zzz-hit-cut', `${cut}px`);
+    }
     return active.length;
   }
   function tick(now) {
@@ -108,10 +152,14 @@
         visibleSpeech=active;if(ads)closeMenu(false);
         const text = ads ? '' : active.map(cueText).join('\n');
         if (text !== lastText) { label.textContent = text; lastText = text; }
-        const screenCount = ads ? 0 : drawScreen(time);
+        speech.hidden = !text;
+        if (!text) cancelDrag?.();
+        const safe = geometry ? visibleRect() : null;
+        const screenCount = ads ? 0 : drawScreen(time, safe);
         if (ads) for (const element of screenNodes.values()) element.hidden = true;
         else for (const element of screenNodes.values()) element.hidden = false;
         host.hidden = ads || !text && !screenCount && !menu;
+        if (!host.hidden) placeSpeech();
       }
     }
     requestAnimationFrame(tick);
@@ -131,7 +179,10 @@
         clear(); cues = normalized; videoId = message.videoId;jobId=/^[a-f0-9-]{36}$/.test(message.jobId||'')?message.jobId:null;
         indexCues();
         setSettings(message.settings); attach(); nextCheck = 0;
-      } else if (message.type === 'ZZZ_SUBTITLES_SETTINGS') setSettings(message.settings);
+      } else if (message.type === 'ZZZ_SUBTITLES_SETTINGS') {
+        setSettings(message.settings);
+        if (Number.isFinite(message.settings?.speechHeight) && videoId) { savePosition().then(() => respond({ok:true}), error => respond({error:error.message})); return true; }
+      }
       else if (message.type === 'ZZZ_SUBTITLES_HIDE') clear();
       respond({ ok: true });
     } catch (error) { respond({ error: error.message }); }

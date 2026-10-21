@@ -57,7 +57,8 @@ export function parseSubtitles(input) {
     if (previous && previous.kind !== 'screen' && !/\bposition:/.test(timingLine) && previous.sourceText === sourceText && startMs <= previous.endMs + 80) previous.endMs = Math.max(previous.endMs, endMs);
     else {
       const line = /\bline:([\d.]+)%/.exec(timingLine), position = /\bposition:([\d.]+)%/.exec(timingLine), size = /\bsize:([\d.]+)%/.exec(timingLine);
-      const region = line && position ? { x: Number(position[1]) / 100, y: Number(line[1]) / 100, w: Math.min(Number(size?.[1] || 40) / 100, 1 - Number(position[1]) / 100), h: Math.min(0.05, 1 - Number(line[1]) / 100) } : null;
+      const speech = /\bline:[\d.]+%,end\b/.test(timingLine) && /\bposition:50(?:\.00)?%,center\b/.test(timingLine) && /\balign:center\b/.test(timingLine);
+      const region = !speech && line && position ? { x: Number(position[1]) / 100, y: Number(line[1]) / 100, w: Math.min(Number(size?.[1] || 40) / 100, 1 - Number(position[1]) / 100), h: Math.min(0.05, 1 - Number(line[1]) / 100) } : null;
       cues.push({ startMs, endMs, sourceText, ...(validRegion(region) ? { kind: 'screen', region } : {}) });
     }
   }
@@ -69,11 +70,16 @@ export function formatTime(ms, separator = ',') {
   return `${String(Math.floor(n / 3600000)).padStart(2, '0')}:${String(Math.floor(n / 60000) % 60).padStart(2, '0')}:${String(Math.floor(n / 1000) % 60).padStart(2, '0')}${separator}${String(n % 1000).padStart(3, '0')}`;
 }
 
+export function subtitleSpeechHeight(input) {
+  const values = [...String(input).matchAll(/\bline:([\d.]+)%,end\b[^\n]*\bposition:50(?:\.00)?%,center\b[^\n]*\balign:center\b/g)].map(match => 1 - Number(match[1]) / 100);
+  return values.length && values.every(value => Number.isFinite(value) && value >= 0 && value <= 0.900001 && Math.abs(value-values[0])<.000001) ? Math.min(.9,values[0]) : undefined;
+}
+
 export function subtitleTrack(cues, track = 'all') {
   if (!['all', 'speech', 'screen'].includes(track)) throw new Error('저장할 자막 종류를 확인하세요.');
   return cues.filter(cue => !cue.excluded && (track === 'all' || (cue.kind === 'screen' ? 'screen' : 'speech') === track));
 }
-export function serializeSubtitles(cues, { format = 'srt', mode = 'translated', offsetMs = 0, positioned = false, track = 'all' } = {}) {
+export function serializeSubtitles(cues, { format = 'srt', mode = 'translated', offsetMs = 0, positioned = false, track = 'all', speechHeight } = {}) {
   if (!['srt', 'vtt'].includes(format) || !['source', 'translated', 'bilingual'].includes(mode)) throw new Error('지원하지 않는 자막 형식입니다.');
   const expanded = subtitleTrack(cues, track).flatMap(cue => positioned && format === 'vtt' && cue.kind === 'screen' && cue.positions?.length ? cue.positions.map((position, index) => ({ ...cue, startMs: Math.max(cue.startMs, position.timeMs), endMs: Math.min(cue.endMs, cue.positions[index + 1]?.timeMs ?? cue.endMs), region: position })).filter(cue => cue.endMs > cue.startMs) : [cue]);
   if (positioned && format === 'vtt') expanded.sort((a, b) => a.startMs - b.startMs);
@@ -82,7 +88,7 @@ export function serializeSubtitles(cues, { format = 'srt', mode = 'translated', 
     // Neutralize cue boundaries and markup when exporting user/AI supplied text.
     const text = raw.replace(/\r/g, '').replace(/\n\s*\n/g, '\n').replace(/-->/g, '→').replace(/</g, '‹').replace(/>/g, '›');
     const region = cue.kind === 'screen' && validRegion(cue.region) ? cue.region : null;
-    const placement = positioned && format === 'vtt' && region ? ` line:${(region.y * 100).toFixed(2)}%,start position:${(region.x * 100).toFixed(2)}%,line-left size:${Math.min(100 - region.x * 100, Math.max(5, region.w * 100)).toFixed(2)}% align:start` : '';
+    const placement = !positioned || format !== 'vtt' ? '' : region ? ` line:${(region.y * 100).toFixed(2)}%,start position:${(region.x * 100).toFixed(2)}%,line-left size:${Math.min(100 - region.x * 100, Math.max(5, region.w * 100)).toFixed(2)}% align:start` : cue.kind !== 'screen' && Number.isFinite(speechHeight) && speechHeight >= 0 && speechHeight <= 0.9 ? ` line:${((1-speechHeight) * 100).toFixed(2)}%,end position:50.00%,center size:90.00% align:center` : '';
     return `${index + 1}\n${formatTime(cue.startMs + offsetMs, format === 'vtt' ? '.' : ',')} --> ${formatTime(cue.endMs + offsetMs, format === 'vtt' ? '.' : ',')}${placement}\n${text}\n`;
   }).join('\n');
 }

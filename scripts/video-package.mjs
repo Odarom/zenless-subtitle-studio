@@ -54,7 +54,7 @@ export async function buildExternalPackage(root = ROOT) {
   const name = `Zenless-Subtitle-Studio-${VIDEO_VERSION}-win-x64`;
   const folder = join(staging, name), app = join(folder, 'app'); mkdirSync(app, { recursive: true });
   // These modules are served to the browser and are not imported by the server.
-  const code = moduleFiles(root, ['video/server.mjs', 'video/geometry.mjs', 'video/review.mjs', 'scripts/video-launch.mjs', 'scripts/video-setup.mjs', 'scripts/video-update-apply.mjs']);
+  const code = moduleFiles(root, ['video/server.mjs', 'video/geometry.mjs', 'video/speech-position.mjs', 'video/review.mjs', 'scripts/video-launch.mjs', 'scripts/video-setup.mjs', 'scripts/video-update-apply.mjs']);
   for (const file of code) copy(join(root, file), join(app, file));
   for (const file of filesIn(join(root, 'video', 'public'))) copy(file, join(app, 'video', 'public', relative(join(root, 'video', 'public'), file)));
   for (const file of ['zzz.json', 'sources.json', 'README.md']) copy(join(root, 'glossary', file), join(app, 'glossary', file));
@@ -66,7 +66,8 @@ export async function buildExternalPackage(root = ROOT) {
   for (const locale of ['ko', 'en', 'ja', 'zh-CN']) copy(join(root, 'video/docs', 'README-' + locale + '.md'), join(folder, 'README-' + locale + '.md'));
   copy(join(root, 'video/docs/README.md'), join(folder, 'README.md'));
   copy(join(root, 'video/docs/THIRD-PARTY-NOTICES.md'), join(folder, 'THIRD-PARTY-NOTICES.md'));
-  for (const file of ['FEATURES.md', 'CHANGELOG.md']) copy(join(root, 'video/docs', file), join(folder, file));
+  // README links detailed help/history on GitHub. Older installed updaters only
+  // accept the existing README and notices at the archive root.
   const included = filesIn(folder);
   for (const path of included) {
     const local = slash(relative(folder, path));

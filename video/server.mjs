@@ -24,6 +24,7 @@ export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const publicFiles = new Map([['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']], ['/app.js', ['app.js', 'text/javascript']], ['/style.css', ['style.css', 'text/css']], ['/favicon.svg', ['favicon.svg', 'image/svg+xml']]]);
 for (const file of ['i18n.mjs', 'locales.mjs']) publicFiles.set(`/${file}`, [file, 'text/javascript']);
 publicFiles.set('/geometry.mjs', ['../geometry.mjs', 'text/javascript']);
+publicFiles.set('/speech-position.mjs', ['../speech-position.mjs', 'text/javascript']);
 publicFiles.set('/review.mjs', ['../review.mjs', 'text/javascript']);
 async function bodyJson(req) {
   if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) throw new Error('JSON 요청 형식이 필요합니다.');
@@ -127,7 +128,7 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
         const [, id, action] = match;
         if (!action && req.method === 'GET') return send(res, 200, { ...jobs.get(id), videoSaving: jobs.videoSaves.has(id) });
         if (!action && req.method === 'DELETE') return send(res, 200, jobs.remove(id));
-        if (!action && req.method === 'PATCH') return send(res, 200, jobs.edit(id, (await bodyJson(req)).changes));
+        if (!action && req.method === 'PATCH') { const body = await bodyJson(req); return send(res, 200, jobs.edit(id, body.speechHeight === undefined ? body.changes : body.changes ?? [], body.speechHeight)); }
         if (action === 'cancel' && req.method === 'POST') return send(res, 200, jobs.cancel(id));
         if (action === 'resume' && req.method === 'POST') return send(res, 202, jobs.resume(id));
         if (action === 'video' && req.method === 'POST') {
@@ -142,9 +143,9 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
           const cues = subtitleTrack(job.cues, track);
           if (format === 'json') {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="${id}.zzzsub.json"` });
-            return res.end(JSON.stringify({ app: 'zenless-subtitle-studio', version: 1, videoId: job.videoId || null, cues: cues.map(({ id, startMs, endMs, sourceText, translatedText, kind, region, positions }) => ({ id, startMs, endMs, sourceText, translatedText, ...(kind === 'screen' ? { kind, region, positions } : {}) })) }));
+            return res.end(JSON.stringify({ app: 'zenless-subtitle-studio', version: 1, videoId: job.videoId || null, ...(Number.isFinite(job.speechHeight) ? {display:{speechHeight:job.speechHeight}} : {}), cues: cues.map(({ id, startMs, endMs, sourceText, translatedText, kind, region, positions }) => ({ id, startMs, endMs, sourceText, translatedText, ...(kind === 'screen' ? { kind, region, positions } : {}) })) }));
           }
-          const output = serializeSubtitles(cues, { format, mode, positioned: url.searchParams.get('positioned') === '1' });
+          const output = serializeSubtitles(cues, { format, mode, positioned: url.searchParams.get('positioned') === '1', speechHeight:job.speechHeight });
           res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Disposition': `attachment; filename="${id}.${format}"` }); return res.end(output);
         }
       }

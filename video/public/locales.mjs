@@ -1,5 +1,14 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ["자막 위치를 확인하세요.","Check the subtitle position.","字幕の位置を確認してください。","请检查字幕位置。"],
+  ["PC에 자막 위치를 저장하지 못했습니다.","Could not save the subtitle position to the PC.","PCに字幕の位置を保存できませんでした。","无法将字幕位置保存到PC。"],
+  ["↕ 이동","↕ Move","↕ 移動","↕ 移动"],
+  ["끌어서 음성 자막 높이 조절 · ↑↓ 키로 이동 · Home 키로 초기화","Drag to adjust speech subtitle height · ↑↓ to move · Home to reset","ドラッグで音声字幕の高さを調整 · ↑↓で移動 · Homeでリセット","拖动调整语音字幕高度 · ↑↓移动 · Home重置"],
+  ["음성 자막 높이","Speech subtitle height","音声字幕の高さ","语音字幕高度"],
+  ["기본 위치","Reset position","位置をリセット","重置位置"],
+  ["음성 자막을 기본 위치로 되돌렸습니다.","Speech subtitles reset to their default position.","音声字幕を初期位置に戻しました。","已将语音字幕恢复到默认位置。"],
+  ["자막 클릭: 신고·삭제 / ↕ 이동 손잡이: 모든 음성 자막 높이 조절. 위치는 자동 저장되며 VTT·프로젝트 JSON 다운로드에 반영됩니다.","Click subtitles to report or delete. Drag ↕ Move to adjust all speech subtitles. Position is saved automatically and included in VTT and project JSON downloads.","字幕のクリックで報告・削除、↕ 移動ですべての音声字幕の高さを調整できます。位置は自動保存され、VTTとプロジェクトJSONに反映されます。","点击字幕可举报或删除，拖动 ↕ 移动可调整所有语音字幕高度。位置会自动保存，并反映在VTT和项目JSON下载中。"],
+  ["자막 위치를 저장하지 못했습니다. 다음에 열면 기본 위치로 표시될 수 있습니다.","Could not save the subtitle position. It may reset the next time you open this.","字幕の位置を保存できませんでした。次回は初期位置に戻る場合があります。","无法保存字幕位置，下次打开时可能恢复为默认位置。"],
   ["유튜브 영상 저장 ↓","Save YouTube video ↓","YouTube動画を保存 ↓","保存YouTube视频 ↓"],
   ["영상 저장 취소","Cancel video save","動画保存をキャンセル","取消视频保存"],
   ["영상 저장 중","Saving video","動画を保存中","正在保存视频"],
