@@ -12,6 +12,8 @@
 2. 열린 프로그램의 **왼쪽 메뉴 → API 및 연결 설정**에서 본인 API 키를 저장합니다.
 3. **영상 번역**에서 영상과 언어를 선택하고 **자막 만들기**를 누릅니다. 화면 OCR은 선택 사항이며 기본 꺼짐입니다.
 
+본인 영상 파일도 **미리보기로 장면을 보며 자막 수정·삭제·오역 신고**를 할 수 있습니다. [→ 미리보기 사용법](README-ko.md#본인-영상-파일-번역과-미리보기)
+
 [한국어 설치·사용법](README-ko.md) · [유튜브 확장 연결](README-ko.md#유튜브에서-자막-보기)
 
 ---
@@ -25,6 +27,8 @@ Recognize and translate a YouTube or local video, then watch with finished subti
 1. Extract all files and run **Start.cmd**.
 2. Save your key under **Left menu → API & connection** in the program page.
 3. In **Translate video**, select a video and languages, then **Create subtitles**. Screen OCR is optional and off by default.
+
+For your own video files, **use the preview to check scenes, edit or delete subtitles, and report translation errors**. [→ Preview guide](README-en.md#translate-and-preview-your-own-video)
 
 [English installation and usage](README-en.md) · [Connect the YouTube extension](README-en.md#watch-on-youtube)
 
@@ -40,6 +44,8 @@ YouTube・ローカル動画を認識・翻訳し、完成した字幕で視聴�
 2. 開いた画面の**左メニュー → API・接続設定**で自分のキーを保存します。
 3. **動画を翻訳**で動画と言語を選び、**字幕を作成**します。画面OCRは任意で、初期状態はオフです。
 
+自分の動画ファイルも、**プレビューで場面を見ながら字幕の修正・削除・誤訳報告**ができます。 [→ プレビューの使い方](README-ja.md#自分の動画ファイルを翻訳プレビューする)
+
 [日本語の導入・使い方](README-ja.md) · [YouTube拡張機能の接続](README-ja.md#youtubeで字幕を見る)
 
 ---
@@ -53,5 +59,7 @@ YouTube・ローカル動画を認識・翻訳し、完成した字幕で視聴�
 1. 完整解压ZIP并运行**Start.cmd**。
 2. 在程序页面的**左侧菜单 → API 与连接设置**保存自己的密钥。
 3. 在**翻译视频**选择视频及语言，点击**生成字幕**。屏幕OCR可选，默认关闭。
+
+自己的视频文件也可以**在预览画面时修改、删除字幕或举报误译**。 [→ 预览使用方法](README-zh-CN.md#翻译并预览自己的视频文件)
 
 [简体中文安装与使用](README-zh-CN.md) · [连接YouTube扩展](README-zh-CN.md#在youtube观看字幕)

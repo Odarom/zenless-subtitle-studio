@@ -16,14 +16,23 @@ A Windows app that recognizes and translates a YouTube video or local file, then
 
 **Studio** means the program page opened by Start.cmd. Keep its execution window open while using it. Processing runs on your PC; no separate video-processing server is needed.
 
+## Translate and preview your own video
+
+You can translate **your own video file without a YouTube URL**, then review, edit and report subtitles while watching the preview. We recommend previewing to check translations against the actual scene.
+
+1. Under **Translate video → Open a file**, choose your video and finish translating it.
+2. In the completed job, click **Preview subtitles with a local video** and select **the same original video used for translation**.
+3. Click a speech or screen subtitle to pause playback and open **Delete subtitle / Report a translation**. **Edit wording in the translation fields under “Review and edit subtitles” below the preview**. Edits appear immediately in the preview.
+4. After reviewing, use **Save VTT ↓** or **Project JSON ↓** to save edits and the adjusted speech subtitle position. **Save SRT ↓** stores text and timing only. Any remaining text edits are saved before download.
+
+The YouTube extension is not needed to preview your own file. If the browser cannot play its format, view the video with its subtitles in an external player and edit or report entries in Studio's subtitle list.
+
 ## Watch on YouTube
 
 1. In Chrome/Edge extension management, enable **Developer mode → Load unpacked** and select the included **video-extension** folder.
 2. In **Studio's left menu → API & connection → Connect the YouTube extension**, click **Copy PC connection code**.
 3. Open the YouTube video and click the **ZZZ Subtitle Studio extension icon** at the top right of the browser. Paste into **PC connection code**, then click **Connect**. This is not your translation API key.
 4. Under **Finished subtitles**, choose the video's job and click **Apply selected subtitles**.
-
-Preview local videos in Studio. If your browser cannot play a codec, open the video and subtitle file in an external player.
 
 ## Save and edit
 
@@ -38,7 +47,9 @@ Preview local videos in Studio. If your browser cannot play a codec, open the vi
 
 Gemini, OpenAI, DeepL API Free/Pro and Ollama are supported. **Free API recommendation recorded on 2026-10-19, Korea time:** [Google AI Studio](https://aistudio.google.com/apikey)'s **Gemini 3.1 Flash-Lite** (<code>gemini-3.1-flash-lite</code>), subject to your account/project's [free-tier terms and quotas](https://ai.google.dev/gemini-api/docs/pricing). Ollama requires a separate installation and local model.
 
-Change and save your key under **Left menu → API & connection**. Keys stay on your PC. Check both program and glossary updates in the same settings page. After an app update, reload the extension and refresh YouTube.
+Change and save your key under **Left menu → API & connection**. Keys stay on your PC. Check both program and glossary updates in the same settings page.
+
+**The extension needs a manual reload.** After an in-app program update, open `chrome://extensions` in Chrome or `edge://extensions` in Edge. Click **Reload ↻** on the ZZZ extension card, then refresh YouTube. If you extract a new ZIP into **a different folder**, disable the extension using the old folder, **Load unpacked** from the new **video-extension** folder, and register the **PC connection code** again.
 
 ## More help
 
