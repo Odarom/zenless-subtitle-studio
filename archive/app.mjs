@@ -5,7 +5,7 @@ try{const saved=localStorage.getItem('zzz-archive-locale');locale=copy[saved]?sa
 const t=k=>copy[locale][k];const el=(tag,text,className)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;if(className)x.className=className;return x;};
 for(const[code,label]of Object.entries(languages)){$('language').append(new Option(label,code));}
 function render(){
- document.documentElement.lang=locale;document.title=t('title')+' · ZZZ';$('locale').value=locale;document.querySelectorAll('[data-i18n]').forEach(x=>x.textContent=t(x.dataset.i18n));$('query').placeholder=t('search');$('entries').replaceChildren();$('count').textContent=entries.length?String(entries.length)+(next===null?'':'+'):'';
+ document.documentElement.lang=locale;document.title=t('title')+' · ZZZ';$('locale').value=locale;document.querySelectorAll('[data-i18n]').forEach(x=>x.textContent=t(x.dataset.i18n));document.querySelector('.guide').href='https://github.com/Odarom/zenless-subtitle-studio/blob/main/README-'+locale+'.md#archive-viewer';$('query').placeholder=t('search');$('entries').replaceChildren();$('count').textContent=entries.length?String(entries.length)+(next===null?'':'+'):'';
  for(const item of entries){
   if(!/^[a-f0-9]{32}$/.test(item.id||'')||!/^[-\w]{11}$/.test(item.videoId||''))continue;
   const card=el('article',undefined,'entry'),image=el('img',undefined,'thumbnail');image.src='https://i.ytimg.com/vi/'+item.videoId+'/hqdefault.jpg';image.alt='';image.loading='lazy';image.referrerPolicy='no-referrer';
