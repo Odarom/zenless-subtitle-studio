@@ -41,6 +41,7 @@ export async function cueAction(message, sender, { extensionId, getToken, fetche
     await api(`/api/jobs/${message.jobId}`,'PATCH',{changes:[{id:message.cueId,excluded:message.excluded}]});
     return {ok:true,excluded:message.excluded};
   }
+  if(message.expectedCue !== undefined && (message.expectedCue?.sourceText !== cue.sourceText || message.expectedCue?.translatedText !== (cue.translatedText||cue.sourceText)))throw new Error('자막이 변경되었습니다. 자막을 다시 열고 신고하세요.');
   let reportId=message.reportId;
   if(reportId) {
     if(!/^V-\d{8}-[a-f0-9]{12}$/.test(reportId))throw new Error('신고 번호를 확인하세요.');
@@ -48,7 +49,7 @@ export async function cueAction(message, sender, { extensionId, getToken, fetche
     if(report?.video?.cueId!==cue.id||report.source?.text!==cue.sourceText||report.target?.text!==(cue.translatedText||cue.sourceText))throw new Error('유튜브 영상과 연결된 자막을 확인하세요.');
   } else {
     const issue=message.issue || {};
-    const created=await api('/api/reports','POST',{jobId:job.id,cueId:cue.id,type:issue.type,explanation:issue.explanation,suggestion:issue.suggestion,includeVideoUrl:issue.includeVideoUrl===true});
+    const created=await api('/api/reports','POST',{jobId:job.id,cueId:cue.id,type:issue.type,explanation:issue.explanation,suggestion:issue.suggestion,includeVideoUrl:issue.includeVideoUrl===true,...(message.expectedCue?{expectedCue:message.expectedCue}:{})});
     reportId=created.report.id;
   }
   try { const receipt=await api(`/api/reports/${reportId}/send`,'POST',{});return {ok:true,reportId,receiptId:receipt.receiptId}; }

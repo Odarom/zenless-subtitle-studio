@@ -1,5 +1,6 @@
 import { videoContentRect, cueRegionAt, buildCueIndex, activeCuesAt } from './geometry.mjs';
 import { speechHeight, speechPlacement, bindSpeechDrag, DEFAULT_SPEECH_HEIGHT } from './speech-position.mjs';
+import { speechDisplayCues } from './speech-cues.mjs';
 import { reviewCues, reviewTime } from './review.mjs';
 import { bindDocument, createI18n, UI_LANGUAGE_STORAGE_KEY } from './i18n.mjs';
 const i18n = createI18n(navigator.languages);
@@ -244,7 +245,7 @@ function renderPreview(job) {
   const url = state.previewUrls.get(job.id); if (!url) return container;
   const video = node('video', { controls: true, src: url });
   const label = node('span'); const caption = node('button', { type: 'button', class: 'preview-caption', title: t('자막 메뉴'), onclick: () => {
-    const cue = activeCuesAt(speechIndex, video.currentTime * 1000 - Number(offset.value || 0) * 1000)[0]; if (cue) { video.pause(); openCueActions(job, cue); }
+    const cue = activeCuesAt(speechIndex, video.currentTime * 1000 - Number(offset.value || 0) * 1000)[0]; if (cue) { video.pause(); openCueActions(job, cue.parentCue); }
   } }, label);
   const moveHandle = node('button', { type:'button', class:'speech-move', text:t('↕ 이동'), title:t('끌어서 음성 자막 높이 조절 · ↑↓ 키로 이동 · Home 키로 초기화'), 'aria-label':t('음성 자막 높이') });
   const speech = node('div', { class:'preview-speech', hidden:true }, caption, moveHandle);
@@ -271,14 +272,21 @@ function renderPreview(job) {
   const saveBackgrounds = () => { try {localStorage.setItem('zzz-preview-backgrounds',JSON.stringify({previewMaskSpeech:state.previewMaskSpeech !== false,previewMaskScreen:state.previewMaskScreen !== false}));} catch {} update(); };
   const speechBackground = node('input',{type:'checkbox',checked:state.previewMaskSpeech !== false,onchange:() => {state.previewMaskSpeech=speechBackground.checked;saveBackgrounds();}});
   const screenBackground = node('input',{type:'checkbox',checked:state.previewMaskScreen !== false,onchange:() => {state.previewMaskScreen=screenBackground.checked;saveBackgrounds();}});
-  const speechIndex = buildCueIndex(job.cues.filter(cue => !cue.excluded && cue.kind !== 'screen'));
+  let speechIndex, speechMode;
   const screenIndex = buildCueIndex(job.cues.filter(cue => !cue.excluded && cue.kind === 'screen'));
   const offset = node('input', { id: 'previewOffset', type: 'number', value: '0', step: '0.1', min: '-3600', max: '3600', 'aria-label': t('자막 지연 초') });
   const update = () => {
     const now = video.currentTime * 1000 - Number(offset.value || 0) * 1000;
     const mode = $('downloadMode')?.value || 'translated';
+    const displayMode = job.options.transcribeOnly ? 'source' : mode;
+    if (speechMode !== displayMode) {
+      const drafts = state.drafts.get(job.id);
+      speechIndex = buildCueIndex(speechDisplayCues(job.cues.map(cue => drafts?.has(cue.id) ? {...cue, translatedText:drafts.get(cue.id)} : cue), {mode:displayMode}));
+      speechMode = displayMode;
+    }
     const text = cue => { const translated = state.drafts.get(job.id)?.get(cue.id) ?? cue.translatedText ?? cue.sourceText; return mode === 'source' || job.options.transcribeOnly ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${translated}` : translated; };
-    label.textContent = speechToggle.checked ? activeCuesAt(speechIndex, now).map(text).join('\n') : '';
+    const speechText = cue => displayMode === 'source' ? cue.sourceText : displayMode === 'bilingual' ? `${cue.sourceText}\n${cue.translatedText}` : cue.translatedText;
+    label.textContent = speechToggle.checked ? activeCuesAt(speechIndex, now).map(speechText).join('\n') : '';
     label.style.background = speechBackground.checked ? 'rgba(0,0,0,.76)' : 'transparent';
     caption.hidden = !label.textContent;
     speech.hidden = caption.hidden; if (speech.hidden) stopDrag();
@@ -302,7 +310,7 @@ function renderPreview(job) {
   video.addEventListener('loadedmetadata', update);
   video.addEventListener('play', update); video.addEventListener('pause', update);
   const resize = new ResizeObserver(update); resize.observe(video);
-  state.previewCleanup = () => { stopDrag(); resize.disconnect(); }; state.previewUpdate = update;
+  state.previewCleanup = () => { stopDrag(); resize.disconnect(); }; state.previewUpdate = () => { speechMode = null; update(); };
   video.addEventListener('error', () => toast(t('이 파일 형식은 브라우저에서 재생하지 못할 수 있습니다. 자막 파일을 외부 플레이어에서 적용할 수 있습니다.'), true));
   container.append(node('div', { class: 'video-preview', onpointerenter:() => {previewHover=true;update();},onpointerleave:() => {previewHover=false;update();} }, video, screen, speech), node('div', { class: 'preview-tools' }, node('label', {}, speechToggle, t('음성 자막 표시')), node('label', {}, screenToggle, t('화면 번역 표시')), node('label', { htmlFor: 'previewOffset', text: t('자막 지연 (초)') }), offset, node('span', { class: 'hint', text: t('양수는 자막을 늦게 표시합니다.') })),
     node('div',{class:'preview-tools'},node('label',{},speechBackground,t('음성 자막 뒤에 배경 표시')),node('label',{},screenBackground,t('화면 글자 뒤에 배경 표시'))),
@@ -492,13 +500,21 @@ function openCueActions(job, cue) {
       node('button', { class: 'primary', type: 'button', text: t('오역 신고'), onclick: () => { close(); openReport(job, cue); } })));
   dialog.addEventListener('cancel', event => { event.preventDefault(); close(); }); document.body.append(dialog); dialog.showModal();
 }
-function openReport(job, cue) {
+async function openReport(job, cue) {
+ try {
+  const serial = state.reportOpening = (state.reportOpening || 0) + 1;
+  await saveSubtitleDrafts(job.id);
+  const current = await apiJson(`/api/jobs/${job.id}`);
+  if (state.reportOpening !== serial || state.selected !== job.id) return;
+  cue = current.cues.find(item => item.id === cue.id);
+  if (!cue) throw new Error(t('자막이 변경되었습니다. 자막을 다시 열고 신고하세요.'));
   state.reportDraft = null; state.reportFingerprint = null;
-  state.reportTarget = { jobId: job.id, cueId: cue.id };
+  state.reportTarget = { jobId: job.id, cueId: cue.id, expectedCue:{sourceText:cue.sourceText,translatedText:cue.translatedText||cue.sourceText} };
   $('reportCueInfo').textContent = `${cue.kind === 'screen' ? t('화면 글자') : t('음성 자막')} · ${time(cue.startMs)} – ${time(cue.endMs)} · #${cue.id}`;
   $('reportSource').value = cue.sourceText; $('reportTranslation').value = cue.translatedText || cue.sourceText;
   $('reportExplanation').value = ''; $('reportSuggestion').value = ''; $('reportVideoUrl').checked = false;
   $('reportReady').hidden = true; $('saveReport').disabled = false; $('reportDialog').showModal();
+ } catch (error) { toast(error.message,true); }
 }
 $('closeReport').addEventListener('click', () => $('reportDialog').close());
 $('reportForm').addEventListener('submit', async event => {

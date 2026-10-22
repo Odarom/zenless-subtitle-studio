@@ -19,6 +19,9 @@ function copyTree(from, to) {
 }
 copyTree(source, output);
 copyFileSync(join(root, 'video', 'subtitles.mjs'), join(output, 'subtitles.mjs'));
+const speechCues = readFileSync(join(root, 'video', 'speech-cues.mjs'), 'utf8');
+copyFileSync(join(root, 'video', 'speech-cues.mjs'), join(output, 'speech-cues.mjs'));
+writeFileSync(join(output, 'speech-cues.js'), `(() => { ${speechCues.replace(/^export /gm, '')}\nglobalThis.__zzzSpeechCues = { speechDisplayCues }; })();\n`);
 copyFileSync(join(root,'video','archive.mjs'),join(output,'archive-protocol.mjs'));
 for (const file of ['i18n.mjs', 'locales.mjs']) copyFileSync(join(root, 'video', 'public', file), join(output, file));
 const geometry = readFileSync(join(root, 'video', 'geometry.mjs'), 'utf8');

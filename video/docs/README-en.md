@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.7.1](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.1/zenless-subtitle-studio-0.7.1-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.7.2](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.2/zenless-subtitle-studio-0.7.2-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 

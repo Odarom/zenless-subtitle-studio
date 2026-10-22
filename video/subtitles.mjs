@@ -1,4 +1,5 @@
 import { validRegion } from './geometry.mjs';
+import { speechDisplayCues } from './speech-cues.mjs';
 const MAX_CUES = 50000;
 
 export function timestamp(value) {
@@ -81,8 +82,9 @@ export function subtitleTrack(cues, track = 'all') {
 }
 export function serializeSubtitles(cues, { format = 'srt', mode = 'translated', offsetMs = 0, positioned = false, track = 'all', speechHeight } = {}) {
   if (!['srt', 'vtt'].includes(format) || !['source', 'translated', 'bilingual'].includes(mode)) throw new Error('지원하지 않는 자막 형식입니다.');
-  const expanded = subtitleTrack(cues, track).flatMap(cue => positioned && format === 'vtt' && cue.kind === 'screen' && cue.positions?.length ? cue.positions.map((position, index) => ({ ...cue, startMs: Math.max(cue.startMs, position.timeMs), endMs: Math.min(cue.endMs, cue.positions[index + 1]?.timeMs ?? cue.endMs), region: position })).filter(cue => cue.endMs > cue.startMs) : [cue]);
-  if (positioned && format === 'vtt') expanded.sort((a, b) => a.startMs - b.startMs);
+  const selected = subtitleTrack(cues, track);
+  const expanded = [...speechDisplayCues(selected, {mode}), ...selected.filter(cue => cue.kind === 'screen').flatMap(cue => positioned && format === 'vtt' && cue.positions?.length ? cue.positions.map((position, index) => ({ ...cue, startMs: Math.max(cue.startMs, position.timeMs), endMs: Math.min(cue.endMs, cue.positions[index + 1]?.timeMs ?? cue.endMs), region: position })).filter(cue => cue.endMs > cue.startMs) : [cue])];
+  expanded.sort((a, b) => a.startMs - b.startMs);
   return (format === 'vtt' ? 'WEBVTT\n\n' : '') + expanded.map((cue, index) => {
     const raw = mode === 'source' ? cue.sourceText : mode === 'bilingual' ? `${cue.sourceText}\n${cue.translatedText || cue.sourceText}` : cue.translatedText || cue.sourceText;
     // Neutralize cue boundaries and markup when exporting user/AI supplied text.

@@ -3,6 +3,7 @@
   globalThis.__zzzSubtitlesInstalled = true;
   const geometry = globalThis.__zzzGeometry;
   const position = globalThis.__zzzSpeechPosition;
+  const speechCues = globalThis.__zzzSpeechCues;
   let speech, moveHandle, cancelDrag, archiveId=null, archiveKey='', archiveSerial=0, archiveCheck=0, archiveNotice;
   let cues = [], speechIndex, screenIndex, videoId = null, jobId = null, host, label, screenLayer, menuRoot, lastText = null, nextCheck = 0, player, video, menu, visibleSpeech = [];
   const screenNodes = new Map();
@@ -11,7 +12,7 @@
   const currentId = () => { const url = new URL(location.href); return url.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([^/]+)/.exec(url.pathname)?.[1]; };
   const cueText = cue => settings.mode === 'source' ? cue.sourceText : settings.mode === 'bilingual' && cue.translatedText !== cue.sourceText ? `${cue.sourceText}\n${cue.translatedText || ''}` : cue.translatedText || cue.sourceText;
   function clear() { cancelDrag?.(); closeMenu(false); cues = []; videoId = null; jobId = null; archiveId=null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; speech = null; }
-  function indexCues() { speechIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind !== 'screen')); screenIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind === 'screen')); lastText = null; }
+  function indexCues() { speechIndex = geometry?.buildCueIndex(speechCues ? speechCues.speechDisplayCues(cues, settings) : cues.filter(cue => !cue.excluded && cue.kind !== 'screen')); screenIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind === 'screen')); lastText = null; }
   function block(event) { event.preventDefault(); event.stopPropagation(); }
   function clickable(element, callback) {
     element.style.pointerEvents = 'auto'; element.tabIndex = 0; element.setAttribute('role','button'); element.setAttribute('aria-label',t('자막 메뉴'));
@@ -37,6 +38,7 @@
     close.onclick=()=>closeMenu();buttons.append(close,exclude,report);
     const render=()=>{source.textContent=cue.sourceText;translated.textContent=cue.translatedText||cue.sourceText;exclude.textContent=t(cue.excluded?'자막 복원':'자막 삭제');};render();
     const action=async (payload,target=cue)=>{
+      if(payload.action==='report')payload={...payload,expectedCue:{sourceText:target.sourceText,translatedText:target.translatedText||target.sourceText}};
       if(archiveId){
         if(payload.action==='exclude')return{ok:true,excluded:payload.excluded};
         const result=await chrome.runtime.sendMessage({type:'ZZZ_ARCHIVE_REPORT',archiveId,videoId,cueId:target.id,...payload});
@@ -65,7 +67,7 @@
   }
   function setSettings(input = {}) {
     if (Number.isFinite(input.speechHeight)) { cancelDrag?.(); settings.speechHeight = position.speechHeight(input.speechHeight); }
-    if (['source', 'translated', 'bilingual'].includes(input.mode)) settings.mode = input.mode;
+    if (['source', 'translated', 'bilingual'].includes(input.mode) && settings.mode !== input.mode) { settings.mode = input.mode; indexCues(); }
     if (Number.isFinite(input.offsetMs) && Math.abs(input.offsetMs) <= 3600000) settings.offsetMs = input.offsetMs;
     if (Number.isFinite(input.fontSize) && input.fontSize >= 16 && input.fontSize <= 48) settings.fontSize = input.fontSize;
     for (const key of ['showSpeech', 'showScreen', 'maskSpeech', 'maskScreen']) if (typeof input[key] === 'boolean') settings[key] = input[key];
@@ -104,7 +106,7 @@
     style.textContent = ':host{position:absolute;inset:0;z-index:2147483647;pointer-events:none;overflow:hidden}.speech{position:absolute;z-index:2;left:5%;right:5%;bottom:11%;margin:0;text-align:center;line-height:1.5;white-space:pre-line;color:#fff;font-family:system-ui,sans-serif;font-weight:600;text-shadow:0 2px 4px #000}.speech span{background:rgba(0,0,0,.76);padding:3px 9px;box-decoration-break:clone;-webkit-box-decoration-break:clone}.screen{position:absolute;inset:0;z-index:1}.screen-text{position:absolute;color:#fff;line-height:1.15;white-space:pre-wrap;overflow-wrap:anywhere;display:grid;place-items:center;text-align:center;font-family:system-ui,sans-serif;font-weight:600;padding:2px 3px;box-sizing:border-box;text-shadow:0 1px 2px #000;border-radius:2px}';
     speech = document.createElement('p'); speech.className = 'speech'; label = document.createElement('span'); speech.append(label);
     if (position) {
-      style.textContent += '.speech{right:auto;bottom:auto;box-sizing:border-box;padding:27px 0 4px;overflow:auto;overflow-wrap:anywhere;pointer-events:none}.speech .speech-move{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:3px 10px;border:1px solid #76894c;border-radius:5px;background:#18200de6;color:#d9fd68;font:12px/18px system-ui,sans-serif;cursor:ns-resize;pointer-events:auto;touch-action:none;user-select:none}.speech-move:hover,.speech-move:focus-visible,.speech-move[data-dragging]{background:#d9fd68;color:#18200d;outline:2px solid #fff}';
+      style.textContent += '.speech{right:auto;bottom:auto;box-sizing:border-box;padding:27px 10px 4px;overflow-x:hidden;overflow-y:auto;word-break:keep-all;overflow-wrap:anywhere;pointer-events:none}.speech .speech-move{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:3px 10px;border:1px solid #76894c;border-radius:5px;background:#18200de6;color:#d9fd68;font:12px/18px system-ui,sans-serif;cursor:ns-resize;pointer-events:auto;touch-action:none;user-select:none}.speech-move:hover,.speech-move:focus-visible,.speech-move[data-dragging]{background:#d9fd68;color:#18200d;outline:2px solid #fff}';
       moveHandle = document.createElement('button'); moveHandle.type = 'button'; moveHandle.className = 'speech-move'; speech.append(moveHandle);
       style.textContent += '.speech::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:32px;pointer-events:auto}.speech .speech-move{opacity:0;transition:opacity .12s .25s}.speech:hover .speech-move,.speech .speech-move:focus-visible,.speech .speech-move[data-dragging]{opacity:1;transition-delay:0s}@media(hover:none){.speech .speech-move{opacity:1}}';
       cancelDrag = position.bindSpeechDrag(moveHandle, { getHeight: () => settings.speechHeight,
@@ -160,7 +162,7 @@
         const time = video.currentTime * 1000 - settings.offsetMs;
         const ads = player.classList.contains('ad-showing') || player.classList.contains('ad-interrupting');
         const active = settings.showSpeech ? geometry ? geometry.activeCuesAt(speechIndex, time, 6) : cues.filter(cue => !cue.excluded && cue.kind !== 'screen' && cue.startMs <= time && cue.endMs > time).slice(-6) : [];
-        visibleSpeech=active;if(ads)closeMenu(false);
+        visibleSpeech=active.map(cue=>cue.parentCue||cue);if(ads)closeMenu(false);
         const text = ads ? '' : active.map(cueText).join('\n');
         if (text !== lastText) { label.textContent = text; lastText = text; }
         speech.hidden = !text;

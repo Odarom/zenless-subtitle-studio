@@ -222,7 +222,10 @@ test('HTTP API protects keys and jobs, accepts file input, and exports only fini
   const response = await fetch(`${base}/api/jobs`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ input: { fileId: file.id }, options: { transcribeOnly: true } }) });
   const job = await response.json(); assert.equal(response.status, 202);
   assert.equal((await waitJob(app.jobs, job.id)).status, 'completed');
-  const exported = await fetch(`${base}/api/jobs/${job.id}/export?format=srt&mode=source`, { headers }); assert.equal(exported.status, 200); assert.equal(parseSubtitles(await exported.text()).length, 1);
+  const exported = await fetch(`${base}/api/jobs/${job.id}/export?format=srt&mode=source`, { headers }); assert.equal(exported.status, 200);
+  const saved = parseSubtitles(await exported.text()); assert.equal(saved.length, 1);
+  assert.equal(saved[0].startMs,1000); assert.equal(saved.at(-1).endMs,8000);
+  assert.equal(saved.map(cue=>cue.sourceText).join(' '),'Quick Assist & EX Special Attack Do not use 20 stacks.');
   const evil = await fetch(`${base}/api/jobs`, { method: 'POST', headers: { ...headers, Origin: 'https://evil.example', 'Content-Type': 'application/json' }, body: '{}' }); assert.equal(evil.status, 403);
   assert.equal((await fetch(`${base}/api/uploads?name=run.exe`, { method: 'POST', headers, body: 'x' })).status, 400);
   assert.equal((await fetch(`${base}/api/jobs/${job.id}`,{method:'DELETE'})).status,401);

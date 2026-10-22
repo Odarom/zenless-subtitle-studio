@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import * as position from '../video/speech-position.mjs';
 import * as geometry from '../video/geometry.mjs';
+import * as speechCues from '../video/speech-cues.mjs';
 import {saveSpeechPosition} from '../video/extension/background.mjs';
 import {translations} from '../video/public/locales.mjs';
 
@@ -63,7 +64,7 @@ test('YouTube speech dragging does not open the report menu or pause playback, w
   setAttribute(k,v){this.attributes[k]=v;}attachShadow(){return this.shadow=new Element();}
   getBoundingClientRect(){return this===player?{left:0,top:0,width:1280,height:720}:{left:0,top:0,width:1152,height:85};}
   setPointerCapture(id){this.capture=id;}hasPointerCapture(id){return this.capture===id;}releasePointerCapture(){this.capture=null;}
-  showModal(){this.open=true;}close(){this.open=false;}
+  showModal(){this.open=true;}close(){this.open=false;}focus(){}
  }
  let listener,frame;const messages=[];
  const video={currentTime:1,videoWidth:1280,videoHeight:720,paused:false,pause(){this.paused=true;},play(){this.paused=false;return Promise.resolve();},getBoundingClientRect:()=>player.getBoundingClientRect()};
@@ -71,6 +72,7 @@ test('YouTube speech dragging does not open the report menu or pause playback, w
  const player=new Element();player.querySelector=()=>video;player.querySelectorAll=()=>[control];player.classList={contains:name=>name==='ytp-autohide'&&controlsHidden};
  const context={URL,location:{href:`https://www.youtube.com/watch?v=${videoId}`},getComputedStyle:()=>({opacity:'1',visibility:'visible',display:'block',objectFit:'contain'}),document:{querySelector:()=>player,createElement:tag=>new Element(tag)},requestAnimationFrame:fn=>{frame=fn;},__zzzGeometry:geometry,__zzzSpeechPosition:position,__zzzOverlayI18n:translations,
  chrome:{runtime:{id:extensionId,onMessage:{addListener:fn=>{listener=fn;}},sendMessage:async value=>{messages.push(value);return{ok:true};}}}};
+ context.__zzzSpeechCues=speechCues;
  vm.runInNewContext(fs.readFileSync('video/extension/content.js','utf8'),context);
  const send=value=>{let response;listener(value,{id:extensionId},r=>{response=r;});assert(response.ok,response.error);};
  const cues=[{id:'1',startMs:0,endMs:5000,sourceText:'Speech',translatedText:'음성 자막'},{id:'2',kind:'screen',startMs:0,endMs:5000,sourceText:'Screen',region:{x:.2,y:.78,w:.3,h:.1}},{id:'3',startMs:5000,endMs:10000,sourceText:'Next speech line',translatedText:'다음 음성 자막'}],before=JSON.stringify(cues);
@@ -88,4 +90,17 @@ test('YouTube speech dragging does not open the report menu or pause playback, w
  assert.equal(messages.length,1);assert.equal(messages[0].type,'ZZZ_SPEECH_POSITION');assert(!JSON.stringify(messages).includes('음성'));
  label.onclick(event());assert.equal(video.paused,true);assert.equal(host.shadow.children.at(-1).open,true);
  await new Promise(resolve=>listener({type:'ZZZ_SUBTITLES_SETTINGS',settings:{speechHeight:.11}},{id:extensionId},value=>{assert(value.ok);resolve();}));frame(3);assert.equal(parseFloat(speech.style.top),top);
+ // Existing long paragraphs are split by the real content script, and changing
+ // display mode rebuilds the timeline without altering the editable parent cue.
+ const long={id:'7',startMs:0,endMs:20000,sourceText:'A long source paragraph with several separate sentences. It should be displayed in short consecutive pieces. Keep every word and the original editing identity.',translatedText:'긴 음성 자막이 한 번에 화면을 가리면 읽기가 어렵습니다. 문장과 구절을 짧게 나누어 순서대로 보여 줍니다. 번역은 그대로 두고 표시만 나눕니다.'};
+ send({type:'ZZZ_SUBTITLES_LOAD',videoId,jobId:'a'.repeat(36),cues:[long],settings:{mode:'translated'}});video.currentTime=0;frame(4);
+ const nextLabel=player.children[0].shadow.children[1].children[0],first=nextLabel.textContent;assert(first.length<long.translatedText.length);
+ video.currentTime=15;frame(5);assert.notEqual(nextLabel.textContent,first);
+ send({type:'ZZZ_SUBTITLES_SETTINGS',settings:{mode:'source'}});frame(6);assert(/[A-Za-z]/.test(nextLabel.textContent));assert(!/[가-힣]/u.test(nextLabel.textContent));
+ send({type:'ZZZ_SUBTITLES_SETTINGS',settings:{mode:'bilingual'}});frame(7);assert(/[A-Za-z]/.test(nextLabel.textContent)&&/[가-힣]/u.test(nextLabel.textContent));
+ nextLabel.onclick(event());const dialog=player.children[0].shadow.children.at(-1);assert.equal(dialog.open,true);
+ assert(JSON.stringify(dialog.children.map(item=>item.textContent)).includes(long.sourceText));
+ assert.equal(dialog.children[2].textContent,long.translatedText);
+ const buttons=dialog.children.find(item=>item.tagName==='DIV'),form=dialog.children.find(item=>item.tagName==='FORM');buttons.children[2].onclick();form.children[1].children[0].value='Report the final part';await form.onsubmit(event());
+ const sent=messages.at(-1);assert.equal(sent.cueId,'7');assert.equal(sent.expectedCue.sourceText,long.sourceText);assert.equal(sent.expectedCue.translatedText,long.translatedText);
 });

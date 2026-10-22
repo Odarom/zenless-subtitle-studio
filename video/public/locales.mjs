@@ -1,5 +1,6 @@
 // Each row is [Korean source, English, Japanese, Simplified Chinese].
 export const rows = [
+  ["자막이 변경되었습니다. 자막을 다시 열고 신고하세요.","The subtitle has changed. Reopen it before reporting.","字幕が変更されました。開き直してから報告してください。","字幕已更改，请重新打开后再举报。"],
   ["화면 자막","Screen subtitles","画面字幕","画面字幕"],
   ["이 기록을 삭제해도 아카이브 공유는 유지됩니다. 공유도 내리려면 먼저 공유 등록을 취소하세요.","Deleting this record keeps its archive post public. To remove the post too, unshare it first.","この履歴を削除してもアーカイブの公開は続きます。公開も終了する場合は、先に共有を取り消してください。","删除此记录后档案馆帖子仍会公开。如需撤下帖子，请先取消共享。"],
   ["이 페이지에서 자막을 숨겼습니다. 새로고침하면 다시 표시됩니다.","Subtitle hidden on this page. Refresh to show it again.","このページで字幕を非表示にしました。更新すると再表示します。","已在此页面隐藏字幕，刷新后会重新显示。"],

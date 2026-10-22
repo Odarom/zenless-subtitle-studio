@@ -11,6 +11,7 @@ export async function loadArchive(message,sender,{extensionId,fetcher=fetch,stor
 export async function reportArchive(message,sender,{extensionId,fetcher=fetch,storage}={}){
  const project=await loadArchive(message,sender,{extensionId,fetcher}),cue=project.cues.find(c=>c.id===message.cueId),issue=message.issue||{};
  if(!cue||!['term','missing','meaning','wording','other'].includes(issue.type)||typeof issue.explanation!=='string'||!issue.explanation.trim()||issue.explanation.length>1000||typeof(issue.suggestion??'')!=='string'||(issue.suggestion||'').length>2000)throw Error('신고할 자막과 설명을 확인하세요.');
+ if(message.expectedCue !== undefined && (message.expectedCue?.sourceText !== cue.sourceText || message.expectedCue?.translatedText !== (cue.translatedText||cue.sourceText)))throw Error('자막이 변경되었습니다. 자막을 다시 열고 신고하세요.');
  let saved=(await storage.get('archiveInstallation')).archiveInstallation;if(!/^[a-f0-9-]{36}$/.test(saved||'')){saved=crypto.randomUUID();await storage.set({archiveInstallation:saved});}
  const day=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('-','');
  const id=/^V-\d{8}-[a-f0-9]{12}$/.test(message.reportId||'')?message.reportId:'V-'+day+'-'+[...crypto.getRandomValues(new Uint8Array(6))].map(x=>x.toString(16).padStart(2,'0')).join('');

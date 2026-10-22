@@ -27,6 +27,7 @@ export class VideoReports {
   create(input) {
     const job = this.jobs.get(input.jobId), cue = job.cues.find(item => item.id === input.cueId);
     if (job.status !== 'completed' || !cue || !types.includes(input.type)) throw new Error('완료된 자막과 문제 유형을 확인하세요.');
+    if (input.expectedCue !== undefined && (input.expectedCue?.sourceText !== cue.sourceText || input.expectedCue?.translatedText !== (cue.translatedText || cue.sourceText))) throw new Error('자막이 변경되었습니다. 자막을 다시 열고 신고하세요.');
     const explanation = text(input.explanation, 1000, true), suggestion = text(input.suggestion || '', 2000), fragment = text(input.fragment || '', 200);
     if (fragment && !(cue.translatedText || cue.sourceText).includes(fragment)) throw new Error('문제 부분에는 번역문에 실제로 있는 글자를 입력하세요.');
     const now = this.now(), day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(now)).replaceAll('-', '');

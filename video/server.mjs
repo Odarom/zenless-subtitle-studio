@@ -26,6 +26,7 @@ const publicFiles = new Map([['/', ['index.html', 'text/html']], ['/index.html',
 for (const file of ['i18n.mjs', 'locales.mjs']) publicFiles.set(`/${file}`, [file, 'text/javascript']);
 publicFiles.set('/geometry.mjs', ['../geometry.mjs', 'text/javascript']);
 publicFiles.set('/speech-position.mjs', ['../speech-position.mjs', 'text/javascript']);
+publicFiles.set('/speech-cues.mjs', ['../speech-cues.mjs', 'text/javascript']);
 publicFiles.set('/review.mjs', ['../review.mjs', 'text/javascript']);
 async function bodyJson(req) {
   if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) throw new Error('JSON 요청 형식이 필요합니다.');

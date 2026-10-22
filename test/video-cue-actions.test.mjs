@@ -10,6 +10,7 @@ import {parseSubtitles,subtitleSpeechHeight} from '../video/subtitles.mjs';
 import {reviewCues} from '../video/review.mjs';
 import {translations} from '../video/public/locales.mjs';
 import * as geometry from '../video/geometry.mjs';
+import {speechDisplayCues} from '../video/speech-cues.mjs';
 
 const videoId='dQw4w9WgXcQ',extensionId='test-extension',token='a'.repeat(64);
 const sender={id:extensionId,frameId:0,tab:{id:12,url:`https://www.youtube.com/watch?v=${videoId}`}};
@@ -83,6 +84,21 @@ test('relay edits only the selected job and retries a saved report without creat
  const done=await cueAction({...bound,action:'report',issue,reportId:failed.reportId},sender,deps);assert.equal(done.receiptId,'A-20261019-123456abcdef');assert.equal(creates,1);assert.equal(sends,2);
  assert(!JSON.stringify(done).includes(token));assert(paths.every(path=>/^\/api\/(?:jobs|reports)\//.test(path)||path==='/api/reports'));
  await cueAction({...bound,action:'exclude',excluded:false},{...sender,tab:{id:12},url:sender.tab.url},deps);assert.equal(app.jobs.get(job.id).cues[1].excluded,false);
+});
+
+test('reporting a short display piece saves the full matching source/translation pair and rejects stale captions',async t=>{
+ const{app,job,base,api}=await fixture(t);
+ const cue={id:'1',startMs:0,endMs:20000,sourceText:'The first sentence establishes the context. The second sentence explains the condition. The final sentence states the result.',translatedText:'첫 문장은 문맥을 설명합니다. 두 번째 문장은 조건을 설명합니다. 마지막 문장은 그 조건에 맞는 결과를 알려 줍니다. 긴 문장도 빠뜨리지 않습니다.'};
+ const saved=app.jobs.get(job.id);saved.cues=[cue];saved.options.transcribeOnly=false;saved.options.targetLanguage='ko';app.jobs.save(saved);
+ const piece=speechDisplayCues(saved.cues).at(-1);assert.notEqual(piece.translatedText,cue.translatedText);
+ const expectedCue={sourceText:piece.parentCue.sourceText,translatedText:piece.parentCue.translatedText};
+ const deps={extensionId,getToken:async()=>token,fetcher:async(url,init)=>url.endsWith('/send')?Response.json({receiptId:'A-20261023-123456abcdef'}):fetch(url.replace('http://127.0.0.1:4318',base),init)};
+ const request={action:'report',jobId:job.id,videoId,cueId:piece.parentCue.id,expectedCue,issue:{type:'meaning',explanation:'Incorrect condition',suggestion:''}};
+ const result=await cueAction(request,sender,deps);assert(result.ok);const report=app.reports.get(result.reportId);
+ assert.equal(report.source.text,cue.sourceText);assert.equal(report.target.text,cue.translatedText);assert.equal(report.video.startMs,cue.startMs);assert.equal(report.video.endMs,cue.endMs);
+ saved.cues[0]={...cue,translatedText:'Changed after opening the menu'};app.jobs.save(saved);
+ await assert.rejects(cueAction(request,sender,deps),/자막이 변경/);assert.equal(app.reports.list().length,1);
+ const response=await api('/api/reports',{method:'POST',body:JSON.stringify({jobId:job.id,cueId:cue.id,expectedCue,type:'meaning',explanation:'Stale direct submission'})});assert.equal(response.status,400);assert.equal(app.reports.list().length,1);
 });
 
 test('clicking YouTube screen subtitles opens a localized menu, stops player click propagation, reports and restores deletion',async()=>{
