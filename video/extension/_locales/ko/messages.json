@@ -1,8 +1,0 @@
-{
-  "extensionName": {
-    "message": "ZZZ 자막 작업실"
-  },
-  "extensionDescription": {
-    "message": "미리 번역한 젠레스 영상 자막을 유튜브 위에 표시합니다. SRT/VTT 파일도 불러올 수 있습니다."
-  }
-}
