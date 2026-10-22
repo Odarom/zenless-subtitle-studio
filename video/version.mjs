@@ -1,1 +1,1 @@
-export const VIDEO_VERSION = '0.7.0';
+export const VIDEO_VERSION = '0.7.1';

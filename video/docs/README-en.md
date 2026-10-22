@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.7.1](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.1/zenless-subtitle-studio-0.7.1-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 
@@ -53,7 +53,7 @@ Find a video in the [Shared Subtitle Archive](https://odarom.github.io/zenless-s
 
 **To watch only:** extract the ZIP and load **video-extension** in Chrome/Edge. **You do not need Start.cmd, a PC studio connection, a translation API key or Google login.** Reload version 0.7.0 or later of the extension and refresh YouTube.
 
-**To share:** choose **Share to archive** in a completed YouTube job in the PC studio, check display settings and consent to public sharing. Pending subtitle edits and position changes are saved first. Subtitles, original-video information and display settings become public; video files, API keys and PC paths are excluded. Share only subtitles you have permission to publish. [Privacy](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#en)
+**To share:** choose **Share to archive** in a completed YouTube job or its **job history card** in the PC studio, check display settings and consent to public sharing. Pending subtitle edits and position changes are saved first. Subtitles, original-video information and display settings become public; video files, API keys and PC paths are excluded. Share only subtitles you have permission to publish. [Privacy](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#en)
 
 Choose **Unshare** on the originating PC to remove a post. Deleting local job history alone does not unshare it: **unshare first**. Delivered copies cannot be recalled or prevented from being copied. A viewer’s edits or hiding do not modify the original shared file. Viewers can click shared captions to send private translation reports.
 

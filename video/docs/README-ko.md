@@ -4,7 +4,7 @@
 
 유튜브 주소나 영상 파일을 넣고 인식·번역을 마친 뒤, 완성된 자막을 감상하는 Windows PC 프로그램입니다.
 
-**[Windows x64 다운로드 · 0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64 다운로드 · 0.7.1](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.1/zenless-subtitle-studio-0.7.1-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 설치하고 자막 만들기
 
@@ -53,7 +53,7 @@
 
 **감상만 할 때:** ZIP을 풀고 Chrome/Edge에서 **video-extension** 폴더를 확장으로 불러오면 됩니다. **Start.cmd 실행·PC 작업실 연결·번역 API 키·Google 로그인은 필요 없습니다.** 확장은 0.7.0 이상으로 새로고침하고 YouTube 페이지도 새로고침하세요.
 
-**직접 공유할 때:** PC 작업실의 완료된 YouTube 작업에서 **아카이브에 공유**를 누르고 표시 설정과 공개 동의를 확인합니다. 저장하지 않은 자막 수정과 위치도 먼저 저장해 공유합니다. 공개되는 자료는 자막·원본 영상 정보·표시 설정이며, 원본 영상 파일·API 키·PC 경로는 포함하지 않습니다. 공유할 권한이 있는 자막만 올리세요. [개인정보 안내](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#ko)
+**직접 공유할 때:** PC 작업실의 완료된 YouTube 작업 상세 또는 **작업 기록 카드**에서 **아카이브에 공유**를 누르고 표시 설정과 공개 동의를 확인합니다. 저장하지 않은 자막 수정과 위치도 먼저 저장해 공유합니다. 공개되는 자료는 자막·원본 영상 정보·표시 설정이며, 원본 영상 파일·API 키·PC 경로는 포함하지 않습니다. 공유할 권한이 있는 자막만 올리세요. [개인정보 안내](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#ko)
 
 공유한 PC에서 **공유 등록 취소**로 게시를 내릴 수 있습니다. 작업 기록 삭제만으로는 공유가 취소되지 않으므로 **먼저 공유를 취소**하세요. 이미 받은 자막의 복사 자체를 막거나 회수할 수는 없습니다. 다른 사람이 수정·숨긴 자막은 원래 공유 파일을 바꾸지 않습니다. 공유 자막도 클릭해서 오역을 비공개로 신고할 수 있습니다.
 

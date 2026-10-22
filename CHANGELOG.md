@@ -6,6 +6,10 @@
 
 ## 한국어
 
+### 0.7.1
+
+작업 기록 카드에서 아카이브 공유·공유 취소를 바로 실행할 수 있습니다. 공유 창의 음성·화면 옵션을 카드로 묶고 체크박스와 문구를 나란히 정렬했습니다. 글자 크기·시간 조절과 공개 동의도 간결하게 배치했습니다.
+
 ### 0.7.0
 
 공유된 자막 아카이브를 추가했습니다. 원작자의 YouTube 영상에서 확장만으로 공유 자막을 보고 오역을 신고할 수 있습니다. PC 작업실에서 자막·표시 설정을 공개 동의 후 공유하고 취소할 수 있습니다. 완료된 YouTube 작업의 임시 영상만 삭제해 자막·기록을 유지하며 공간을 정리할 수 있습니다.
@@ -49,6 +53,10 @@
 ---
 
 ## English
+
+### 0.7.1
+
+Share or unshare archive captions directly from job history cards. The sharing dialog groups speech and screen options into compact cards, aligns checkboxes with their labels, and organizes size, timing and consent controls.
 
 ### 0.7.0
 
@@ -94,6 +102,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 
 ## 日本語
 
+### 0.7.1
+
+作業履歴カードから直接アーカイブへの共有・取消ができます。共有画面の音声・画面オプションを小さなカードにまとめ、チェックボックスと説明を横に揃えました。文字サイズ・時間調整・公開同意も整理しました。
+
 ### 0.7.0
 
 共有字幕アーカイブを追加しました。拡張機能のみで制作者の元のYouTube動画に共有字幕を適用し、誤訳を報告できます。PC作業室から同意のうえ字幕と表示設定を共有・取消できます。完了したYouTube作業の一時動画のみ削除し、字幕と履歴を保持して容量を整理できます。
@@ -137,6 +149,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 ---
 
 ## 简体中文
+
+### 0.7.1
+
+可直接在任务记录卡片共享字幕或取消共享。共享窗口将语音与画面选项分组为紧凑卡片，使复选框与说明并排，并整理字号、时间调整及公开同意设置。
 
 ### 0.7.0
 

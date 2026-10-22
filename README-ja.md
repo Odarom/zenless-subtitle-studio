@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.1/zenless-subtitle-studio-0.7.1-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
@@ -53,7 +53,7 @@ YouTube以外の**自分の動画ファイルも翻訳し、プレビューを�
 
 **視聴のみの場合：**ZIPを展開し、Chrome/Edgeに **video-extension** フォルダーを読み込みます。**Start.cmdの実行、PC作業室への接続、翻訳APIキー、Googleログインは不要です。** 拡張を0.7.0以降に再読み込みし、YouTubeも更新してください。
 
-**共有する場合：**PC作業室の完了したYouTube作業で **アーカイブに共有**を選び、表示設定と公開への同意を確認します。未保存の字幕編集・位置は先に保存します。字幕・元動画情報・表示設定が公開され、動画ファイル・APIキー・PCパスは送信しません。公開する権利のある字幕のみ共有してください。[プライバシー](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#ja)
+**共有する場合：**PC作業室の完了したYouTube作業の詳細、または **作業履歴カード**で **アーカイブに共有**を選び、表示設定と公開への同意を確認します。未保存の字幕編集・位置は先に保存します。字幕・元動画情報・表示設定が公開され、動画ファイル・APIキー・PCパスは送信しません。公開する権利のある字幕のみ共有してください。[プライバシー](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#ja)
 
 共有元PCの **共有を取り消す** で掲載を終了できます。履歴の削除だけでは公開は取り消されないため、**先に共有を取り消してください。** 配信済みのコピーは回収できず、複製自体も防げません。視聴者の編集・非表示は元の共有ファイルを変更しません。共有字幕のクリックから非公開の誤訳報告も送れます。
 
