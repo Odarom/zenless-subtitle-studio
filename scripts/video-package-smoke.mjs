@@ -5,6 +5,7 @@ import { spawn } from 'node:child_process';
 import net from 'node:net';
 import { zipOperation, sha256File } from '../video/downloads.mjs';
 import { parseSubtitles } from '../video/subtitles.mjs';
+import { pathToFileURL } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const release = JSON.parse(readFileSync(join(root, 'dist', 'video-release.json'), 'utf8'));
 if (await sha256File(release.output) !== release.sha256) throw new Error('배포 ZIP 체크섬이 다릅니다.');
@@ -20,6 +21,9 @@ for (const locale of ['ko', 'en', 'ja', 'zh-CN']) if (!existsSync(join(folder, `
 for (const file of ['geometry.js', 'geometry.mjs', 'i18n.mjs', 'locales.mjs', '_locales/ja/messages.json']) if (!existsSync(join(folder, 'video-extension', file))) throw new Error('확장 프로그램 언어·위치 모듈이 없습니다.');
 const extensionManifest = JSON.parse(readFileSync(join(folder, 'video-extension/manifest.json'), 'utf8'));
 for (const file of [...extensionManifest.content_scripts.flatMap(item => item.js), extensionManifest.background.service_worker]) if (!existsSync(join(folder, 'video-extension', file))) throw new Error('자막 클릭 메뉴의 확장 파일이 없습니다.');
+for(const file of ['archive.mjs','archive-protocol.mjs','subtitles.mjs','geometry.mjs'])if(!existsSync(join(folder,'video-extension',file)))throw new Error('공유 아카이브의 확장 파일이 없습니다.');
+const archiveExtension=await import(pathToFileURL(join(folder,'video-extension/archive.mjs')));if(typeof archiveExtension.loadArchive!=='function'||typeof archiveExtension.reportArchive!=='function')throw new Error('공유 자막의 독립 실행 모듈을 불러오지 못했습니다.');
+if(await sha256File(join(folder,'video-extension/archive-protocol.mjs'))!==await sha256File(join(root,'video/archive.mjs')))throw new Error('확장의 공유 자막 규격 파일이 다릅니다.');
 if (!readFileSync(join(folder, 'video-extension/content.js'), 'utf8').includes("attachShadow({ mode: 'closed' })")) throw new Error('배포 확장의 화면 영역 설정이 변경되었습니다.');
 function mirror(source, target) {
   mkdirSync(dirname(target), { recursive: true });

@@ -4,9 +4,11 @@
 
 ## 한국어
 
+공유 자막 감상만 하려면 [아카이브 사용법](README-ko.md#archive-viewer)을 보세요. 확장만 있으면 되며 PC 작업실·API 키는 필요 없습니다.
+
 유튜브·로컬 영상의 인식과 번역을 마친 뒤 완성된 자막을 봅니다.
 
-**[Windows 프로그램 다운로드](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)**
+**[Windows 프로그램 다운로드](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)**
 
 1. ZIP을 모두 풀고 **Start.cmd**를 실행합니다.
 2. 열린 프로그램의 **왼쪽 메뉴 → API 및 연결 설정**에서 본인 API 키를 저장합니다.
@@ -22,9 +24,11 @@
 
 ## English
 
+For shared captions only, see the [archive guide](README-en.md#archive-viewer). Only the extension is required; no PC studio or API key.
+
 Recognize and translate a YouTube or local video, then watch with finished subtitles.
 
-**[Download for Windows](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)**
+**[Download for Windows](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)**
 
 1. Extract all files and run **Start.cmd**.
 2. Save your key under **Left menu → API & connection** in the program page.
@@ -40,9 +44,11 @@ For your own video files, **use the preview to check scenes, edit or delete subt
 
 ## 日本語
 
+共有字幕の視聴のみなら[アーカイブの使い方](README-ja.md#archive-viewer)をご覧ください。拡張機能のみで利用でき、PC作業室・APIキーは不要です。
+
 YouTube・ローカル動画を認識・翻訳し、完成した字幕で視聴します。
 
-**[Windows版をダウンロード](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)**
+**[Windows版をダウンロード](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)**
 
 1. ZIPをすべて展開し、**Start.cmd**を実行します。
 2. 開いた画面の**左メニュー → API・接続設定**で自分のキーを保存します。
@@ -58,9 +64,11 @@ YouTube・ローカル動画を認識・翻訳し、完成した字幕で視聴�
 
 ## 简体中文
 
+仅观看共享字幕请查看[档案馆使用说明](README-zh-CN.md#archive-viewer)。只需扩展，无需PC工作室或API密钥。
+
 完成YouTube或本地视频的识别和翻译后，使用生成的字幕观看。
 
-**[下载Windows程序](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)**
+**[下载Windows程序](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)**
 
 1. 完整解压ZIP并运行**Start.cmd**。
 2. 在程序页面的**左侧菜单 → API 与连接设置**保存自己的密钥。

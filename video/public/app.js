@@ -109,14 +109,28 @@ function jobButtons(job) {
   const busy = ['queued', 'running'].includes(job.status), pending = state.actions.has(job.id), controls = node('div', { class: 'button-row' });
   if (busy) controls.append(node('button', { class: 'secondary', type: 'button', text: t(job.cancelRequested ? '중단 중' : '작업 중단'), disabled: pending || job.cancelRequested, onclick: () => action('cancel', job.id) }));
   if (['failed', 'cancelled', 'interrupted'].includes(job.status)) controls.append(node('button', { class: 'primary', type: 'button', text: t('이어하기'), disabled: pending, onclick: () => action('resume', job.id) }));
+  if(job.temporaryVideoBytes>0)controls.append(node('button',{class:'secondary',type:'button',text:t('임시 영상 삭제 ({size} MB)',{size:(job.temporaryVideoBytes/1048576).toLocaleString(i18n.locale,{maximumFractionDigits:1})}),disabled:pending||job.videoSaving||state.videoSaves.has(job.id),onclick:()=>removeTemporaryVideo(job)}));
   controls.append(node('button', { class: 'secondary', type: 'button', text: t('기록 삭제'), disabled: pending || job.status === 'running' || job.cancelRequested || job.videoSaving || state.videoSaves.has(job.id), title: job.videoSaving ? t('영상 저장을 마치거나 중단한 뒤 기록을 삭제하세요.') : job.status === 'running' ? t('실행 중인 작업은 먼저 중단한 뒤 삭제하세요.') : '', onclick: () => action('delete', job.id) }));
   return controls;
 }
-function confirmJobDeletion() {
+async function removeTemporaryVideo(job){
+  if(state.actions.has(job.id)||$('temporaryVideoDialog'))return;
+  const accepted=await new Promise(resolve=>{
+    const dialog=node('dialog',{id:'temporaryVideoDialog','aria-labelledby':'temporaryVideoTitle'}),finish=value=>{dialog.close();dialog.remove();resolve(value);};
+    dialog.append(node('h2',{id:'temporaryVideoTitle',text:t('임시 영상만 삭제')}),node('p',{text:t('프로그램에 보관된 이 작업의 임시 영상 {size} MB를 삭제할까요? 자막·수정 내용·작업 기록과 따로 다운로드한 파일은 유지합니다.',{size:(job.temporaryVideoBytes/1048576).toLocaleString(i18n.locale,{maximumFractionDigits:1})})}),node('p',{class:'description',text:t('유튜브에서 자막 보기와 자막 수정·다운로드는 계속 가능합니다. 영상 저장을 다시 누르면 영상을 새로 다운로드합니다.')}),node('div',{class:'button-row'},node('button',{class:'secondary',type:'button',text:t('닫기'),onclick:()=>finish(false)}),node('button',{class:'primary',type:'button',text:t('임시 영상만 삭제'),onclick:()=>finish(true)})));
+    dialog.addEventListener('cancel',e=>{e.preventDefault();finish(false);},{once:true});document.body.append(dialog);dialog.showModal();
+  });
+  if(!accepted)return;state.actions.add(job.id);state.refreshSerial++;renderJobLists();if(state.detail)renderDetail();
+  try{const result=await apiJson(`/api/jobs/${job.id}/temporary-video`,{method:'DELETE'});toast(t('임시 영상을 삭제해 {size} MB를 확보했습니다.',{size:(result.removedBytes/1048576).toLocaleString(i18n.locale,{maximumFractionDigits:1})}));}
+  catch(error){toast(error.message,true);}
+  finally{state.actions.delete(job.id);try{await refreshJobs();}catch(error){toast(error.message,true);}}
+}
+function confirmJobDeletion(job) {
   if ($('deleteJobDialog')) return Promise.resolve(false);
   return new Promise(resolve => {
     const dialog = node('dialog', { id: 'deleteJobDialog', 'aria-labelledby': 'deleteJobTitle' });
     const finish = accepted => { dialog.close(); dialog.remove(); resolve(accepted); };
+    if(job?.archiveShareId)dialog.append(node('p',{class:'hint',text:t('이 기록을 삭제해도 아카이브 공유는 유지됩니다. 공유도 내리려면 먼저 공유 등록을 취소하세요.')}));
     dialog.append(node('h2', { id: 'deleteJobTitle', text: t('기록 삭제') }),
       node('p', { text: t('이 작업의 기록과 프로그램에 보관된 영상·자막·임시 파일을 삭제할까요? 따로 저장한 원본·다운로드 파일과 API 설정은 유지합니다.') }),
       node('p', { class: 'description', text: t('다른 작업도 사용하는 영상 사본은 마지막 작업 기록을 삭제할 때 정리합니다.') }),
@@ -129,7 +143,7 @@ function confirmJobDeletion() {
 }
 async function action(name, id = state.selected) {
   if (!id || state.actions.has(id)) return;
-  if (name === 'delete' && !await confirmJobDeletion()) return;
+  if (name === 'delete' && !await confirmJobDeletion(state.jobs.find(job=>job.id===id))) return;
   state.actions.add(id); state.refreshSerial++; renderJobLists(); if (state.detail) renderDetail();
   try {
     await apiJson(name === 'delete' ? `/api/jobs/${id}` : `/api/jobs/${id}/${name}`, { method: name === 'delete' ? 'DELETE' : 'POST' });
@@ -152,6 +166,25 @@ async function download(format, positioned = false) {
     const anchor = node('a', { href: url, download: `${(state.detail.title || t('젠레스 자막')).replace(/[<>:"/\\|?*]/g, '_')}.${mode}${track === 'all' ? '' : '.' + track}${positioned ? ".positioned" : ""}.${format}` });
     document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
   } catch (error) { toast(error.message, true); }
+}
+function openArchiveShare(job){
+ const dialog=node('dialog',{'aria-label':t('아카이브에 공유')});
+ const close=()=>{dialog.close();dialog.remove();};
+ const speech=node('input',{type:'checkbox',checked:true}),screen=node('input',{type:'checkbox',checked:true}),maskSpeech=node('input',{type:'checkbox',checked:state.previewMaskSpeech!==false}),maskScreen=node('input',{type:'checkbox',checked:state.previewMaskScreen!==false}),font=node('input',{type:'number',min:16,max:48,value:28}),offset=node('input',{type:'number',min:-3600,max:3600,step:.1,value:0}),consent=node('input',{type:'checkbox'}),status=node('p',{role:'status'});
+ const submit=node('button',{class:'primary',type:'button',text:t('동의하고 공유'),disabled:true}),cancel=node('button',{class:'secondary',type:'button',text:t('닫기'),onclick:close});
+ dialog.append(node('h2',{text:t('아카이브에 공유')}),node('p',{text:job.title}),node('p',{text:t('자막·원본 유튜브 정보·표시 설정을 공개 공유합니다. API 키·PC 경로·원본 영상 파일은 보내지 않습니다.')}),node('p',{class:'hint',text:t('공유 자막은 등록된 원본 유튜브 영상에서만 표시됩니다. 공유 등록 후에도 다른 사람이 받은 데이터의 복사 자체를 막을 수는 없습니다.')}),node('label',{},speech,t('음성 자막 표시')),node('label',{},screen,t('화면 번역 표시')),node('label',{},maskSpeech,t('음성 자막 뒤에 배경 표시')),node('label',{},maskScreen,t('화면 글자 뒤에 배경 표시')),node('label',{},t('글자 크기'),font),node('label',{},t('자막 지연 (초)'),offset),node('label',{},consent,t('이 자막을 공개 공유하는 데 동의합니다.')),node('div',{class:'button-row'},submit,cancel),status);
+ consent.onchange=()=>submit.disabled=!consent.checked;
+ submit.onclick=async()=>{submit.disabled=true;cancel.disabled=true;try{
+  if(!consent.checked)throw Error(t('자막을 공개 공유하는 데 동의한 뒤 등록하세요.'));const id=job.id;await state.positionSaves.get(id);if(state.positionDrafts.has(id))await persistSpeechHeight(id,state.positionDrafts.get(id));await saveSubtitleDrafts(id);
+  const result=await apiJson(`/api/jobs/${id}/share`,{method:'POST',body:{consent:true,display:{showSpeech:speech.checked,showScreen:screen.checked,maskSpeech:maskSpeech.checked,maskScreen:maskScreen.checked,fontSize:Number(font.value),offsetMs:Math.round(Number(offset.value)*1000)}}});
+  if(state.detail?.id===id)state.detail.archiveShareId=result.id;close();renderDetail();toast(t('공유 자막을 등록했습니다. 아카이브에서 확인하세요.'));
+ }catch(error){status.textContent=i18n.message(error.message);submit.disabled=!consent.checked;}finally{cancel.disabled=false;}};
+ dialog.addEventListener('cancel',event=>{event.preventDefault();if(!cancel.disabled)close();});document.body.append(dialog);dialog.showModal();
+}
+async function unshareArchive(job){
+ const dialog=node('dialog',{'aria-label':t('공유 등록 취소')}),close=()=>{dialog.close();dialog.remove();},status=node('p',{role:'status'});
+ const confirm=node('button',{class:'primary',type:'button',text:t('공유 등록 취소')}),cancel=node('button',{class:'secondary',type:'button',text:t('닫기'),onclick:close});dialog.append(node('h2',{text:t('공유 등록 취소')}),node('p',{text:t('아카이브에서 이 공유 자막을 내립니다. PC 작업과 별도로 받은 사본은 유지됩니다.')}),node('div',{class:'button-row'},confirm,cancel),status);
+ confirm.onclick=async()=>{confirm.disabled=true;try{await apiJson(`/api/jobs/${job.id}/unshare`,{method:'POST',body:{}});if(state.detail?.id===job.id)state.detail.archiveShareId=null;close();renderDetail();toast(t('공유 등록을 취소했습니다.'));}catch(error){status.textContent=i18n.message(error.message);confirm.disabled=false;}};dialog.addEventListener('cancel',event=>{event.preventDefault();close();});document.body.append(dialog);dialog.showModal();
 }
 async function persistSpeechHeight(id, value) {
   const previous = state.positionSaves.get(id);
@@ -320,6 +353,7 @@ function renderDetail() {
   const buttons = node('div', { class: 'button-row' }, downloadTrack, downloadMode, node('button', { class: 'primary', type: 'button', text: t('SRT 저장 ↓'), onclick: () => download('srt') }), node('button', { class: 'secondary', type: 'button', text: t('VTT 저장 ↓'), onclick: () => download('vtt', true) }), node('button', { class: 'secondary', type: 'button', text: t('프로젝트 JSON ↓'), onclick: () => download('json') }));
   if (job.videoId) buttons.append(node('button', { class: 'secondary', type: 'button', text: t(state.videoSaves.has(job.id) ? '영상 저장 취소' : job.videoSaving ? '영상 저장 중' : '유튜브 영상 저장 ↓'), disabled: job.videoSaving && !state.videoSaves.has(job.id), onclick: () => saveVideo(job) }), node('a', { class: 'secondary', href: `https://www.youtube.com/watch?v=${job.videoId}`, target: '_blank', rel: 'noopener', text: t('유튜브에서 열기 ↗') }));
   element.append(node('p', { class: 'progress-message', text: i18n.message(job.message) }), buttons);
+  if(job.videoId&&!job.options.transcribeOnly)element.append(node('div',{class:'button-row archive-actions'},node('a',{class:'secondary',href:'https://odarom.github.io/zenless-subtitle-studio/archive/',target:'_blank',rel:'noopener noreferrer',text:t('공유된 자막 아카이브')}),job.archiveShareId?node('button',{class:'secondary',type:'button',text:t('공유 등록 취소'),onclick:()=>unshareArchive(job)}):node('button',{class:'secondary',type:'button',text:t('아카이브에 공유'),onclick:()=>openArchiveShare(job)})));
   element.append(node('p', { class: 'meta-line', text: `${job.origin?.includes('auto') ? t('유튜브 자동 자막 기반 · 원문 오류를 확인하세요.') : job.origin === 'whisper' ? t('음성 인식 기반 · {runtime}', { runtime: i18n.message(job.runtime) || t('로컬 처리') }) : t('기존 원어 자막 기반')}${job.translationConfig ? ` · ${job.translationConfig.provider} / ${job.translationConfig.model}` : ''} · ${t('확인 표시 {count}개 구간', { count: job.cues.filter(cue => cue.warnings?.length).length })}` }));
   if (job.videoId) element.append(node('p', { class: 'hint', text: t('유튜브 영상에서 확장 프로그램을 열고 이 작업의 자막을 적용하세요.') }));
   element.append(node('p', { class: 'hint', text: t('화면 위치는 프로젝트 JSON 또는 위치 포함 VTT로 저장하세요. YouTube CC의 모양은 시청자 설정에 따라 달라집니다.') }));

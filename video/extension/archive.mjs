@@ -1,0 +1,20 @@
+import {ARCHIVE_API,ARCHIVE_ID,archiveProject} from './archive-protocol.mjs';
+export function archiveSender(message,sender,extensionId){
+ let url;try{url=new URL(sender.tab?.url||sender.url);}catch{}
+ if(sender.id!==extensionId||sender.frameId&&sender.frameId!==0||!Number.isInteger(sender.tab?.id)||url?.protocol!=='https:'||url.port||url.username||url.password||url.hostname!=='www.youtube.com'||url.pathname!=='/watch'||url.searchParams.get('v')!==message.videoId||!/^[-\w]{11}$/.test(message.videoId||'')||!ARCHIVE_ID.test(message.archiveId||''))throw Error('등록된 원본 유튜브 영상에서만 볼 수 있습니다.');
+}
+export async function loadArchive(message,sender,{extensionId,fetcher=fetch,storage}={}){
+ archiveSender(message,sender,extensionId);const r=await fetcher(ARCHIVE_API+'/entries/'+message.archiveId+'/play?videoId='+message.videoId,{redirect:'error',signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('공유 자막을 불러오지 못했습니다. 아카이브에서 다시 열어 주세요.');
+ const parts=[];let size=0;for await(const part of r.body){size+=part.byteLength;if(size>16*1048576+16384)throw Error('공유 자막 크기를 확인하세요.');parts.push(part);}const bytes=new Uint8Array(size);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.byteLength;}const value=JSON.parse(new TextDecoder().decode(bytes)),project=archiveProject(value.project);
+ if(value.entry?.id!==message.archiveId||value.entry.videoId!==message.videoId||project.videoId!==message.videoId)throw Error('공유 자막의 원본 영상이 일치하지 않습니다.');const saved=await storage?.get('uiLanguage');const uiLanguage=['ko','en','ja','zh-CN'].includes(saved?.uiLanguage)?saved.uiLanguage:typeof navigator!=='undefined'&&navigator.language.startsWith('ja')?'ja':typeof navigator!=='undefined'&&navigator.language.startsWith('zh')?'zh-CN':typeof navigator!=='undefined'&&navigator.language.startsWith('ko')?'ko':'en';return{archiveId:message.archiveId,videoId:message.videoId,cues:project.cues,settings:{...project.display,uiLanguage},sourceLanguage:project.sourceLanguage,targetLanguage:project.targetLanguage};
+}
+export async function reportArchive(message,sender,{extensionId,fetcher=fetch,storage}={}){
+ const project=await loadArchive(message,sender,{extensionId,fetcher}),cue=project.cues.find(c=>c.id===message.cueId),issue=message.issue||{};
+ if(!cue||!['term','missing','meaning','wording','other'].includes(issue.type)||typeof issue.explanation!=='string'||!issue.explanation.trim()||issue.explanation.length>1000||typeof(issue.suggestion??'')!=='string'||(issue.suggestion||'').length>2000)throw Error('신고할 자막과 설명을 확인하세요.');
+ let saved=(await storage.get('archiveInstallation')).archiveInstallation;if(!/^[a-f0-9-]{36}$/.test(saved||'')){saved=crypto.randomUUID();await storage.set({archiveInstallation:saved});}
+ const day=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('-','');
+ const id=/^V-\d{8}-[a-f0-9]{12}$/.test(message.reportId||'')?message.reportId:'V-'+day+'-'+[...crypto.getRandomValues(new Uint8Array(6))].map(x=>x.toString(16).padStart(2,'0')).join('');
+ const report={id,source:{text:cue.sourceText,language:project.sourceLanguage==='auto'?null:project.sourceLanguage},target:{text:cue.translatedText||cue.sourceText,language:project.targetLanguage},issue:{type:issue.type,explanation:issue.explanation.trim(),suggestion:issue.suggestion||''},video:{startMs:cue.startMs,endMs:cue.endMs,kind:cue.kind==='screen'?'screen':'speech',...(issue.includeVideoUrl===true?{url:'https://www.youtube.com/watch?v='+message.videoId}:{})},metadata:{},createdAt:Date.now()};
+ const r=await fetcher(ARCHIVE_API.replace('/api/archive','/api/reports'),{method:'POST',redirect:'error',signal:AbortSignal.timeout(25000),headers:{'Content-Type':'application/json'},body:JSON.stringify({installationId:saved,report})});
+ if(!r.ok)return{error:'신고를 전송하지 못했습니다. 잠시 후 다시 보내세요.',reportId:id};const value=await r.json();if(!/^A-\d{8}-[a-f0-9]{12}$/.test(value.receiptId||''))throw Error('신고 접수 번호를 확인하지 못했습니다.');return{ok:true,reportId:id,receiptId:value.receiptId};
+}

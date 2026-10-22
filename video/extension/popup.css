@@ -3,3 +3,5 @@
 .checks{margin:12px 0}.checks label{display:flex;align-items:center;gap:6px;margin:8px 0}.checks input{width:auto}
 
 .report-help{border-left:2px solid #d9fd68;background:#d9fd6809;padding:10px 12px;margin:12px 0}.report-help strong{color:#d9fd68;font-size:11px}.report-help p{font-size:10px;line-height:1.7;margin:7px 0 0}
+
+.archive-link{display:block;margin:12px 0 18px;padding:11px;border:1px solid #7c9940;border-radius:8px;text-align:center;color:#d9fd68;text-decoration:none;font-weight:600}.archive-link:hover{background:#d9fd6815}

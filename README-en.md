@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 
@@ -45,6 +45,19 @@ The YouTube extension is not needed to preview your own file. If the browser can
 2. In **Studio's left menu → API & connection → Connect the YouTube extension**, click **Copy PC connection code**.
 3. Open the YouTube video and click the **ZZZ Subtitle Studio extension icon** at the top right of the browser. Paste into **PC connection code**, then click **Connect**. This is not your translation API key.
 4. Under **Finished subtitles**, choose the video's job and click **Apply selected subtitles**.
+
+<a id="archive-viewer"></a>
+## Shared Subtitle Archive
+
+Find a video in the [Shared Subtitle Archive](https://odarom.github.io/zenless-subtitle-studio/archive/) and select **Watch on YouTube (extension required)**. Captions apply only to the registered original creator’s YouTube video. The archive provides no embedded playback or subtitle download.
+
+**To watch only:** extract the ZIP and load **video-extension** in Chrome/Edge. **You do not need Start.cmd, a PC studio connection, a translation API key or Google login.** Reload version 0.7.0 or later of the extension and refresh YouTube.
+
+**To share:** choose **Share to archive** in a completed YouTube job in the PC studio, check display settings and consent to public sharing. Pending subtitle edits and position changes are saved first. Subtitles, original-video information and display settings become public; video files, API keys and PC paths are excluded. Share only subtitles you have permission to publish. [Privacy](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#en)
+
+Choose **Unshare** on the originating PC to remove a post. Deleting local job history alone does not unshare it: **unshare first**. Delivered copies cannot be recalled or prevented from being copied. A viewer’s edits or hiding do not modify the original shared file. Viewers can click shared captions to send private translation reports.
+
+**Free video storage only:** **Delete cached video (MB)** in a completed YouTube job removes the app’s screen-analysis video and saved-video copies. Captions, edits, job history and separately downloaded files remain. YouTube captions still work; saving the video again downloads a fresh copy.
 
 ## Save and edit
 

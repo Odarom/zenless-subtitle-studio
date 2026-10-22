@@ -19,7 +19,7 @@ export function publicSource(root) {
       else if (/\.(?:m?js|json|html|css|svg|md)$/.test(item.name)) add(path);
     }
   };
-  for (const dir of ['video', 'src', 'scripts', 'services', 'test', 'runner']) walk(dir);
+  for (const dir of ['video', 'src', 'scripts', 'services', 'test', 'runner', 'archive']) walk(dir);
   if (existsSync(join(root, 'docs/discord'))) walk('docs/discord');
   for (const name of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md', 'classification.json', 'TAGS.md']) add(`glossary/${name}`);
   for (const name of ['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml']) add(`glossary/issue-templates/${name}`);

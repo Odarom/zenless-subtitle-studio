@@ -3,14 +3,14 @@
   globalThis.__zzzSubtitlesInstalled = true;
   const geometry = globalThis.__zzzGeometry;
   const position = globalThis.__zzzSpeechPosition;
-  let speech, moveHandle, cancelDrag;
+  let speech, moveHandle, cancelDrag, archiveId=null, archiveKey='', archiveSerial=0, archiveCheck=0, archiveNotice;
   let cues = [], speechIndex, screenIndex, videoId = null, jobId = null, host, label, screenLayer, menuRoot, lastText = null, nextCheck = 0, player, video, menu, visibleSpeech = [];
   const screenNodes = new Map();
   const settings = { mode: 'translated', offsetMs: 0, fontSize: 28, showSpeech: true, showScreen: true, maskSpeech: true, maskScreen: true, uiLanguage: 'ko', speechHeight: 0.11 };
   const t = (key, values = {}) => (globalThis.__zzzOverlayI18n?.[settings.uiLanguage]?.[key] || key).replace(/\{(\w+)\}/g, (match,name) => values[name] ?? match);
   const currentId = () => { const url = new URL(location.href); return url.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([^/]+)/.exec(url.pathname)?.[1]; };
   const cueText = cue => settings.mode === 'source' ? cue.sourceText : settings.mode === 'bilingual' && cue.translatedText !== cue.sourceText ? `${cue.sourceText}\n${cue.translatedText || ''}` : cue.translatedText || cue.sourceText;
-  function clear() { cancelDrag?.(); closeMenu(false); cues = []; videoId = null; jobId = null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; speech = null; }
+  function clear() { cancelDrag?.(); closeMenu(false); cues = []; videoId = null; jobId = null; archiveId=null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; speech = null; }
   function indexCues() { speechIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind !== 'screen')); screenIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind === 'screen')); lastText = null; }
   function block(event) { event.preventDefault(); event.stopPropagation(); }
   function clickable(element, callback) {
@@ -37,11 +37,16 @@
     close.onclick=()=>closeMenu();buttons.append(close,exclude,report);
     const render=()=>{source.textContent=cue.sourceText;translated.textContent=cue.translatedText||cue.sourceText;exclude.textContent=t(cue.excluded?'자막 복원':'자막 삭제');};render();
     const action=async (payload,target=cue)=>{
+      if(archiveId){
+        if(payload.action==='exclude')return{ok:true,excluded:payload.excluded};
+        const result=await chrome.runtime.sendMessage({type:'ZZZ_ARCHIVE_REPORT',archiveId,videoId,cueId:target.id,...payload});
+        if(!result)throw new Error(t('신고를 전송하지 못했습니다. 잠시 후 다시 보내세요.'));return result;
+      }
       if(!jobId)throw new Error(t('PC 작업을 연결해 적용하면 신고·제외를 사용할 수 있습니다.'));
       const result=await chrome.runtime.sendMessage({type:'ZZZ_CUE_ACTION',jobId,videoId,cueId:target.id,...payload});
       if(!result)throw new Error(t('PC 연결을 확인하세요.'));return result;
     };
-    exclude.onclick=async()=>{const target=cue;exclude.disabled=true;if(select)select.disabled=true;try{const result=await action({action:'exclude',excluded:!target.excluded},target);if(result.error)throw new Error(result.error);target.excluded=result.excluded;indexCues();render();status.textContent=t(target.excluded?'자막을 삭제했습니다. 삭제한 자막 탭에서 복원할 수 있습니다.':'자막을 복원했습니다.');}catch(error){status.textContent=t(error.message);}finally{exclude.disabled=false;if(select)select.disabled=false;}};
+    exclude.onclick=async()=>{const target=cue;exclude.disabled=true;if(select)select.disabled=true;try{const result=await action({action:'exclude',excluded:!target.excluded},target);if(result.error)throw new Error(result.error);target.excluded=result.excluded;indexCues();render();status.textContent=t(target.excluded?(archiveId?'이 페이지에서 자막을 숨겼습니다. 새로고침하면 다시 표시됩니다.':'자막을 삭제했습니다. 삭제한 자막 탭에서 복원할 수 있습니다.'):'자막을 복원했습니다.');}catch(error){status.textContent=t(error.message);}finally{exclude.disabled=false;if(select)select.disabled=false;}};
     const field=(label,input)=>{const wrapper=el('label',t(label));wrapper.append(input);form.append(wrapper);return input;};
     const type=field('문제 유형',el('select'));for(const [value,text]of[['term','게임 용어 오류'],['missing','내용 누락'],['meaning','의미가 달라짐'],['wording','어색한 표현'],['other','기타']])type.append(el('option',t(text),{value}));
     const explanation=field('문제 설명',el('textarea',undefined,{required:true,maxLength:1000})),suggestion=field('수정 제안',el('textarea',undefined,{maxLength:2000}));
@@ -55,7 +60,7 @@
       }catch(error){status.textContent=t(error.message);submit.disabled=false;}finally{if(select)select.disabled=false;}};
     dialog.oncancel=event=>{event.preventDefault();closeMenu();};
     for(const name of ['onclick','onmousedown','onmouseup','onpointerdown','onkeydown'])dialog[name]=event=>event.stopPropagation();
-    if(!jobId){exclude.disabled=true;report.disabled=true;status.textContent=t('PC 작업을 연결해 적용하면 신고·제외를 사용할 수 있습니다.');}
+    if(!jobId&&!archiveId){exclude.disabled=true;report.disabled=true;status.textContent=t('PC 작업을 연결해 적용하면 신고·제외를 사용할 수 있습니다.');}
     menuRoot.append(dialog);dialog.showModal();
   }
   function setSettings(input = {}) {
@@ -148,6 +153,7 @@
     return active.length;
   }
   function tick(now) {
+    if(now>=archiveCheck){archiveCheck=now+500;checkArchive();}
     if (cues.length) {
       if (now >= nextCheck) { nextCheck = now + 400; if (currentId() !== videoId) clear(); else attach(); }
       if (host && video && label) {
@@ -169,7 +175,7 @@
     }
     requestAnimationFrame(tick);
   }
-  chrome.runtime.onMessage.addListener((message, sender, respond) => {
+  function applyMessage(message, sender, respond) {
     if (sender.id !== chrome.runtime.id || !message?.type?.startsWith('ZZZ_SUBTITLES_')) return;
     try {
       if (message.type === 'ZZZ_SUBTITLES_LOAD') {
@@ -181,7 +187,7 @@
           const id=typeof cue.id==='string'&&/^\d{1,8}$/.test(cue.id)?cue.id:String(index+1);if(ids.has(id))throw new Error('자막 구간 형식을 확인하세요.');ids.add(id);
           return { id, startMs: cue.startMs, endMs: cue.endMs, sourceText: cue.sourceText, translatedText: cue.translatedText, excluded:cue.excluded===true,...(cue.kind === 'screen' ? { kind: 'screen', region: cue.region, positions: cue.positions } : {}) };
         });
-        clear(); cues = normalized; videoId = message.videoId;jobId=/^[a-f0-9-]{36}$/.test(message.jobId||'')?message.jobId:null;
+        clear(); cues = normalized; videoId = message.videoId;jobId=/^[a-f0-9-]{36}$/.test(message.jobId||'')?message.jobId:null;archiveId=/^[a-f0-9]{32}$/.test(message.archiveId||'')?message.archiveId:null;
         indexCues();
         setSettings(message.settings); attach(); nextCheck = 0;
       } else if (message.type === 'ZZZ_SUBTITLES_SETTINGS') {
@@ -191,6 +197,21 @@
       else if (message.type === 'ZZZ_SUBTITLES_HIDE') clear();
       respond({ ok: true });
     } catch (error) { respond({ error: error.message }); }
-  });
+  }
+  function showArchiveNotice(text){
+    archiveNotice?.remove();const area=document.querySelector('#movie_player')||document.querySelector('.html5-video-player');if(!area)return;
+    const notice=document.createElement('div');notice.style.cssText='position:absolute;top:16px;left:16px;right:16px;z-index:2147483647;background:#151c16ee;color:#d9fd68;border:1px solid #8ba542;border-radius:8px;padding:12px;font:14px/1.5 system-ui,sans-serif;pointer-events:auto';notice.textContent=t(text);
+    const close=document.createElement('button');close.textContent='×';close.setAttribute('aria-label',t('닫기'));close.style.cssText='float:right;margin-left:12px;background:transparent;color:inherit;border:0;font-size:20px;cursor:pointer';close.onclick=event=>{block(event);notice.remove();};notice.append(close);area.append(notice);archiveNotice=notice;
+  }
+  function checkArchive(){
+    const url=new URL(location.href),id=url.searchParams.get('zzzArchive'),current=currentId(),key=current+':'+id;
+    if(key===archiveKey)return;archiveKey=key;const serial=++archiveSerial;archiveNotice?.remove();
+    if(!/^[a-f0-9]{32}$/.test(id||'')||url.hostname!=='www.youtube.com'||url.pathname!=='/watch'||!/^[-\w]{11}$/.test(current||''))return;
+    chrome.runtime.sendMessage({type:'ZZZ_ARCHIVE_LOAD',archiveId:id,videoId:current}).then(result=>{
+      if(serial!==archiveSerial||currentId()!==current)return;if(result?.error)throw Error(result.error);
+      let error;applyMessage({type:'ZZZ_SUBTITLES_LOAD',...result},{id:chrome.runtime.id},value=>error=value?.error);if(error)throw Error(error);
+    }).catch(error=>{if(serial===archiveSerial)showArchiveNotice(error.message||'공유 자막을 불러오지 못했습니다. 아카이브에서 다시 열어 주세요.');});
+  }
+  chrome.runtime.onMessage.addListener(applyMessage);
   requestAnimationFrame(tick);
 })();

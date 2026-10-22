@@ -10,3 +10,5 @@
 .screen-caption{pointer-events:none;display:grid;place-items:center}.screen-caption>span{min-width:0;max-width:100%}.screen-hit{position:absolute;top:0;left:0;width:100%;padding:0;margin:0;border:0;border-radius:2px;background:transparent;pointer-events:auto;cursor:pointer}.screen-hit:focus-visible{outline:2px solid var(--accent);outline-offset:0}
 
 .report-help{border:1px solid #596c35;border-left:3px solid var(--accent);border-radius:9px;padding:16px 18px;margin-top:20px;background:#d9fd6808}.report-help strong{display:block;color:var(--accent);font-size:14px}.report-help p{font-size:12px;line-height:1.8;margin:8px 0 0}
+
+.archive-link{text-decoration:none}.archive-actions{padding:14px 0;border-bottom:1px solid var(--line,#344033)}

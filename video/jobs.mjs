@@ -9,6 +9,7 @@ import { RequestGate } from './request-gate.mjs';
 import { serializeSubtitles, validateCues, youtubeVideoId } from './subtitles.mjs';
 import { TEXT_LANGUAGES, OCR_LANGUAGES } from '../src/languages.js';
 import { unusedUploadFiles, removeUploadFiles } from './upload-storage.mjs';
+import { temporaryVideos, removeTemporaryVideos } from './temporary-video.mjs';
 
 export const LANGS = ['auto', ...Object.keys(TEXT_LANGUAGES)];
 export class Jobs {
@@ -29,7 +30,16 @@ export class Jobs {
   }
   directory(id) { return join(this.path, id); }
   save(job, patch = {}) { Object.assign(job, patch, { updatedAt: new Date().toISOString() }); saveJson(join(this.directory(job.id), 'job.json'), job); }
-  summary(job) { const { cues, ...value } = job; return { ...value, videoSaving: this.videoSaves.has(job.id), canDelete: this.active?.id !== job.id && job.status !== 'running' && !this.videoSaves.has(job.id), cueCount: cues?.filter(cue => !cue.excluded).length || 0, excludedCueCount: cues?.filter(cue => cue.excluded).length || 0, warningCount: cues?.filter(cue => !cue.excluded && cue.warnings?.length).length || 0 }; }
+  summary(job) { const { cues, ...value } = job; return { ...value, temporaryVideoBytes:this.temporaryVideoBytes(job), videoSaving: this.videoSaves.has(job.id), canDelete: this.active?.id !== job.id && job.status !== 'running' && !this.videoSaves.has(job.id), cueCount: cues?.filter(cue => !cue.excluded).length || 0, excludedCueCount: cues?.filter(cue => cue.excluded).length || 0, warningCount: cues?.filter(cue => !cue.excluded && cue.warnings?.length).length || 0 }; }
+  temporaryVideoBytes(job) { if(!job.videoId||job.input?.fileId||job.status!=='completed')return 0;try{return temporaryVideos(this.path,job.id).reduce((sum,file)=>sum+file.bytes,0);}catch{return 0;} }
+  removeVideo(id) {
+    const job=this.get(id);
+    if(job.status!=='completed'||!job.videoId||job.input?.fileId)throw new Error('완료된 유튜브 작업의 임시 영상만 삭제할 수 있습니다.');
+    if(this.active?.id===id||this.videoSaves.has(id))throw Object.assign(new Error('영상 저장을 마친 뒤 임시 영상을 삭제하세요.'),{statusCode:409});
+    const result=removeTemporaryVideos(temporaryVideos(this.path,id));
+    this.save(job,{temporaryVideoRemovedAt:new Date().toISOString()});
+    return{...result,job:this.summary(job)};
+  }
   list() { return [...this.jobs.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(job => this.summary(job)); }
   get(id) { const job = this.jobs.get(id); if (!job) throw Object.assign(new Error('작업을 찾지 못했습니다.'), { statusCode: 404 }); return job; }
   create(input) {

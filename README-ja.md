@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
@@ -45,6 +45,19 @@ YouTube以外の**自分の動画ファイルも翻訳し、プレビューを�
 2. **作業室の左メニュー → API・接続設定 → YouTube拡張機能を接続**で**PC接続コードをコピー**を押します。
 3. YouTube動画を開き、ブラウザー右上の**ZZZ字幕スタジオの拡張アイコン**を押します。**PC接続コード**欄に貼り付けて**接続**します。翻訳APIキーとは別です。
 4. **完成した字幕**から対象動画の作業を選び、**選択した字幕を適用**します。
+
+<a id="archive-viewer"></a>
+## 共有字幕アーカイブ
+
+[共有字幕アーカイブ](https://odarom.github.io/zenless-subtitle-studio/archive/)で動画を探し、**YouTubeで見る（拡張機能が必要）**を選びます。字幕は登録された制作者の元のYouTube動画でのみ適用されます。サイト内の動画再生や字幕ダウンロードはありません。
+
+**視聴のみの場合：**ZIPを展開し、Chrome/Edgeに **video-extension** フォルダーを読み込みます。**Start.cmdの実行、PC作業室への接続、翻訳APIキー、Googleログインは不要です。** 拡張を0.7.0以降に再読み込みし、YouTubeも更新してください。
+
+**共有する場合：**PC作業室の完了したYouTube作業で **アーカイブに共有**を選び、表示設定と公開への同意を確認します。未保存の字幕編集・位置は先に保存します。字幕・元動画情報・表示設定が公開され、動画ファイル・APIキー・PCパスは送信しません。公開する権利のある字幕のみ共有してください。[プライバシー](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#ja)
+
+共有元PCの **共有を取り消す** で掲載を終了できます。履歴の削除だけでは公開は取り消されないため、**先に共有を取り消してください。** 配信済みのコピーは回収できず、複製自体も防げません。視聴者の編集・非表示は元の共有ファイルを変更しません。共有字幕のクリックから非公開の誤訳報告も送れます。
+
+**動画の容量だけ整理：**完了したYouTube作業の **一時動画を削除（MB）** は画面解析用動画と動画保存用のコピーのみ削除します。字幕・編集・履歴・別途ダウンロードしたファイルは保持します。YouTubeでの字幕視聴は継続でき、再度動画を保存すると新しくダウンロードします。
 
 ## 保存・編集
 

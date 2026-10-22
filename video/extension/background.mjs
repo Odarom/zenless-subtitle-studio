@@ -1,3 +1,4 @@
+import {loadArchive,reportArchive} from './archive.mjs';
 const BASE = 'http://127.0.0.1:4318';
 export async function saveSpeechPosition(message, sender, { extensionId, storage, getToken, fetcher = fetch } = {}) {
   let url; try { url = new URL(sender.tab?.url || sender.url); } catch {}
@@ -59,6 +60,10 @@ if(typeof chrome!=='undefined' && chrome.runtime?.onMessage && chrome.storage?.l
   const pending=new Set();
   let positionWrite = Promise.resolve();
   chrome.runtime.onMessage.addListener((message,sender,respond)=>{
+    if(message?.type==='ZZZ_ARCHIVE_LOAD'||message?.type==='ZZZ_ARCHIVE_REPORT'){
+      const action=message.type==='ZZZ_ARCHIVE_LOAD'?loadArchive:reportArchive;
+      action(message,sender,{extensionId:chrome.runtime.id,storage:chrome.storage.local}).then(respond,error=>respond({error:error.message}));return true;
+    }
     if (message?.type === 'ZZZ_SPEECH_POSITION') {
       positionWrite = positionWrite.catch(() => {}).then(() => saveSpeechPosition(message,sender,{extensionId:chrome.runtime.id,storage:chrome.storage.local,getToken:async()=>(await chrome.storage.local.get('connectionToken')).connectionToken}));
       positionWrite.then(respond, () => respond({error:'자막 위치를 저장하지 못했습니다.'})); return true;

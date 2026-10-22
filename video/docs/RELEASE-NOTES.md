@@ -1,19 +1,19 @@
-# ZZZ Subtitle Studio 0.6.11
+# ZZZ Subtitle Studio 0.7.0
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 ## 한국어
 
-오역 신고 방법과 신고가 ZZZ 게임 용어 DB·번역 품질 개선에 도움이 된다는 안내를 강화했습니다. 설치 안내 바로 아래의 README와 번역 완료 화면·확장에 안내를 표시합니다. 신고 접수·공유 방식은 그대로입니다.
+공유된 자막 아카이브를 추가했습니다. 원작자의 YouTube 영상에서 확장만으로 공유 자막을 보고 오역을 신고할 수 있습니다. PC 작업실에서 자막·표시 설정을 공개 동의 후 공유하고 취소할 수 있습니다. 완료된 YouTube 작업의 임시 영상만 삭제해 자막·기록을 유지하며 공간을 정리할 수 있습니다.
 
 ## English
 
-Made reporting easier to discover and explained how it helps improve the ZZZ game terminology DB and translation quality. Guidance follows setup in the README and appears in completed video jobs and the extension. Report submission and sharing behavior is unchanged.
+Added the Shared Subtitle Archive. View shared captions on the original creator’s YouTube video and report errors with only the extension. Publish captions and display settings with explicit consent from the PC studio, or unshare them. Completed YouTube jobs can delete cached videos while keeping subtitles and history.
 
 ## 日本語
 
-誤訳報告の見つけやすさと、ZZZゲーム用語DB・翻訳品質の改善に役立つことの案内を強化しました。READMEの導入手順直後と、完了した動画作業・拡張に案内を表示します。報告の受付・共有方法は従来どおりです。
+共有字幕アーカイブを追加しました。拡張機能のみで制作者の元のYouTube動画に共有字幕を適用し、誤訳を報告できます。PC作業室から同意のうえ字幕と表示設定を共有・取消できます。完了したYouTube作業の一時動画のみ削除し、字幕と履歴を保持して容量を整理できます。
 
 ## 简体中文
 
-加强误译举报入口及其有助于改进ZZZ游戏术语数据库与翻译质量的说明。在README安装步骤后、视频任务完成页面及扩展中显示指南。举报提交与分享方式保持不变。
+新增共享字幕档案馆。仅使用扩展即可在原作者的YouTube视频观看共享字幕并举报误译。可在PC工作室明确同意后发布字幕与显示设置，也可取消共享。已完成的YouTube任务可仅删除临时视频，保留字幕及记录并释放空间。

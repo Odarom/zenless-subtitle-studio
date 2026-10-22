@@ -19,6 +19,7 @@ import { ProgramUpdates, UPDATE_EXIT_CODE } from './program-updates.mjs';
 import { ReportDelivery } from './report-delivery.mjs';
 import { UPLOAD_EXTENSIONS } from './upload-storage.mjs';
 import { VideoDownloads } from './video-download.mjs';
+import { ArchiveClient } from './archive-client.mjs';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const publicFiles = new Map([['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']], ['/app.js', ['app.js', 'text/javascript']], ['/style.css', ['style.css', 'text/css']], ['/favicon.svg', ['favicon.svg', 'image/svg+xml']]]);
@@ -32,7 +33,7 @@ async function bodyJson(req) {
   for await (const chunk of req) { bytes += chunk.length; if (bytes > 16 * 1048576) throw new Error('요청 내용이 너무 큽니다.'); chunks.push(chunk); }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new Error('요청 내용을 읽지 못했습니다.'); }
 }
-export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'video'), token: suppliedToken, jobsOptions = {}, onProgramRestart, programOptions = {}, videoOptions = {} } = {}) {
+export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'video'), token: suppliedToken, jobsOptions = {}, onProgramRestart, programOptions = {}, videoOptions = {}, archiveOptions = {} } = {}) {
   mkdirSync(dataDir, { recursive: true }); mkdirSync(join(dataDir, 'uploads'), { recursive: true });
   const tokenPath = join(root, '.secrets', 'video-connection.key'); mkdirSync(dirname(tokenPath), { recursive: true });
   if (!suppliedToken && !existsSync(tokenPath)) writeFileSync(tokenPath, randomBytes(32).toString('hex'), { flag: 'wx', mode: 0o600 });
@@ -42,6 +43,7 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
   const glossary = new GlossaryUpdates({ root, dataDir, busy: () => !!jobs?.active || jobs?.list().some(job => ['queued', 'running'].includes(job.status)) });
   jobs = new Jobs({ root, dataDir, settings, glossaryPath: () => glossary.currentPath(), ...jobsOptions });
   const videos = new VideoDownloads({ root, jobs, ...videoOptions });
+  const archive = new ArchiveClient({root,...archiveOptions});
   const reports = new VideoReports({ dataDir, jobs, repository: () => glossary.state.repository });
   const delivery = new ReportDelivery({ dataDir, reports });
   const program = new ProgramUpdates({ root, dataDir, busy: () => !!jobs.active || jobs.videoSaves.size > 0 || jobs.list().some(j => ['queued', 'running'].includes(j.status)), ...programOptions });
@@ -123,14 +125,17 @@ export function createVideoServer({ root = ROOT, dataDir = join(root, 'data', 'v
         } catch (error) { if (existsSync(path)) unlinkSync(path); throw error; }
         saveJson(join(dataDir, 'uploads', `${id}.json`), { id, name, path, size }); return send(res, 201, { id, name, size });
       }
-      const match = /^\/api\/jobs\/([a-f0-9-]{36})(?:\/(cancel|resume|export|video))?$/.exec(url.pathname);
+      const match = /^\/api\/jobs\/([a-f0-9-]{36})(?:\/(cancel|resume|export|video|share|unshare|temporary-video))?$/.exec(url.pathname);
       if (match) {
         const [, id, action] = match;
-        if (!action && req.method === 'GET') return send(res, 200, { ...jobs.get(id), videoSaving: jobs.videoSaves.has(id) });
+        if (!action && req.method === 'GET') return send(res, 200, { ...jobs.get(id), ...jobs.summary(jobs.get(id)) });
+        if (action === 'temporary-video' && req.method === 'DELETE') return send(res,200,jobs.removeVideo(id));
         if (!action && req.method === 'DELETE') return send(res, 200, jobs.remove(id));
-        if (!action && req.method === 'PATCH') { const body = await bodyJson(req); return send(res, 200, jobs.edit(id, body.speechHeight === undefined ? body.changes : body.changes ?? [], body.speechHeight)); }
+        if (!action && req.method === 'PATCH') { const body = await bodyJson(req),job=jobs.edit(id, body.speechHeight === undefined ? body.changes : body.changes ?? [], body.speechHeight); return send(res, 200, {...job,...jobs.summary(job)}); }
         if (action === 'cancel' && req.method === 'POST') return send(res, 200, jobs.cancel(id));
         if (action === 'resume' && req.method === 'POST') return send(res, 202, jobs.resume(id));
+        if (action === 'share' && req.method === 'POST') {const job=jobs.get(id),result=await archive.publish(job,await bodyJson(req));jobs.save(job,{archiveShareId:result.id});return send(res,201,result);}
+        if (action === 'unshare' && req.method === 'POST') {const job=jobs.get(id),result=await archive.remove(job.archiveShareId);jobs.save(job,{archiveShareId:null});return send(res,200,result);}
         if (action === 'video' && req.method === 'POST') {
           const controller = new AbortController(), abort = () => controller.abort(); res.once('close', abort);
           try { send(res, 200, await videos.prepare(id, { signal: controller.signal })); }

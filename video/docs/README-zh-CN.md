@@ -4,7 +4,7 @@
 
 选择YouTube视频或本地文件，完成识别和翻译后，再使用生成的字幕观看。适用于Windows电脑。
 
-**[下载Windows x64版 · 0.6.11](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.6.11/zenless-subtitle-studio-0.6.11-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[下载Windows x64版 · 0.7.0](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.0/zenless-subtitle-studio-0.7.0-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 安装并制作字幕
 
@@ -45,6 +45,19 @@
 2. 在**工作室左侧菜单 → API 与连接设置 → 连接 YouTube 扩展程序**点击**复制本机连接码**。
 3. 打开YouTube视频，点击浏览器右上方的**ZZZ字幕工作室扩展图标**，将代码粘贴到**本机连接码**并点击**连接**。这里不是填写翻译API密钥的地方。
 4. 在**已完成字幕**选择对应视频任务，点击**应用所选字幕**。
+
+<a id="archive-viewer"></a>
+## 共享字幕档案馆
+
+在[共享字幕档案馆](https://odarom.github.io/zenless-subtitle-studio/archive/)查找视频，点击 **在YouTube观看（需扩展）**。字幕仅应用于登记的原作者YouTube视频。档案馆不提供嵌入播放或字幕下载。
+
+**仅观看时：**解压ZIP，在Chrome/Edge加载 **video-extension** 文件夹即可。**无需运行Start.cmd、连接PC工作室、填写翻译API密钥或登录Google。** 请重新加载0.7.0或更新版本的扩展，并刷新YouTube页面。
+
+**分享时：**在PC工作室已完成的YouTube任务中选择 **分享到档案馆**，确认显示设置并同意公开。尚未保存的字幕修改及位置会先保存。公开内容包括字幕、原视频信息和显示设置，不包含视频文件、API密钥及PC路径。请仅分享有权发布的字幕。[隐私说明](https://odarom.github.io/zenless-subtitle-studio/archive/privacy.html#zh-CN)
+
+在原PC选择 **取消共享** 可撤下帖子。删除本地记录不会取消公开，请 **先取消共享**。已经传送的字幕无法收回，也无法阻止复制。观看者的编辑或隐藏不会更改原共享文件。点击共享字幕也可发送非公开误译举报。
+
+**仅清理视频空间：**已完成的YouTube任务中的 **删除临时视频（MB）** 只删除程序的画面分析视频与视频保存副本。字幕、修改、任务记录及单独下载的文件将保留。仍可在YouTube观看字幕；再次保存视频时会重新下载。
 
 ## 保存与编辑
 

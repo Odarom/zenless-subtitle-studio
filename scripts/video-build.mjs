@@ -19,6 +19,7 @@ function copyTree(from, to) {
 }
 copyTree(source, output);
 copyFileSync(join(root, 'video', 'subtitles.mjs'), join(output, 'subtitles.mjs'));
+copyFileSync(join(root,'video','archive.mjs'),join(output,'archive-protocol.mjs'));
 for (const file of ['i18n.mjs', 'locales.mjs']) copyFileSync(join(root, 'video', 'public', file), join(output, file));
 const geometry = readFileSync(join(root, 'video', 'geometry.mjs'), 'utf8');
 copyFileSync(join(root, 'video', 'geometry.mjs'), join(output, 'geometry.mjs'));

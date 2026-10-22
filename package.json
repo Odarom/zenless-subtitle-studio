@@ -26,7 +26,7 @@
     "video": "node video/server.mjs --open",
     "video:setup": "node scripts/video-setup.mjs",
     "video:build": "node scripts/video-build.mjs",
-    "video:test": "node --test test/video.test.mjs test/video-downloads.test.mjs test/video-features.test.mjs test/video-requests.test.mjs test/video-updates.test.mjs test/video-review.test.mjs test/multilingual.test.mjs test/glossary-reports.test.mjs test/video-ocr-setup.test.mjs test/glossary-browse.test.mjs test/video-errors.test.mjs test/video-screen-reuse.test.mjs test/video-cue-actions.test.mjs test/video-speech-position.test.mjs",
+    "video:test": "node --test test/video.test.mjs test/video-downloads.test.mjs test/video-features.test.mjs test/video-requests.test.mjs test/video-updates.test.mjs test/video-review.test.mjs test/multilingual.test.mjs test/glossary-reports.test.mjs test/video-ocr-setup.test.mjs test/glossary-browse.test.mjs test/video-errors.test.mjs test/video-screen-reuse.test.mjs test/video-cue-actions.test.mjs test/video-speech-position.test.mjs test/archive.test.mjs test/video-temporary-video.test.mjs",
     "video:package": "node scripts/video-build.mjs && node scripts/video-package.mjs",
     "video:ocr-test": "node scripts/video-ocr-smoke.mjs",
     "glossary:publish": "node scripts/video-glossary-build.mjs && node scripts/video-glossary-publish.mjs"
