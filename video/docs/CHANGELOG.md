@@ -6,6 +6,10 @@
 
 ## 한국어
 
+### 0.7.3
+
+음성 인식에서 이름·게임 용어의 철자가 조금 틀려도 기존 DB의 유사 명칭·등록 별칭을 번역 참고 후보로 제공합니다. 기존 번역 요청에서 문맥과 화면 글자를 함께 대조하며 추가 교정 API 호출은 하지 않습니다. 후보는 확정된 별칭이나 자동 치환이 아닙니다. 미출시·자동 적용 금지 항목, 짧은 표현·숫자 포함 명칭은 후보에서 제외합니다. 인식 원문·타이밍·신고의 원문/번역 쌍과 이미 완료한 번역은 보존합니다. 남은 구간의 이어하기에는 새 지침을 적용합니다. DeepL은 기존의 정확한 명칭 보호를 유지합니다.
+
 ### 0.7.2
 
 긴 음성 자막을 문장·구절 단위로 나누어 차례로 표시합니다. 기존 완료 작업, 유튜브 확장, 로컬 미리보기와 SRT/VTT 저장에 적용되며 재번역이나 추가 API 호출은 필요 없습니다. 원래 구간 안에서 글 길이에 비례해 표시 시간을 나누므로 단어별 음성과 정확히 일치하는 방식은 아닙니다. 화면 자막과 편집·신고용 원본 구간은 유지합니다. 신고에는 같은 구간의 원문·번역 전체가 연결되며, 신고 창을 연 뒤 내용이 바뀌면 전송을 멈춥니다.
@@ -57,6 +61,10 @@
 ---
 
 ## English
+
+### 0.7.3
+
+Small spelling errors in speech names and game terms now retrieve similar existing DB names/registered aliases as unverified translation hints. The existing translation request uses context and screen text; no separate correction API call is made. Hints are neither confirmed aliases nor automatic substitutions. Prerelease/disabled terms, short expressions and names containing numbers are excluded. Original transcripts, timing, matching report source/translation pairs and completed translations are preserved. Resumed pending cues use the new guidance. DeepL keeps its existing exact-name protection.
 
 ### 0.7.2
 
@@ -110,6 +118,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 
 ## 日本語
 
+### 0.7.3
+
+音声認識で名前・ゲーム用語の綴りが少し誤っていても、既存DBの類似名称・登録別名を未確定の翻訳候補として参照します。既存の翻訳要求で文脈と画面文字を照合し、別の訂正APIは呼び出しません。候補は確定済みの別名や自動置換ではありません。未実装・自動適用禁止の項目、短い表現・数字を含む名称は候補から除外します。認識原文・時間・報告の原文/訳文の対応と完了済み翻訳を保持し、再開時は未完了区間に新しい指示を適用します。DeepLの完全一致による名称保護は維持します。
+
 ### 0.7.2
 
 長い音声字幕を短い文・フレーズに分け、順番に表示します。完了済み作業、YouTube拡張、ローカルプレビュー、SRT/VTT保存に適用され、再翻訳や追加API呼び出しは不要です。表示時間は元の区間内で文字量に応じて配分するため、単語ごとの音声との厳密な同期ではありません。画面字幕と編集・報告用の元の区間は維持します。報告には同じ区間の原文・訳文全体を使用し、報告画面を開いた後に内容が変わった場合は送信を停止します。
@@ -161,6 +173,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 ---
 
 ## 简体中文
+
+### 0.7.3
+
+语音识别中的姓名、游戏术语出现少量拼写错误时，会从现有数据库检索相似名称和已登记别名，作为未经确认的翻译参考候选。在原有翻译请求中结合上下文与画面文字判断，不额外调用纠错API。候选并非已确认别名，也不会自动替换原文。候选排除未上线、禁止自动应用的条目，以及短表达和含数字的名称。保留识别原文、时间、举报对应的原文/译文和已完成翻译；继续任务时仅对未完成区间应用新指引。DeepL仍使用原有的名称精确保护方式。
 
 ### 0.7.2
 
