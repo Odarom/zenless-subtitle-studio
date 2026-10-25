@@ -61,7 +61,7 @@ test('quota failure records safe details and an empty legacy checkpoint resumes 
   assert.equal(completed.apiLimit, null); assert.equal(completed.cues[0].translatedText, '빠른 지원.');
 });
 
-test('version 6 partial translations resume with spelling hints without repeating paid completed cues', async t => {
+for(const legacyVersion of [6,7]) test(`version ${legacyVersion} partial translations resume without repeating paid completed cues`, async t => {
   let requests=0, prepared=0; const payloads=[];
   const cues=[{id:'1',startMs:0,endMs:2000,sourceText:'Quick Assist.'},{id:'2',startMs:2500,endMs:4500,sourceText:'Save the next attack.'}];
   const fetcher=async(_url,init)=>{requests++;const payload=JSON.parse(JSON.parse(init.body).contents[0].parts[0].text);payloads.push(payload);
@@ -69,7 +69,7 @@ test('version 6 partial translations resume with spelling hints without repeatin
   const app=setup(t,{jobsOptions:{prepare:async()=>{prepared++;return{cues,title:'Resume fixture',origin:'test'};},fetcher}});app.settings.save(config);
   const created=app.jobs.create(jobInput),failed=await waitJob(app.jobs,created.id);while(app.jobs.active)await tick();assert.equal(failed.status,'failed');assert.equal(failed.completedCues,1);
   const checkpointPath=join(app.jobs.directory(created.id),'translation.json'),checkpoint=JSON.parse(readFileSync(checkpointPath));
-  checkpoint.key=translationKey(failed.cues,{...failed.options,...failed.translationConfig,title:failed.title},join(app.root,'glossary/zzz.json'),6);writeFileSync(checkpointPath,JSON.stringify(checkpoint));
+  checkpoint.key=translationKey(failed.cues,{...failed.options,...failed.translationConfig,title:failed.title},join(app.root,'glossary/zzz.json'),legacyVersion);writeFileSync(checkpointPath,JSON.stringify(checkpoint));
   const restarted=new Jobs({root:app.root,dataDir:app.jobs.dataDir,settings:app.settings,gate:{enter:async()=>{}},prepare:()=>assert.fail('must reuse source'),fetcher});restarted.resume(created.id);
   const completed=await waitJob(restarted,created.id);while(restarted.active)await tick();assert.equal(completed.status,'completed');assert.equal(requests,2);assert.equal(prepared,1);
   assert.deepEqual(payloads[1].cues.map(cue=>cue.id),['2']);assert.equal(completed.cues[0].translatedText,'이미 비용을 지불한 번역');assert.equal(completed.cues[0].sourceText,cues[0].sourceText);

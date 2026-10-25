@@ -6,7 +6,7 @@
 
 언어별 Discord 채널을 본인 API 키로 번역합니다.
 
-**[봇 설치](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [PC 연결 프로그램 다운로드](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
+**[봇 설치](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [PC 연결 프로그램 다운로드](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.4/zenless-discord-runner-0.3.4-win-x64.zip)**
 
 1. ZIP을 모두 풀고 **Start.cmd**를 실행합니다.
 2. 열린 설정 화면에서 API 키를 저장하고 Discord의 **/zzz connect** 코드로 연결합니다.
@@ -22,7 +22,7 @@
 
 Translate language channels using your own API key.
 
-**[Install the bot](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [Download the PC runner](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
+**[Install the bot](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [Download the PC runner](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.4/zenless-discord-runner-0.3.4-win-x64.zip)**
 
 1. Extract all ZIP files and run **Start.cmd**.
 2. Save your API key in the settings page and pair with the code from **/zzz connect** in Discord.
@@ -38,7 +38,7 @@ Translate language channels using your own API key.
 
 自分のAPIキーで言語別チャンネルを翻訳します。
 
-**[ボットを導入](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [PC接続プログラムを取得](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
+**[ボットを導入](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [PC接続プログラムを取得](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.4/zenless-discord-runner-0.3.4-win-x64.zip)**
 
 1. ZIPをすべて展開し、**Start.cmd**を実行します。
 2. 設定画面でキーを保存し、Discordの**/zzz connect**コードで接続します。
@@ -54,7 +54,7 @@ Translate language channels using your own API key.
 
 使用自己的API密钥翻译不同语言频道。
 
-**[安装机器人](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [下载PC连接程序](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
+**[安装机器人](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [下载PC连接程序](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.4/zenless-discord-runner-0.3.4-win-x64.zip)**
 
 1. 完整解压ZIP并运行**Start.cmd**。
 2. 在设置页面保存密钥，使用Discord的**/zzz connect**连接码配对。

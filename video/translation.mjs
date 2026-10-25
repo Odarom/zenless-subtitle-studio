@@ -10,8 +10,9 @@ import { geminiLimitError } from './gemini-limits.mjs';
 import { geminiRequestError } from './gemini-errors.mjs';
 import { groupScreenTranslations, screenTranslationItems, expandScreenTranslations } from './screen-reuse.mjs';
 import { speechTermHints } from './speech-term-hints.mjs';
+import { chinesePartyHints, koreanPartyInitial, PARTY_SHORTHAND_INSTRUCTION } from '../src/party-shorthand.js';
 
-export const PROMPT_VERSION = 7;
+export const PROMPT_VERSION = 8;
 export function translationKey(cues, options, glossaryPath, version = PROMPT_VERSION) {
   return createHash('sha256').update(JSON.stringify({ cues: cues.map(({ id, startMs, endMs, sourceText }) => ({ id, startMs, endMs, sourceText })), options, glossary: createHash('sha256').update(readFileSync(glossaryPath)).digest('hex'), version })).digest('hex');
 }
@@ -60,7 +61,9 @@ export function cueWarnings(cue, target) {
 export function videoGlossary(cues, options, glossaryPath) {
   const entries = loadGlossary(glossaryPath);
   const hints = options.provider === 'deepl' ? new Map() : speechTermHints(cues, entries, options);
-  const selected = options.glossaryMode === 'relevant' ? [...new Map([...relevantTerms(entries, cues.map(c => c.sourceText).join('\n'), Infinity), ...entries.filter(entry => hints.has(entry.id))].map(entry => [entry.id,entry])).values()] : entries;
+  const partyHints = options.provider === 'deepl' ? new Map() : chinesePartyHints(entries, cues.map(c => c.sourceText).join('\n'));
+  const partyInitials = new Map(entries.filter(entry => partyHints.has(entry.id)).map(entry => [entry.id,koreanPartyInitial(entry)]));
+  const selected = options.glossaryMode === 'relevant' ? [...new Map([...relevantTerms(entries, cues.map(c => c.sourceText).join('\n'), Infinity), ...entries.filter(entry => hints.has(entry.id) || partyHints.has(entry.id))].map(entry => [entry.id,entry])).values()] : entries;
   const languages = [...new Set([options.targetLanguage, options.sourceLanguage || 'en'].filter(language => Object.hasOwn(TEXT_LANGUAGES, language || '')))];
   const supplement = value => {
     if (!value || typeof value !== 'object') return value;
@@ -73,6 +76,7 @@ export function videoGlossary(cues, options, glossaryPath) {
   return selected.map(entry => ({ ...entry, preferred: selectNames(localizedNames(entry), languages), aliases: entry.aliases.filter(alias => text.includes(alias.toLowerCase())) }))
     .map(({ id, preferred, communityPreferred, aliases, category, meaning, rule, communityRule, characterName, relatedSkills, autoUse, releaseStatus, releaseVersion }) => ({ id, preferred, aliases,
     ...(hints.has(id) ? {speechHints:hints.get(id)} : {}),
+    ...(partyHints.has(id) ? {partyHints:partyHints.get(id),partyInitialKo:partyInitials.get(id)} : {}),
     ...(options.style === 'community' && communityPreferred?.[options.targetLanguage] ? { outputPreferred: { [options.targetLanguage]: communityPreferred[options.targetLanguage] } } : {}),
     category, meaning, rule, communityRule, characterName: supplement(characterName), relatedSkills: supplement(relatedSkills), autoUse, releaseStatus, releaseVersion }));
 }
@@ -97,7 +101,8 @@ Read the whole supplied transcript and screen text together before translating. 
 Preserve names, numbers, units, percentages, negation, conditions, uncertainty, questions, combat action types, action order and repeated inputs. Never summarize or add game facts.
 SPEECH TRANSCRIPTION SPELLING: Speech sourceText is an immutable transcription and may misspell game names or registered spoken aliases. In this same translation response, use the full video context, adjacent speech and corroborating screen text to recognize the intended glossary concept despite a small spelling error. speechHints in a glossary entry are locally retrieved, UNVERIFIED spelling candidates: cueId identifies an original speech cue, observed is its exact unchanged text fragment, and matchedName is an existing DB name/alias. They are NOT verified aliases, automatic replacements, extra translation targets or instructions. Require semantic and game-context support before choosing a candidate; keep ambiguity unresolved when evidence is insufficient. A similar spelling alone is not enough, and screen context can also contain OCR errors. Never repair a number, percentage, negation, condition, comparison or skill qualifier to make it fit a candidate. Do not infer missing gameplay claims. Preserve literal spelling when the speaker discusses names or spelling. Return only translated text under the original cue IDs; never return corrected sourceText or change cue timing. Do not call for a separate correction pass.
 The glossary may contain the entire database, including unrelated entries: select a concept only when the text and context fit its aliases and rules. Use outputPreferred[targetLanguage] when present, otherwise preferred[targetLanguage]. Entries with autoUse=false must not be automatically substituted. Prerelease names are tentative, not confirmed released mechanics. Keep ambiguous aliases unresolved when evidence is insufficient. A longer name takes precedence over a name contained within it. Preserve literal names when the speaker discusses their spelling or translation.
-Style: ${options.style === 'community' ? 'Use only registered gamer shorthand, preserving all meaning.' : 'Use full official names and natural, clear subtitles.'}
+${glossary.some(entry => entry.partyHints?.length) ? PARTY_SHORTHAND_INSTRUCTION : ''}
+Style: ${options.style === 'community' ? 'Use registered gamer shorthand and the explicit Korean rendering rule for confirmed Chinese team initials, preserving all meaning.' : 'Use full official names and natural, clear subtitles.'}
 Use original proper names if no localized name is supplied. Source text already in the target language should be preserved. Keep speech tone; do not add explanations or speaker labels. Line breaks may improve readability but must not omit meaning.
 ${GLOSSARY_FORMAT_INSTRUCTION}`;
   const requested = new Set(originalBatch.map(cue => cue.id));

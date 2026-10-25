@@ -8,6 +8,18 @@ const entries = loadGlossary('glossary/zzz.json');
 const catalogVersion = JSON.parse(readFileSync('glossary/zzz.json', 'utf8')).sourceVersion;
 const find = (text, category) => entries.find(e => e.preferred.en === text && (!category || e.category === category));
 
+test('Armorer specialty and existing Sunbringer NPC names use reviewed localized names without merging identities', () => {
+  const armorer=relevantTerms(entries,'단조 특성 에이전트 전용 지원').find(e=>e.id==='specialty:armorer');
+  assert.deepEqual(armorer.preferred,{ko:'단조',en:'Armorer',ja:'鋭御','zh-CN':'锋御'});
+  assert.match(armorer.rule,/일반적인|일반 어휘/);assert.match(armorer.rule,/Crafting/);assert.match(armorer.rule,/제한을 보존/);
+  assert(!relevantTerms(entries,'완벽하게 단조된 별').some(e=>e.id==='specialty:armorer'));
+  assert(!relevantTerms(entries,'초급 단조 휘장').some(e=>e.id==='specialty:armorer'));
+  const names=relevantTerms(entries,'드라케나 린드베른 엘드레다').filter(e=>e.id.startsWith('npc:'));
+  assert.equal(names.length,3);assert.deepEqual(names.map(e=>e.preferred.en).sort(),['Dracaene','Eldreda','Lindverne']);
+  for(const entry of names){assert.equal(entry.releaseStatus,'live');assert.equal(entry.category,'contextual-term');assert.match(entry.rule,/미출시/);assert(!entry.communityPreferred);assert(Object.values(entry.classification.names).every(tag=>tag==='official'));}
+  assert(armorer.classification.aliases.unofficial.includes('아머러'));
+});
+
 test('reviewed resource and anomaly terms retain scoped names and qualifiers', () => {
   const corruption = relevantTerms(entries, 'guaranteed corruption proc even from zero Anomaly').find(e => e.id === 'combat:corruption');
   assert.equal(corruption.preferred.ko, '침식');

@@ -4,7 +4,7 @@
 
 언어별 Discord 채널의 새 메시지를 번역합니다. 각자 PC 또는 개인 서버에서 연결 프로그램을 실행하고 본인 API 키를 사용합니다.
 
-**[① Discord 서버에 봇 설치](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② PC 연결 프로그램 다운로드 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
+**[① Discord 서버에 봇 설치](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② PC 연결 프로그램 다운로드 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.4/zenless-discord-runner-0.3.4-win-x64.zip)**
 
 ## PC에서 사용하기
 

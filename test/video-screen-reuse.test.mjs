@@ -47,7 +47,7 @@ test('one real request shape translates repeated screen text once then restores 
   const output=await run(input,async(_url,init)=>{
     calls++;const body=JSON.parse(init.body),data=JSON.parse(body.contents[0].parts[0].text);
     assert.equal(data.cues.length,2); assert.equal(data.translationTask.requiredScreenTranslations,1);
-    assert.equal(data.cues[0].occurrences.length,2);assert.equal(data.glossary.entries.length,2314);
+    assert.equal(data.cues[0].occurrences.length,2);assert.equal(data.glossary.entries.length,2318);
     return response(data.cues.map(item=>({id:item.id,text:item.kind==='screen'?'방어막을 유지하세요.':'음성 번역'})));
   });
   assert.equal(calls,1);assert.equal(output.length,3);assert.equal(output[0].translatedText,output[1].translatedText);

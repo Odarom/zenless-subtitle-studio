@@ -2,31 +2,134 @@
   "version": 1,
   "description": "명칭·별칭·현재 커뮤니티 출력의 분류만 지정합니다. 번역문과 대표 출력은 변경하지 않습니다. source-matched 및 출처를 대조한 보완 명칭은 공식 명칭, 개별 확인이 필요한 보완 표현은 확인 필요로 분류합니다.",
   "entries": [
-    { "id": "community:ex-ex-basic-combo", "default": "unofficial" },
-    { "id": "community:hold-ex-special", "default": "unofficial" },
-    { "id": "community:preserve-san-z", "default": "unofficial" },
-    { "id": "enhanced-basic-attack", "default": "unofficial" },
-    { "id": "community:crit-pair", "default": "unofficial" },
-    { "id": "community:signature-engine", "default": "unofficial" },
-    { "id": "community:on-field", "default": "unofficial" },
-    { "id": "community:off-field", "default": "unofficial" },
-    { "id": "community:best-in-slot", "default": "unofficial" },
-    { "id": "community:mindscape-0", "default": "unofficial" },
-    { "id": "community:mindscape-1", "default": "unofficial" },
-    { "id": "community:mindscape-2", "default": "unofficial" },
-    { "id": "community:mindscape-3", "default": "unofficial" },
-    { "id": "community:mindscape-4", "default": "unofficial" },
-    { "id": "community:mindscape-5", "default": "unofficial" },
-    { "id": "community:mindscape-6", "default": "unofficial" },
-    { "id": "community:notorious-label", "default": "unofficial" },
-    { "id": "community:m0w1-build", "default": "unofficial" },
-    { "id": "community:all-m0w1-team", "default": "unofficial" },
-    { "id": "community:shill-buff", "default": "unofficial" },
+    {
+      "id": "community:ex-ex-basic-combo",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:hold-ex-special",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:preserve-san-z",
+      "default": "unofficial"
+    },
+    {
+      "id": "enhanced-basic-attack",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:crit-pair",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:signature-engine",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:on-field",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:off-field",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:best-in-slot",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-0",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-1",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-2",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-3",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-4",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-5",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:mindscape-6",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:notorious-label",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:m0w1-build",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:all-m0w1-team",
+      "default": "unofficial"
+    },
+    {
+      "id": "community:shill-buff",
+      "default": "unofficial"
+    },
     {
       "id": "community:damage-bonus",
-      "names": { "ko": "official" },
+      "names": {
+        "ko": "official"
+      },
       "reviewedAt": "2026-10-19",
       "note": "피해 증가와 피해 보너스가 모두 공식 표현이라는 사용자 확인. 현재 등록된 한국어 이름인 피해 증가에만 태그를 붙이며 다른 언어 이름·입력 별칭·대표 출력은 변경하지 않습니다."
+    },
+    {
+      "id": "specialty:armorer",
+      "aliases": {
+        "아머러": "unofficial"
+      },
+      "reviewedAt": "2026-10-25",
+      "note": "공개 명칭의 전체 호칭과 비공식 한국어 발음 입력을 구분. 출력 대표값은 바꾸지 않음."
+    },
+    {
+      "id": "npc:dracaene-sunbringer",
+      "aliases": {
+        "드라케나·태양을 가져온 자": "official",
+        "Dracaene Sunbringer": "official",
+        "ドラキナ・サンブリンガー": "official",
+        "德蕾琪娜·挽昼": "official"
+      },
+      "reviewedAt": "2026-10-25",
+      "note": "공개 명칭의 전체 호칭과 비공식 한국어 발음 입력을 구분. 출력 대표값은 바꾸지 않음."
+    },
+    {
+      "id": "npc:lindverne-sunbringer",
+      "aliases": {
+        "린드베른·태양을 가져온 자": "official",
+        "Lindverne Sunbringer": "official",
+        "リンドヴェルヌ・サンブリンガー": "official",
+        "林德薇恩·挽昼": "official"
+      },
+      "reviewedAt": "2026-10-25",
+      "note": "공개 명칭의 전체 호칭과 비공식 한국어 발음 입력을 구분. 출력 대표값은 바꾸지 않음."
+    },
+    {
+      "id": "npc:eldreda-sunbringer",
+      "aliases": {
+        "엘드레다·태양을 가져온 자": "official",
+        "Eldreda Sunbringer": "official",
+        "エルダ・サンブリンガー": "official",
+        "艾尔妲·挽昼": "official"
+      },
+      "reviewedAt": "2026-10-25",
+      "note": "공개 명칭의 전체 호칭과 비공식 한국어 발음 입력을 구분. 출력 대표값은 바꾸지 않음."
     }
   ]
 }

@@ -4,7 +4,7 @@
 
 翻译不同语言频道中的新消息。在自己的电脑或个人服务器运行连接程序，并使用自己的API密钥。
 
-**[① 将机器人安装到Discord](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② 下载PC连接程序 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.3/zenless-discord-runner-0.3.3-win-x64.zip)**
+**[① 将机器人安装到Discord](https://discord.com/oauth2/authorize?client_id=1557261995215028254) · [② 下载PC连接程序 · Windows x64](https://github.com/Odarom/zenless-discord-translator/releases/download/v0.3.4/zenless-discord-runner-0.3.4-win-x64.zip)**
 
 ## Windows电脑
 

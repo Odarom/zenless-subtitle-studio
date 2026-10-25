@@ -434,6 +434,129 @@
         "https://static.nanoka.cc/zzz/3.2/zh/character/1331.json"
       ],
       "sourceNotes": "공개 Nanoka 3.2 비비안 추가 능력의 동일 ID·문단에서 네 언어 효과 명칭을 대조했다. 팬 데이터베이스 출처이며 제작사 직접 검수를 뜻하지 않는다. 특정 캐릭터의 궁극기 발동 조건 전체를 검증한 항목은 아니다."
+    },
+    {
+      "category": "contextual-term",
+      "status": "source-supported-curated",
+      "retrievedAt": "2026-10-25",
+      "id": "specialty:armorer",
+      "preferred": {
+        "ko": "단조",
+        "en": "Armorer",
+        "ja": "鋭御",
+        "zh-CN": "锋御"
+      },
+      "aliases": [
+        "단조",
+        "Armorer",
+        "鋭御",
+        "锋御",
+        "아머러"
+      ],
+      "meaning": "젠레스 에이전트와 W-엔진의 특성 Armorer. 재료를 가공하는 일반적인 금속 단조와 별개인 게임 분류다.",
+      "rule": "에이전트 특성·포지션·직군·파티 구성·전용 지원·W-엔진·육성 재료를 말하는 문맥에서만 적용한다. 단조 한정 지원이나 단조 전용 서포터는 Armorer 특성 에이전트를 대상으로 하는 지원이라는 제한을 보존한다. 직군 이름을 Crafting, Forging, Weaponsmith 등 일반 제작 표현으로 번역하지 않는다. 단조된 금속·제작·대장간·단조로운 음악 등 일반 어휘에는 적용하지 않는다. 단조라는 이름만으로 지원(Support) 특성이나 방어(Defense) 특성과 동일시하지 않으며 원문에 없는 등급·속성·성능·대상 범위를 추가하지 않는다.",
+      "sourceVersion": "3.2",
+      "sources": [
+        "https://zenless.hoyoverse.com/ko-kr/news/165979",
+        "https://zenless.hoyoverse.com/en-us/news/166000",
+        "https://zenless.hoyoverse.com/ja-jp/news/165979",
+        "https://zzz.mihoyo.com/news/166026"
+      ],
+      "sourceNotes": "제작사의 3.2 정식 공지에 실린 클라렛/Claret/クラレッタ/克拉蕾의 특성과 같은 특성 W-엔진·육성 재료를 네 언어로 대조했다. 신규 특성의 라이브 공개를 확인했으며 신고 본문이나 미출시 성능을 출처로 사용하지 않는다."
+    },
+    {
+      "category": "contextual-term",
+      "status": "source-supported-curated",
+      "retrievedAt": "2026-10-25",
+      "id": "npc:dracaene-sunbringer",
+      "preferred": {
+        "ko": "드라케나",
+        "en": "Dracaene",
+        "ja": "ドラキナ",
+        "zh-CN": "德蕾琪娜"
+      },
+      "aliases": [
+        "드라케나",
+        "Dracaene",
+        "ドラキナ",
+        "德蕾琪娜",
+        "드라케나·태양을 가져온 자",
+        "Dracaene Sunbringer",
+        "ドラキナ・サンブリンガー",
+        "德蕾琪娜·挽昼"
+      ],
+      "meaning": "로스캘리퍼 스토리에 등장한 인물 Dracaene Sunbringer의 이름. 이 항목은 기존 NPC의 명칭 대응만 보완한다.",
+      "rule": "해당 인물을 지칭하는 문맥에서 언어별 preferred 이름을 적용하고 일반 명사·식물 이름 등 동음이의어에는 적용하지 않는다. 짧은 이름에는 짧은 현지화 이름을 쓰며, 원문에 Sunbringer/태양을 가져온 자/サンブリンガー/挽昼 호칭이 있으면 그 호칭을 보존한다. 다른 두 인물이나 원래의 Sunbringer와 이름을 합치지 않는다. 이름만으로 미출시 플레이어블 특성·속성·스킬·전투 성능을 보충하거나 확정하지 않는다. 등장 비중이라는 표현만으로 스토리 분량이나 전투 기여도 중 하나를 임의로 확정하지 않는다.",
+      "sources": [
+        "https://www.youtube.com/watch?v=gZ3Y0I1qzUA",
+        "https://www.hoyolab.com/article/47171818",
+        "https://zenless-zone-zero.fandom.com/wiki/Dracaene_Sunbringer"
+      ],
+      "sourceNotes": "한국 공식 YouTube의 게시자와 이름 제목, 영어 공식 HoYoLAB 게시물의 이름을 대조했다. 기존 스토리 NPC의 등장과 일본어·중국어 대응은 공개 팬 Wiki의 해당 인물 언어표와 대조했으며 제작사 직접 검수를 뜻하지 않는다. 기존 NPC 이름만 등록하며 앞으로 출시될 플레이어블 버전의 정보는 등록하지 않는다."
+    },
+    {
+      "category": "contextual-term",
+      "status": "source-supported-curated",
+      "retrievedAt": "2026-10-25",
+      "id": "npc:lindverne-sunbringer",
+      "preferred": {
+        "ko": "린드베른",
+        "en": "Lindverne",
+        "ja": "リンドヴェルヌ",
+        "zh-CN": "林德薇恩"
+      },
+      "aliases": [
+        "린드베른",
+        "Lindverne",
+        "リンドヴェルヌ",
+        "林德薇恩",
+        "린드베른·태양을 가져온 자",
+        "Lindverne Sunbringer",
+        "リンドヴェルヌ・サンブリンガー",
+        "林德薇恩·挽昼"
+      ],
+      "meaning": "로스캘리퍼 스토리에 등장한 인물 Lindverne Sunbringer의 이름. 이 항목은 기존 NPC의 명칭 대응만 보완한다.",
+      "rule": "해당 인물을 지칭하는 문맥에서 언어별 preferred 이름을 적용하고 일반 명사·식물 이름 등 동음이의어에는 적용하지 않는다. 짧은 이름에는 짧은 현지화 이름을 쓰며, 원문에 Sunbringer/태양을 가져온 자/サンブリンガー/挽昼 호칭이 있으면 그 호칭을 보존한다. 다른 두 인물이나 원래의 Sunbringer와 이름을 합치지 않는다. 이름만으로 미출시 플레이어블 특성·속성·스킬·전투 성능을 보충하거나 확정하지 않는다. 등장 비중이라는 표현만으로 스토리 분량이나 전투 기여도 중 하나를 임의로 확정하지 않는다.",
+      "sources": [
+        "https://www.youtube.com/watch?v=heBSLppUYAI",
+        "https://www.hoyolab.com/article/47174033",
+        "https://zenless-zone-zero.fandom.com/wiki/Lindverne_Sunbringer",
+        "https://static.nanoka.cc/zzz/3.2/ko/character/1591.json",
+        "https://static.nanoka.cc/zzz/3.2/en/character/1591.json",
+        "https://static.nanoka.cc/zzz/3.2/ja/character/1591.json",
+        "https://static.nanoka.cc/zzz/3.2/zh/character/1591.json"
+      ],
+      "sourceNotes": "한국 공식 YouTube의 게시자와 이름 제목, 영어 공식 HoYoLAB 게시물의 이름을 대조했다. 기존 스토리 NPC의 등장과 일본어·중국어 대응은 공개 팬 Wiki의 해당 인물 언어표와 대조했으며 제작사 직접 검수를 뜻하지 않는다. 기존 공개 3.2 시그리드 프로필의 동일 위치에서도 네 언어 이름을 확인했다. 기존 NPC 이름만 등록하며 앞으로 출시될 플레이어블 버전의 정보는 등록하지 않는다."
+    },
+    {
+      "category": "contextual-term",
+      "status": "source-supported-curated",
+      "retrievedAt": "2026-10-25",
+      "id": "npc:eldreda-sunbringer",
+      "preferred": {
+        "ko": "엘드레다",
+        "en": "Eldreda",
+        "ja": "エルダ",
+        "zh-CN": "艾尔妲"
+      },
+      "aliases": [
+        "엘드레다",
+        "Eldreda",
+        "エルダ",
+        "艾尔妲",
+        "엘드레다·태양을 가져온 자",
+        "Eldreda Sunbringer",
+        "エルダ・サンブリンガー",
+        "艾尔妲·挽昼"
+      ],
+      "meaning": "로스캘리퍼 스토리에 등장한 인물 Eldreda Sunbringer의 이름. 이 항목은 기존 NPC의 명칭 대응만 보완한다.",
+      "rule": "해당 인물을 지칭하는 문맥에서 언어별 preferred 이름을 적용하고 일반 명사·식물 이름 등 동음이의어에는 적용하지 않는다. 짧은 이름에는 짧은 현지화 이름을 쓰며, 원문에 Sunbringer/태양을 가져온 자/サンブリンガー/挽昼 호칭이 있으면 그 호칭을 보존한다. 다른 두 인물이나 원래의 Sunbringer와 이름을 합치지 않는다. 이름만으로 미출시 플레이어블 특성·속성·스킬·전투 성능을 보충하거나 확정하지 않는다. 등장 비중이라는 표현만으로 스토리 분량이나 전투 기여도 중 하나를 임의로 확정하지 않는다.",
+      "sources": [
+        "https://www.youtube.com/watch?v=oOgREhYTMLw",
+        "https://www.hoyolab.com/article/47172014",
+        "https://zenless-zone-zero.fandom.com/wiki/Eldreda_Sunbringer"
+      ],
+      "sourceNotes": "한국 공식 YouTube의 게시자와 이름 제목, 영어 공식 HoYoLAB 게시물의 이름을 대조했다. 기존 스토리 NPC의 등장과 일본어·중국어 대응은 공개 팬 Wiki의 해당 인물 언어표와 대조했으며 제작사 직접 검수를 뜻하지 않는다. 기존 NPC 이름만 등록하며 앞으로 출시될 플레이어블 버전의 정보는 등록하지 않는다."
     }
   ]
 }
