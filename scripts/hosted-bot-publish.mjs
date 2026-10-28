@@ -17,6 +17,7 @@ export function botSource(root) {
   }
   const add=(target,source=target)=>{if(lstatSync(join(root,source)).isSymbolicLink())throw new Error('Symbolic link in public source');files.set(target,readFileSync(join(root,source),'utf8'));};
   for(const directory of ['src','test'])for(const entry of readdirSync(join(root,directory),{withFileTypes:true}))if(entry.isFile()&&entry.name.endsWith('.js'))add(`${directory}/${entry.name}`);
+  add('test/fixtures/relevant-terms-before-runtime.js');
   for(const file of ['check.js','reports-cli.mjs','local-ai.js','download-ollama.js','set-provider.js','build-glossary.js','fetch-source.js','source-fetch.mjs','sync-glossary.mjs','glossary-abbreviations.mjs','discord-runner.mjs','runner-ui.mjs','runner-build.mjs'])add(`scripts/${file}`);
   for(const file of ['index.html','app.js','style.css'])add(`runner/public/${file}`);
   for(const file of ['zzz.json','sources.json','community.json','curated.json','reviewed-mechanics.json', 'localizations.json','README.md','ABBREVIATIONS.md','LIFECYCLE.md','classification.json','TAGS.md'])add(`glossary/${file}`);
@@ -25,7 +26,7 @@ export function botSource(root) {
   add('ARCHITECTURE.md','docs/discord/ARCHITECTURE.md');
   add('RELEASE-NOTES.md','docs/discord/RELEASE-NOTES.md');
   add('FEATURES.md','docs/discord/FEATURES.md');
-  const pkg=JSON.parse(files.get('package.json'));pkg.version=RUNNER_VERSION;for(const name of Object.keys(pkg.scripts))if(name.startsWith('video')||name==='glossary:publish'||name==='reports')delete pkg.scripts[name];pkg.scripts.reports='node scripts/reports-cli.mjs';pkg.scripts['runner:ui']='node scripts/runner-ui.mjs';pkg.scripts['runner:build']='node scripts/runner-build.mjs';files.set('package.json',JSON.stringify(pkg,null,2)+'\n');
+  const pkg=JSON.parse(files.get('package.json'));pkg.version=RUNNER_VERSION;for(const name of Object.keys(pkg.scripts))if(name.startsWith('video')||name.startsWith('database:')||name==='glossary:publish'||name==='reports')delete pkg.scripts[name];pkg.scripts.reports='node scripts/reports-cli.mjs';pkg.scripts['runner:ui']='node scripts/runner-ui.mjs';pkg.scripts['runner:build']='node scripts/runner-build.mjs';files.set('package.json',JSON.stringify(pkg,null,2)+'\n');
   const lock=JSON.parse(files.get('package-lock.json'));lock.version=pkg.version;if(lock.packages?.[''])lock.packages[''].version=pkg.version;files.set('package-lock.json',JSON.stringify(lock,null,2)+'\n');
   files.set('.gitignore','.env\n.env.*\n!.env.example\n!.env.runner.example\n.secrets/\ndata/\nreports/\n.tools/\n.models/\nnode_modules/\ndist/\nglossary/cache/\nglossary/history/\nglossary/candidates/\nglossary/updates/\n');
   for(const name of files.keys())if(!['.env.example','.env.runner.example'].includes(name)&&/(?:^|\/)(?:\.env[^/]*|\.secrets|data|reports|\.tools|\.models|node_modules)(?:\/|$)/i.test(name))throw new Error('Private data in public source');

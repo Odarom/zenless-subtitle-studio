@@ -1,0 +1,11 @@
+{
+  "name": "@odarom/zenless-translation-database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./index.mjs",
+  "description": "Dependency-free reader for the ZZZ translation concept catalog",
+  "engines": {
+    "node": ">=24.17.0"
+  }
+}

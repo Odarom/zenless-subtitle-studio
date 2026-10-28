@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { VIDEO_VERSION } from '../video/version.mjs';
 import { DEFAULT_PROGRAM_REPOSITORY } from '../video/distribution.mjs';
 import { sha256File } from '../video/downloads.mjs';
+import { DATABASE_SOURCE_FILES } from './database-export.mjs';
 
 // Public source is built from this explicit allowlist, never from the checkout
 // or from a used portable installation. No user data or model files are read.
@@ -20,6 +21,7 @@ export function publicSource(root) {
     }
   };
   for (const dir of ['video', 'src', 'scripts', 'services', 'test', 'runner', 'archive']) walk(dir);
+  for (const file of DATABASE_SOURCE_FILES) add(file);
   if (existsSync(join(root, 'docs/discord'))) walk('docs/discord');
   for (const name of ['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md', 'classification.json', 'TAGS.md']) add(`glossary/${name}`);
   for (const name of ['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml']) add(`glossary/issue-templates/${name}`);

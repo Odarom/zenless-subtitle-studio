@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { buildGlossaryRelease } from './video-glossary-build.mjs';
+import { databaseReleasePaths } from './database-export.mjs';
 
 export function publishGlossary(root = resolve(import.meta.dirname, '..')) {
   const release = buildGlossaryRelease(root), repo = release.repository, owner = repo.split('/')[0];
@@ -29,7 +30,7 @@ export function publishGlossary(root = resolve(import.meta.dirname, '..')) {
   const paths = ['README.md', 'README-ko.md', 'README-en.md', 'README-ja.md', 'README-zh-CN.md', 'latest.json', release.manifest.file,
     ...['config.yml', 'glossary-ko.yml', 'glossary-en.yml', 'glossary-ja.yml', 'glossary-zh-CN.yml'].map(file => `.github/ISSUE_TEMPLATE/${file}`),
     ...['zzz.json', 'sources.json', 'community.json', 'curated.json', 'reviewed-mechanics.json', 'localizations.json', 'README.md', 'ABBREVIATIONS.md', 'LIFECYCLE.md', 'classification.json', 'TAGS.md'].map(file => `catalog/${file}`),
-    ...release.browseFiles];
+    ...release.browseFiles, ...databaseReleasePaths(release.conceptRelease.manifest)];
   if (release.browseFiles.some(file => !/^catalog\/(?:BROWSE\.md|INDEX\.md|terms\/[a-z0-9-]+-\d+\.md)$/.test(file))) throw new Error('Invalid public catalog page');
   const tree = api(`repos/${repo}/git/trees`, 'POST', { base_tree: base.tree.sha, tree: paths.map(path => ({ path, mode: '100644', type: 'blob', content: readFileSync(join(release.output, path), 'utf8') })) });
   if (tree.sha === base.tree.sha) return { repository: repo, url: remote.html_url, version: release.manifest.version, unchanged: true };
