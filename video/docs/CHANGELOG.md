@@ -6,6 +6,10 @@
 
 ## 한국어
 
+### 0.7.5
+
+공용 DB 조회 도구와 같은 방식으로 번역용 용어 자료를 구성합니다. 필요한 언어에 캐릭터·스킬 문맥 명칭이 없으면 DB에 있는 다른 언어 명칭 하나를 유지합니다. 전체 DB 참고 범위, 지정된 대표 번역, 조건 문장과 음성·파티 후보를 보존하며 추가 AI 요청을 하지 않습니다. 기존 DB 업데이트를 계속 사용하고 완료된 자막은 다시 번역하지 않습니다.
+
 ### 0.7.4
 
 중국어 세 에이전트 파티 약칭은 기존 DB의 이름 첫 글자에서 후보를 찾아 같은 번역 요청의 문맥으로 해석합니다. 별도 AI 호출이나 모든 조합의 사전 등록은 하지 않습니다. 모호하면 원문을 유지하고 한국어 첫 글자 조합은 자동 추론하지 않습니다. 한국어 커뮤니티 출력은 확인된 각 에이전트의 한국어 이름 첫 글자를 순서대로 이어 붙입니다(仪琉卢 → 의현·다이아린·루시아 → 의다루). 파티마다 별도 DB 항목을 등록하지 않으며 공식 스타일은 이름을 풀어 씁니다. 원문과 완료된 번역은 보존하며 새 지침은 이후 번역·미완료 구간에 적용합니다.
@@ -65,6 +69,10 @@
 ---
 
 ## English
+
+### 0.7.5
+
+Translation glossary data now uses the same projection as the public DB reader. If character or skill context has no label in the requested languages, one existing DB label is retained. Full-catalog scope, selected outputs, conditions, speech hints and team candidates are preserved, without extra AI requests. Existing DB updates remain supported and completed captions are not translated again.
 
 ### 0.7.4
 
@@ -126,6 +134,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 
 ## 日本語
 
+### 0.7.5
+
+公開DB読み取りツールと共通の処理で翻訳用の用語情報を構成します。指定言語にキャラクター・スキルの文脈名がない場合は、DBにある別言語の名称を1つ保持します。DB全体の参照範囲、指定された訳語、条件文、音声・編成候補を維持し、追加AI要求は行いません。従来のDB更新と完了済み字幕を保持します。
+
 ### 0.7.4
 
 中国語の3人編成の頭文字略称は、既存DBの名前から候補を抽出し、同じ翻訳要求の文脈で判断します。追加AI呼び出しや全組み合わせの登録は不要です。不明確な略称は保持し、韓国語の頭文字は自動推測しません。韓国語コミュニティ出力では、特定した各エージェントの韓国語名の先頭音節を順に連結します（仪琉卢 → 의현・다이아린・루시아 → 의다루）。編成ごとのDB登録は行わず、正式スタイルでは名前を省略せず表記します。原文と完了済み翻訳は保持し、新規翻訳・未完了区間に適用します。
@@ -185,6 +197,10 @@ Valid translations are saved even when a response omits cues. Resume requests un
 ---
 
 ## 简体中文
+
+### 0.7.5
+
+翻译术语资料与公共数据库读取工具采用相同的投影逻辑。若指定语言缺少角色或技能上下文名称，将保留数据库中已有的一个其他语言名称。保留全库参考范围、指定译法、条件、语音与配队候选，不增加AI请求。继续支持原有数据库更新，已完成字幕不会重新翻译。
 
 ### 0.7.4
 

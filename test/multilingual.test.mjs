@@ -13,6 +13,24 @@ import { Translator } from '../src/translator.js';
 import { settings } from '../src/config.js';
 
 const catalog=JSON.parse(readFileSync('glossary/zzz.json','utf8'));
+test('shared video projection preserves full-catalog selection and every requested output and condition across all languages',()=>{
+  const cues=[{id:'1',sourceText:'Quick Assist unless the shield is gone.',startMs:0,endMs:2000}];
+  for(const targetLanguage of Object.keys(TEXT_LANGUAGES)) for(const style of ['official','community']) {
+    const rows=videoGlossary(cues,{provider:'gemini',sourceLanguage:'en',targetLanguage,style},'glossary/zzz.json');
+    assert.deepEqual(rows.map(row=>row.id),catalog.entries.map(entry=>entry.id));
+    for(const [index,row] of rows.entries()) {
+      const entry=catalog.entries[index];
+      assert.equal(row.preferred[targetLanguage],localizedNames(entry)[targetLanguage]);
+      assert.equal(row.outputPreferred?.[targetLanguage]??row.preferred[targetLanguage],style==='community'?(entry.communityPreferred?.[targetLanguage]??localizedNames(entry)[targetLanguage]):localizedNames(entry)[targetLanguage]);
+      for(const field of ['meaning','rule','communityRule','autoUse','releaseStatus','releaseVersion']) assert.deepEqual(row[field],entry[field]);
+      for(const field of ['characterName','relatedSkills']) {
+        const labels=Object.entries(entry[field]||{}).filter(([,value])=>typeof value==='string'&&value.trim());
+        if(labels.length) assert(Object.keys(row[field]||{}).length>0,`${row.id}: ${field}`);
+        for(const [language,value]of Object.entries(row[field]||{})) assert.equal(value,entry[field][language]);
+      }
+    }
+  }
+});
 test('additional language names preserve the legacy four-language shape and cover live matched concepts',()=>{
   const localized=catalog.entries.filter(entry=>entry.localizedNames);
   assert.equal(localized.length,1868);

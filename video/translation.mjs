@@ -11,8 +11,9 @@ import { geminiRequestError } from './gemini-errors.mjs';
 import { groupScreenTranslations, screenTranslationItems, expandScreenTranslations } from './screen-reuse.mjs';
 import { speechTermHints } from './speech-term-hints.mjs';
 import { chinesePartyHints, koreanPartyInitial, PARTY_SHORTHAND_INSTRUCTION } from '../src/party-shorthand.js';
+import { legacyPromptEntries } from '../src/glossary-prompt.js';
 
-export const PROMPT_VERSION = 8;
+export const PROMPT_VERSION = 9;
 export function translationKey(cues, options, glossaryPath, version = PROMPT_VERSION) {
   return createHash('sha256').update(JSON.stringify({ cues: cues.map(({ id, startMs, endMs, sourceText }) => ({ id, startMs, endMs, sourceText })), options, glossary: createHash('sha256').update(readFileSync(glossaryPath)).digest('hex'), version })).digest('hex');
 }
@@ -65,6 +66,22 @@ export function videoGlossary(cues, options, glossaryPath) {
   const partyInitials = new Map(entries.filter(entry => partyHints.has(entry.id)).map(entry => [entry.id,koreanPartyInitial(entry)]));
   const selected = options.glossaryMode === 'relevant' ? [...new Map([...relevantTerms(entries, cues.map(c => c.sourceText).join('\n'), Infinity), ...entries.filter(entry => hints.has(entry.id) || partyHints.has(entry.id))].map(entry => [entry.id,entry])).values()] : entries;
   const languages = [...new Set([options.targetLanguage, options.sourceLanguage || 'en'].filter(language => Object.hasOwn(TEXT_LANGUAGES, language || '')))];
+  if (options.provider !== 'deepl') {
+    const sourceText = cues.map(cue => cue.sourceText).join('\n');
+    const lower = sourceText.toLowerCase();
+    return legacyPromptEntries(selected, { languages, style: options.style, text: sourceText, fallbackLanguages: Object.keys(TEXT_LANGUAGES) })
+      .map(({ characterId, sourceVersion, outputPreferred, ...row }, index) => ({ ...row,
+        // Keep the existing video wire contract: only the requested output
+        // override is needed here; owner labels already carry the context.
+        ...(options.style === 'community' && selected[index].communityPreferred?.[options.targetLanguage]
+          ? { outputPreferred: { [options.targetLanguage]: selected[index].communityPreferred[options.targetLanguage] } } : {}),
+        // Preserve video selection/hint behavior, including OCR fragments and
+        // the existing full-catalog mode, while sharing the prompt projection.
+        aliases: selected[index].aliases.filter(alias => lower.includes(alias.toLowerCase())),
+        ...(hints.has(row.id) ? { speechHints: hints.get(row.id) } : {}),
+        ...(partyHints.has(row.id) ? { partyHints: partyHints.get(row.id), partyInitialKo: partyInitials.get(row.id) } : {})
+      }));
+  }
   const supplement = value => {
     if (!value || typeof value !== 'object') return value;
     if (Array.isArray(value)) return value.map(supplement);

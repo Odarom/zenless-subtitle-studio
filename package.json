@@ -11,7 +11,7 @@
     "start": "node --env-file-if-exists=.env src/index.js",
     "register": "node --env-file-if-exists=.env src/register.js",
     "check": "node --env-file-if-exists=.env scripts/check.js",
-    "test": "node --test test/core.test.js test/glossary.test.js test/glossary-tags.test.js test/glossary-runtime.test.js test/providers.test.js test/guild-api.test.js test/media.test.js test/reports.test.js test/selfhost.test.js test/party-shorthand.test.js",
+    "test": "node --test test/core.test.js test/glossary.test.js test/glossary-tags.test.js test/glossary-runtime.test.js test/providers.test.js test/guild-api.test.js test/media.test.js test/reports.test.js test/selfhost.test.js test/party-shorthand.test.js test/glossary-prompt.test.js",
     "reports": "node scripts/report-review.mjs",
     "runner": "node --env-file-if-exists=.env.runner scripts/discord-runner.mjs start",
     "runner:pair": "node --env-file-if-exists=.env.runner scripts/discord-runner.mjs pair",

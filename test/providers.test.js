@@ -28,7 +28,13 @@ test('community style selects registered shorthand in all providers, with offici
       assert.equal(qa.preferred.ko,'빠른 지원');
       assert.equal(qa.outputPreferred.ko,style==='community'?'빠지':'빠른 지원');
       assert.equal(qa.outputPreferred.en,style==='community'?'QA':'Quick Assist');
-      assert.equal(qa.outputPreferred.ja,'クイック支援'); // No invented Japanese abbreviation.
+      assert.equal(qa.outputPreferred.ja,undefined); // Unrequested languages stay out of the prompt.
+      const chain=terms.get('combat:chain-attack');
+      assert.equal(chain.preferred.ko,'콤보 스킬');
+      assert.equal(chain.outputPreferred.ko,style==='community'?'콤스':'콤보 스킬');
+      const reduction=terms.get('community:damage-reduction');
+      assert.equal(reduction.preferred.ko,'받는 피해 감소');
+      assert.equal(reduction.outputPreferred.ko,style==='community'?'받피감':'받는 피해 감소');
       assert.equal(terms.get('stat-percent-atk').outputPreferred.ko,style==='community'?'공퍼':'공격력%');
       assert.equal(terms.get('character:1431').outputPreferred.en,style==='community'?'YSG':'Ye Shunguang');
       assert.equal(terms.get('community:ex-ex-basic-combo').outputPreferred.en,style==='community'?'EX → EX → BA':'EX Special Attack → EX Special Attack → Basic Attack');
@@ -37,7 +43,30 @@ test('community style selects registered shorthand in all providers, with offici
       const content=JSON.stringify({ko:'검사용 번역'});
       return response(provider==='gemini'?{candidates:[{finishReason:'STOP',content:{parts:[{text:content}]}}]}:provider==='openai'?{status:'completed',output:[{content:[{type:'output_text',text:content}]}]}:{done:true,done_reason:'stop',message:{content}});
     });
-    await translator.translate({text:'Quick Assist 공퍼 YSG 강강평 극치 san-z',sourceLanguage:'en',targets:['ko']});
+    await translator.translate({text:'Quick Assist Chain Attack damage reduction 공퍼 YSG 강강평 극치 san-z',sourceLanguage:'en',targets:['ko']});
+    assert.equal(calls,1);
+  }
+});
+
+test('full-duplicate shorthand carries character-only scope and the Bangboo exception to every provider', async () => {
+  for (const provider of ['gemini', 'openai', 'ollama']) {
+    let calls=0;
+    const config=settings({...creds,TRANSLATION_PROVIDER:provider,TRANSLATION_STYLE:'community',GEMINI_API_KEY:'test',OPENAI_API_KEY:'test',OLLAMA_CONTEXT_LENGTH:'32768'});
+    const translator=new Translator(config,makeStore(),path,async(url,init)=>{
+      if(url.endsWith('/api/show'))return response(model);
+      calls++;
+      const body=JSON.parse(init.body);
+      const payload=JSON.parse(provider==='gemini'?body.contents[0].parts[0].text:provider==='openai'?body.input:body.messages[1].content);
+      const term=payload.glossary.find(e=>e.id==='community:mindscape-6');
+      assert(term);assert.equal(term.outputPreferred.ko,'풀돌');
+      assert(term.rule.includes('캐릭터 문맥에만 적용'));
+      assert(term.rule.includes('방부의 풀돌은 5돌'));
+      assert(term.rule.includes('대상 확인 없이 6돌이나 5돌이라는 숫자를 추가하지 않는다'));
+      assert.equal(payload.message.text,'방부 풀돌과 캐릭터 풀돌을 비교해.');
+      const content=JSON.stringify({en:'Compare a fully upgraded Bangboo with a fully upgraded character.'});
+      return response(provider==='gemini'?{candidates:[{finishReason:'STOP',content:{parts:[{text:content}]}}]}:provider==='openai'?{status:'completed',output:[{content:[{type:'output_text',text:content}]}]}:{done:true,done_reason:'stop',message:{content}});
+    });
+    await translator.translate({text:'방부 풀돌과 캐릭터 풀돌을 비교해.',sourceLanguage:'ko',targets:['en']});
     assert.equal(calls,1);
   }
 });

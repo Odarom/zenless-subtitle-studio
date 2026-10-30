@@ -140,7 +140,7 @@ export class Jobs {
       const checkpointPath = join(directory, 'translation.json');
       const checkpoint = readJson(checkpointPath, { key, cues: {} });
       // Preserve completed text; new candidate hints apply only to pending cues.
-      if (checkpoint.key !== key && ([5,6,7].some(version => checkpoint.key === translationKey(source.cues, options, glossaryPath, version))
+      if (checkpoint.key !== key && ([5,6,7,8].some(version => checkpoint.key === translationKey(source.cues, options, glossaryPath, version))
         || Object.keys(checkpoint.cues).length === 0 && checkpoint.key === translationKey(source.cues, options, glossaryPath, 4))) checkpoint.key = key;
       if (checkpoint.key !== key) throw new Error('원문·용어집·번역 설정이 변경되어 기존 결과를 이어할 수 없습니다. 새 작업으로 번역하세요.');
       const glossary = videoGlossary(source.cues, options, glossaryPath);

@@ -67,7 +67,7 @@ export function databaseReleasePaths(manifest) {
     || !/^[a-f0-9]{64}$/.test(manifest.sha256 || '') || manifest.file !== `releases/concepts-v1-${manifest.sha256}.json`) {
     throw new Error('Invalid public concept release path');
   }
-  return [...DATABASE_SOURCE_FILES, '.gitattributes', 'database/match.mjs', 'database/latest.json', 'catalog/concepts.json', manifest.file];
+  return [...DATABASE_SOURCE_FILES, '.gitattributes', 'database/match.mjs', 'database/prompt.mjs', 'database/latest.json', 'catalog/concepts.json', manifest.file];
 }
 
 export function buildConceptRelease(root, output, catalog, sourceSha256) {
@@ -81,13 +81,18 @@ export function buildConceptRelease(root, output, catalog, sourceSha256) {
     if (!lstatSync(join(root, file)).isFile()) throw new Error(`Invalid public database asset: ${file}`);
     mkdirSync(dirname(join(output, file)), { recursive: true });
     if (file === 'database/index.mjs') {
-      const source = readFileSync(join(root, file), 'utf8');
-      const original = "'../src/glossary-match.js'";
-      if (source.split(original).length !== 2) throw new Error('SDK matcher import changed; review the public export');
-      writeFileSync(join(output, file), source.replace(original, "'./match.mjs'"));
+      let source = readFileSync(join(root, file), 'utf8');
+      for (const [original, replacement] of [["'../src/glossary-match.js'", "'./match.mjs'"], ["'../src/glossary-prompt.js'", "'./prompt.mjs'"]]) {
+        if (source.split(original).length !== 2) throw new Error('SDK imports changed; review the public export');
+        source = source.replace(original, replacement);
+      }
+      writeFileSync(join(output, file), source);
     } else copyFileSync(join(root, file), join(output, file));
   }
   copyFileSync(join(root, 'src/glossary-match.js'), join(output, 'database/match.mjs'));
+  const promptSource = readFileSync(join(root, 'src/glossary-prompt.js'), 'utf8');
+  if (promptSource.split("'./glossary-match.js'").length !== 2) throw new Error('Prompt imports changed; review the public export');
+  writeFileSync(join(output, 'database/prompt.mjs'), promptSource.replace("'./glossary-match.js'", "'./match.mjs'"));
   for (const file of ['catalog/concepts.json', manifest.file]) {
     mkdirSync(dirname(join(output, file)), { recursive: true });
     writeFileSync(join(output, file), bytes);

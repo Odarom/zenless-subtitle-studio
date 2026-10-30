@@ -61,7 +61,7 @@ test('quota failure records safe details and an empty legacy checkpoint resumes 
   assert.equal(completed.apiLimit, null); assert.equal(completed.cues[0].translatedText, '빠른 지원.');
 });
 
-for(const legacyVersion of [6,7]) test(`version ${legacyVersion} partial translations resume without repeating paid completed cues`, async t => {
+for(const legacyVersion of [6,7,8]) test(`version ${legacyVersion} partial translations resume without repeating paid completed cues`, async t => {
   let requests=0, prepared=0; const payloads=[];
   const cues=[{id:'1',startMs:0,endMs:2000,sourceText:'Quick Assist.'},{id:'2',startMs:2500,endMs:4500,sourceText:'Save the next attack.'}];
   const fetcher=async(_url,init)=>{requests++;const payload=JSON.parse(JSON.parse(init.body).contents[0].parts[0].text);payloads.push(payload);

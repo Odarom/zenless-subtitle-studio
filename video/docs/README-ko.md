@@ -4,7 +4,7 @@
 
 유튜브 주소나 영상 파일을 넣고 인식·번역을 마친 뒤, 완성된 자막을 감상하는 Windows PC 프로그램입니다.
 
-**[Windows x64 다운로드 · 0.7.4](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.4/zenless-subtitle-studio-0.7.4-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64 다운로드 · 0.7.5](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.5/zenless-subtitle-studio-0.7.5-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 설치하고 자막 만들기
 

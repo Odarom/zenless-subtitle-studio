@@ -115,9 +115,11 @@ test('public release remains compatible and SDK/example run outside the authorin
 test('shared matcher stays inside existing portable update paths and both source distributions', () => {
   const files = moduleFiles(root, ['video/server.mjs', 'scripts/video-launch.mjs', 'scripts/video-setup.mjs']).map(file => file.replaceAll('\\', '/'));
   assert(files.includes('src/glossary-match.js'));
+  assert(files.includes('src/glossary-prompt.js'));
   for (const file of files) assert(updatePathAllowed(`app/${file}`), file);
   const runner = runnerModules(root).map(file => file.replaceAll('\\', '/'));
   assert(runner.includes('src/glossary-match.js'));
+  assert(runner.includes('src/glossary-prompt.js'));
   const studio = publicSource(root), bot = botSource(root);
   assert(studio.has('src/glossary-match.js') && bot.has('src/glossary-match.js'));
   for (const file of DATABASE_SOURCE_FILES) assert(studio.has(file), file);

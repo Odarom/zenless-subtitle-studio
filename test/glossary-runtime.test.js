@@ -56,7 +56,7 @@ test('optimized matcher preserves reference ordering across every registered ali
   assert.deepEqual(ids(relevantTerms(mutable,'After')),['edit']);
 });
 
-test('provider payload retains all original term fields, style, context and snapshot identity during a database update', async t => {
+test('provider payload preserves selected concepts, outputs, rules and snapshot while trimming unused languages and aliases', async t => {
   const folder=mkdtempSync(join(tmpdir(),'zzz-runtime-payload-')); t.after(()=>rmSync(folder,{recursive:true,force:true}));
   const path=join(folder,'glossary.json'); writeFileSync(path,readFileSync(catalogPath));
   const cache=new RuntimeGlossaryCache(), snapshot=cache.get(path), full=loadGlossary(path);
@@ -70,7 +70,21 @@ test('provider payload retains all original term fields, style, context and snap
     const translator=new Translator(config,store,path,async(_url,init)=>{
       calls++; const body=JSON.parse(init.body), payload=JSON.parse(body.input);
       const expected=selected.map(entry=>({...entry,preferred:localizedNames(entry)})).map(({id,preferred,communityPreferred,aliases,category,meaning,rule,communityRule,relatedSkills,characterId,characterName,releaseStatus,releaseVersion,sourceVersion})=>({id,preferred,outputPreferred:style==='community'?{...preferred,...communityPreferred}:preferred,aliases,category,meaning,rule,communityRule,relatedSkills,characterId,characterName,releaseStatus,releaseVersion,sourceVersion}));
-      assert.deepEqual(payload.glossary,JSON.parse(JSON.stringify(expected)));
+      assert.deepEqual(ids(payload.glossary),ids(expected));
+      for (const [index, row] of payload.glossary.entries()) {
+        const original = expected[index];
+        for (const language of ['en','ja','ko']) {
+          assert.equal(row.preferred[language], original.preferred[language]);
+          assert.equal(row.outputPreferred[language], original.outputPreferred[language]);
+        }
+        assert(Object.keys(row.preferred).every(language => ['en','ja','ko'].includes(language)));
+        for (const field of ['meaning','rule','communityRule','characterId','releaseStatus','releaseVersion','sourceVersion']) assert.deepEqual(row[field], original[field], field);
+        assert(row.aliases.every(alias => original.aliases.includes(alias)));
+        for (const field of ['characterName','relatedSkills']) for (const [language,label] of Object.entries(row[field] || {})) assert.equal(label,original[field][language]);
+      }
+      assert(payload.glossary.some(row=>row.aliases.includes('Return to Dust'))); // Reply evidence survives.
+      assert(payload.glossary.some(row=>row.aliases.includes('Deadly Assault'))); // Earlier context survives.
+      assert(Buffer.byteLength(JSON.stringify(payload.glossary)) < Buffer.byteLength(JSON.stringify(expected)));
       assert.deepEqual(payload.context,input.context); assert.deepEqual(payload.reply,input.reply);
       assert.deepEqual(payload.targets,input.targets);
       return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({en:'Fixture output',ja:'確認用の訳文'})}]}]})};
