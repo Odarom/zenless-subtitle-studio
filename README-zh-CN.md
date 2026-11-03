@@ -4,7 +4,7 @@
 
 选择YouTube视频或本地文件，完成识别和翻译后，再使用生成的字幕观看。适用于Windows电脑。
 
-**[下载Windows x64版 · 0.7.5](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.5/zenless-subtitle-studio-0.7.5-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[下载Windows x64版 · 0.7.6](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.6/zenless-subtitle-studio-0.7.6-win-x64.zip)** · [最新发布页面](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 安装并制作字幕
 
@@ -91,3 +91,7 @@
 <a id="词库举报与隐私"></a>
 <a id="程序更新"></a>
 <a id="使用的开源组件与许可证"></a>
+
+## 隐藏和显示字幕
+
+扩展可在“隐藏字幕”和“显示字幕”之间切换。保留已加载字幕、位置及显示设置，无需重新载入或调用API即可恢复显示。重新打开弹窗也会读取隐藏状态，切换视频后不会显示上一视频的字幕。

@@ -1,19 +1,19 @@
-# ZZZ Subtitle Studio 0.7.5
+# ZZZ Subtitle Studio 0.7.6
 
 [한국어](README-ko.md) · [English](README-en.md) · [日本語](README-ja.md) · [简体中文](README-zh-CN.md)
 
 ## 한국어
 
-공용 DB 조회 도구와 같은 방식으로 번역용 용어 자료를 구성합니다. 필요한 언어에 캐릭터·스킬 문맥 명칭이 없으면 DB에 있는 다른 언어 명칭 하나를 유지합니다. 전체 DB 참고 범위, 지정된 대표 번역, 조건 문장과 음성·파티 후보를 보존하며 추가 AI 요청을 하지 않습니다. 기존 DB 업데이트를 계속 사용하고 완료된 자막은 다시 번역하지 않습니다.
+확장의 「자막 숨기기」가 「자막 보이기」로 전환됩니다. 자막·위치·표시 설정을 유지하므로 다시 불러오거나 API를 호출하지 않고 복원할 수 있습니다. 팝업을 다시 열어도 숨김 상태를 확인하며, 다른 영상으로 이동하면 이전 자막을 표시하지 않습니다.
 
 ## English
 
-Translation glossary data now uses the same projection as the public DB reader. If character or skill context has no label in the requested languages, one existing DB label is retained. Full-catalog scope, selected outputs, conditions, speech hints and team candidates are preserved, without extra AI requests. Existing DB updates remain supported and completed captions are not translated again.
+The extension toggles between Hide subtitles and Show subtitles. It retains loaded captions, position and display settings, so showing them again needs no reload or API request. Reopening the popup restores the correct button state; subtitles from a previous video stay unavailable after navigation.
 
 ## 日本語
 
-公開DB読み取りツールと共通の処理で翻訳用の用語情報を構成します。指定言語にキャラクター・スキルの文脈名がない場合は、DBにある別言語の名称を1つ保持します。DB全体の参照範囲、指定された訳語、条件文、音声・編成候補を維持し、追加AI要求は行いません。従来のDB更新と完了済み字幕を保持します。
+拡張機能の「字幕を非表示」が「字幕を表示」に切り替わります。字幕・位置・表示設定を保持し、再読み込みやAPI要求なしで再表示できます。ポップアップを開き直しても状態を確認し、別動画では前の字幕を表示しません。
 
 ## 简体中文
 
-翻译术语资料与公共数据库读取工具采用相同的投影逻辑。若指定语言缺少角色或技能上下文名称，将保留数据库中已有的一个其他语言名称。保留全库参考范围、指定译法、条件、语音与配队候选，不增加AI请求。继续支持原有数据库更新，已完成字幕不会重新翻译。
+扩展可在“隐藏字幕”和“显示字幕”之间切换。保留已加载字幕、位置及显示设置，无需重新载入或调用API即可恢复显示。重新打开弹窗也会读取隐藏状态，切换视频后不会显示上一视频的字幕。

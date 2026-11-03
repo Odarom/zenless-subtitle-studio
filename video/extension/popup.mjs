@@ -9,6 +9,21 @@ import { speechHeight, DEFAULT_SPEECH_HEIGHT } from './speech-position.mjs';
 const BASE = 'http://127.0.0.1:4318';
 const $ = id => document.getElementById(id);
 let tab, videoId, token = '';
+let subtitleVisibility = null;
+function renderVisibility() {
+  $('hide').textContent = t(subtitleVisibility?.hidden ? '자막 보이기' : '자막 숨기기');
+  $('hide').disabled = subtitleVisibility?.loaded !== true;
+  $('hide').title = subtitleVisibility?.loaded ? '' : t('표시할 자막이 없습니다. 먼저 자막을 불러오세요.');
+}
+function updateVisibility(value) {
+  if (typeof value?.loaded !== 'boolean' || typeof value?.hidden !== 'boolean') throw new Error(t('유튜브 페이지를 새로고침한 뒤 다시 적용하세요.'));
+  subtitleVisibility = { loaded: value.loaded, hidden: value.hidden }; renderVisibility();
+}
+async function refreshVisibility() {
+  if (!videoId) { subtitleVisibility=null; renderVisibility(); return; }
+  try { updateVisibility(await send({type:'ZZZ_SUBTITLES_STATE'})); }
+  catch(error) { subtitleVisibility=null; renderVisibility(); say(error.message,true); }
+}
 const say = (text, error = false) => { $('message').textContent = i18n.message(text); $('message').className = error ? 'error' : ''; };
 async function api(path) {
   if (!token) throw new Error(t('프로그램 왼쪽 「API 및 연결 설정」에서 「PC 연결 코드 복사」를 눌러 코드를 입력하세요.'));
@@ -37,7 +52,7 @@ function renderJobs() {
   if (matches.some(job => job.id === selected)) $('job').value = selected;
   say(matches.length ? t('PC 연결 완료 · 자막 {count}개', { count: matches.length }) : t('PC 연결 완료. 작업실에서 이 영상을 먼저 번역하세요.'));
 }
-function handle(id, callback) { $(id).addEventListener('click', async () => { try { $(id).disabled = true; await callback(); } catch (error) { say(error.message, true); } finally { $(id).disabled = false; } }); }
+function handle(id, callback) { $(id).addEventListener('click', async () => { try { $(id).disabled = true; await callback(); } catch (error) { say(error.message, true); } finally { $(id).disabled = false; if(id==='hide')renderVisibility(); } }); }
 handle('connect', async () => { token = $('token').value.trim(); if (!/^[a-f0-9]{64}$/.test(token)) throw new Error(t('프로그램 왼쪽 「API 및 연결 설정」에서 「PC 연결 코드 복사」를 눌러 코드를 입력하세요.')); await refresh(); await chrome.storage.local.set({ connectionToken: token }); });
 handle('refresh', refresh);
 handle('openStudio', async () => { await chrome.tabs.create({ url: `${BASE}/?youtube=${encodeURIComponent(videoId ? `https://www.youtube.com/watch?v=${videoId}` : '')}` }); });
@@ -46,11 +61,11 @@ handle('apply', async () => {
   const job = await api(`/api/jobs/${id}`);
   if (job.status !== 'completed') throw new Error(t('자막 처리가 완료되지 않았습니다.'));
   const settings = {...display(),speechHeight:Number.isFinite(job.speechHeight)?job.speechHeight:DEFAULT_SPEECH_HEIGHT}; $('speechHeight').value = String(Math.round(settings.speechHeight * 100));
-  await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId: job.videoId || videoId, jobId:job.id, cues: job.cues, settings });
+  updateVisibility(await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId: job.videoId || videoId, jobId:job.id, cues: job.cues, settings }));
   say(t('완성된 자막을 적용했습니다. 영상을 재생하세요.'));
 });
 handle('displaySettings', async () => { await send({ type: 'ZZZ_SUBTITLES_SETTINGS', settings: display() }); await chrome.storage.local.set({ displaySettings: display() }); say(t('표시 설정을 적용했습니다.')); });
-handle('hide', async () => { await send({ type: 'ZZZ_SUBTITLES_HIDE' }); say(t('자막을 숨겼습니다.')); });
+handle('hide', async () => { updateVisibility(await send({ type: 'ZZZ_SUBTITLES_TOGGLE' })); say(t(subtitleVisibility.hidden ? '자막을 숨겼습니다.' : '자막을 다시 표시했습니다.')); });
 async function applyHeight() {
   const value = speechHeight(Number($('speechHeight').value) / 100);
   await send({type:'ZZZ_SUBTITLES_SETTINGS',settings:{speechHeight:value}});
@@ -76,7 +91,7 @@ $('file').addEventListener('change', async () => {
       height = data.display?.speechHeight;
     } else { cues = parseSubtitles(input).map(cue => ({ ...cue, translatedText: cue.sourceText })); height = subtitleSpeechHeight(input); }
     const settings = {...display(),...(Number.isFinite(height)&&height>=0&&height<=.9?{speechHeight:height}:{})}; $('speechHeight').value = String(Math.round(settings.speechHeight * 100));
-    await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId, cues, settings }); say(t('{file} · {count}개 구간을 적용했습니다.', { file: file.name, count: cues.length }));
+    updateVisibility(await send({ type: 'ZZZ_SUBTITLES_LOAD', videoId, cues, settings })); say(t('{file} · {count}개 구간을 적용했습니다.', { file: file.name, count: cues.length }));
   } catch (error) { say(error.message, true); }
 });
 try {
@@ -91,12 +106,13 @@ try {
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   try { videoId = youtubeVideoId(tab?.url || ''); } catch {}
   renderVideoTitle();
+  await refreshVisibility();
   if (token) await refresh();
 } catch (error) { say(error.message, true); }
 
 function renderVideoTitle() { $('videoTitle').textContent = videoId ? tab.title || t('유튜브 영상') : t('유튜브 영상 페이지에서 열어 주세요.'); }
 $('uiLanguage').value = i18n.locale;
 $('uiLanguage').addEventListener('change', async () => {
-  i18n.setLocale($('uiLanguage').value); applyStaticLanguage(); renderVideoTitle(); renderJobs(); $('message').textContent = '';
+  i18n.setLocale($('uiLanguage').value); applyStaticLanguage(); renderVideoTitle(); renderJobs(); renderVisibility(); $('message').textContent = '';
   try { await chrome.storage.local.set({ uiLanguage: i18n.locale }); } catch (error) { say(error.message, true); }
 });

@@ -8,10 +8,12 @@
   let cues = [], speechIndex, screenIndex, videoId = null, jobId = null, host, label, screenLayer, menuRoot, lastText = null, nextCheck = 0, player, video, menu, visibleSpeech = [];
   const screenNodes = new Map();
   const settings = { mode: 'translated', offsetMs: 0, fontSize: 28, showSpeech: true, showScreen: true, maskSpeech: true, maskScreen: true, uiLanguage: 'ko', speechHeight: 0.11 };
+  let subtitlesHidden = false;
+  const visibility = () => ({ loaded: cues.length > 0 && videoId === currentId(), hidden: subtitlesHidden });
   const t = (key, values = {}) => (globalThis.__zzzOverlayI18n?.[settings.uiLanguage]?.[key] || key).replace(/\{(\w+)\}/g, (match,name) => values[name] ?? match);
   const currentId = () => { const url = new URL(location.href); return url.pathname === '/watch' ? url.searchParams.get('v') : /^\/shorts\/([^/]+)/.exec(url.pathname)?.[1]; };
   const cueText = cue => settings.mode === 'source' ? cue.sourceText : settings.mode === 'bilingual' && cue.translatedText !== cue.sourceText ? `${cue.sourceText}\n${cue.translatedText || ''}` : cue.translatedText || cue.sourceText;
-  function clear() { cancelDrag?.(); closeMenu(false); cues = []; videoId = null; jobId = null; archiveId=null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; speech = null; }
+  function clear() { cancelDrag?.(); closeMenu(false); subtitlesHidden = false; cues = []; videoId = null; jobId = null; archiveId=null; lastText = null; screenNodes.clear(); host?.remove(); host = null; menuRoot = null; label = null; speech = null; }
   function indexCues() { speechIndex = geometry?.buildCueIndex(speechCues ? speechCues.speechDisplayCues(cues, settings) : cues.filter(cue => !cue.excluded && cue.kind !== 'screen')); screenIndex = geometry?.buildCueIndex(cues.filter(cue => !cue.excluded && cue.kind === 'screen')); lastText = null; }
   function block(event) { event.preventDefault(); event.stopPropagation(); }
   function clickable(element, callback) {
@@ -171,7 +173,7 @@
         const screenCount = ads ? 0 : drawScreen(time, safe);
         if (ads) for (const {element} of screenNodes.values()) element.hidden = true;
         else for (const {element} of screenNodes.values()) element.hidden = false;
-        host.hidden = ads || !text && !screenCount && !menu;
+        host.hidden = subtitlesHidden || ads || !text && !screenCount && !menu;
         if (!host.hidden) placeSpeech();
       }
     }
@@ -180,6 +182,7 @@
   function applyMessage(message, sender, respond) {
     if (sender.id !== chrome.runtime.id || !message?.type?.startsWith('ZZZ_SUBTITLES_')) return;
     try {
+      if (message.type === 'ZZZ_SUBTITLES_STATE') { respond({ ok:true, ...visibility() }); return; }
       if (message.type === 'ZZZ_SUBTITLES_LOAD') {
         if (!currentId() || message.videoId !== currentId()) throw new Error('이 영상에 연결된 자막을 선택하세요.');
         if (!Array.isArray(message.cues) || !message.cues.length || message.cues.length > 50000) throw new Error('자막 구간 형식을 확인하세요.');
@@ -196,8 +199,13 @@
         setSettings(message.settings);
         if (Number.isFinite(message.settings?.speechHeight) && videoId) { savePosition().then(() => respond({ok:true}), error => respond({error:error.message})); return true; }
       }
-      else if (message.type === 'ZZZ_SUBTITLES_HIDE') clear();
-      respond({ ok: true });
+      else if (['ZZZ_SUBTITLES_HIDE','ZZZ_SUBTITLES_SHOW','ZZZ_SUBTITLES_TOGGLE'].includes(message.type)) {
+        if (!visibility().loaded) throw new Error('표시할 자막이 없습니다. 먼저 자막을 불러오세요.');
+        subtitlesHidden = message.type === 'ZZZ_SUBTITLES_TOGGLE' ? !subtitlesHidden : message.type === 'ZZZ_SUBTITLES_HIDE';
+        if (subtitlesHidden) { cancelDrag?.(); closeMenu(false); if(host)host.hidden=true; }
+        else { attach(); lastText=null; nextCheck=0; }
+      }
+      respond({ ok: true, ...visibility() });
     } catch (error) { respond({ error: error.message }); }
   }
   function showArchiveNotice(text){

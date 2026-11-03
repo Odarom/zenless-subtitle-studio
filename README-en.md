@@ -4,7 +4,7 @@
 
 A Windows app that recognizes and translates a YouTube video or local file, then lets you watch with the finished subtitles.
 
-**[Download for Windows x64 · 0.7.5](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.5/zenless-subtitle-studio-0.7.5-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Download for Windows x64 · 0.7.6](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.6/zenless-subtitle-studio-0.7.6-win-x64.zip)** · [Latest release](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## Install and create subtitles
 
@@ -91,3 +91,7 @@ Translation supports 13 languages; the interface and guides support four. whispe
 <a id="glossary-reports-and-privacy"></a>
 <a id="program-updates"></a>
 <a id="open-source-components-and-licenses"></a>
+
+## Hide and show subtitles
+
+The extension toggles between Hide subtitles and Show subtitles. It retains loaded captions, position and display settings, so showing them again needs no reload or API request. Reopening the popup restores the correct button state; subtitles from a previous video stay unavailable after navigation.

@@ -4,7 +4,7 @@
 
 유튜브 주소나 영상 파일을 넣고 인식·번역을 마친 뒤, 완성된 자막을 감상하는 Windows PC 프로그램입니다.
 
-**[Windows x64 다운로드 · 0.7.5](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.5/zenless-subtitle-studio-0.7.5-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64 다운로드 · 0.7.6](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.6/zenless-subtitle-studio-0.7.6-win-x64.zip)** · [최신 배포 페이지](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 설치하고 자막 만들기
 
@@ -92,3 +92,7 @@ Gemini·OpenAI·DeepL API Free/Pro·Ollama를 지원합니다. **2026-10-19 한�
 <a id="용어집과-신고"></a>
 <a id="프로그램-업데이트"></a>
 <a id="사용한-오픈소스와-라이선스"></a>
+
+## 자막 숨기기와 다시 표시
+
+확장의 「자막 숨기기」가 「자막 보이기」로 전환됩니다. 자막·위치·표시 설정을 유지하므로 다시 불러오거나 API를 호출하지 않고 복원할 수 있습니다. 팝업을 다시 열어도 숨김 상태를 확인하며, 다른 영상으로 이동하면 이전 자막을 표시하지 않습니다.

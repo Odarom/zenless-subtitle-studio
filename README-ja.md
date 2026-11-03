@@ -4,7 +4,7 @@
 
 YouTubeやローカル動画の認識・翻訳が完了してから、できあがった字幕で視聴するWindows用アプリです。
 
-**[Windows x64版をダウンロード・0.7.5](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.5/zenless-subtitle-studio-0.7.5-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
+**[Windows x64版をダウンロード・0.7.6](https://github.com/Odarom/zenless-subtitle-studio/releases/download/v0.7.6/zenless-subtitle-studio-0.7.6-win-x64.zip)** · [最新リリース](https://github.com/Odarom/zenless-subtitle-studio/releases/latest)
 
 ## 導入して字幕を作る
 
@@ -91,3 +91,7 @@ Gemini・OpenAI・DeepL API Free/Pro・Ollamaに対応します。**2026-10-19�
 <a id="用語集報告個人情報"></a>
 <a id="プログラムの更新"></a>
 <a id="使用オープンソースとライセンス"></a>
+
+## 字幕を非表示・再表示
+
+拡張機能の「字幕を非表示」が「字幕を表示」に切り替わります。字幕・位置・表示設定を保持し、再読み込みやAPI要求なしで再表示できます。ポップアップを開き直しても状態を確認し、別動画では前の字幕を表示しません。
